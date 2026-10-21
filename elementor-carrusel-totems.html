@@ -1,0 +1,383 @@
+<!-- ============================================================
+     MEDIAMASTER · Carrusel 3D de Tótems
+     Pegar completo en un widget "HTML" de Elementor.
+     Edita la lista PANELES (más abajo, en el <script>) para
+     cambiar imágenes, textos y páginas de destino.
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+<section id="mm-totem" aria-label="Carrusel de anuncios en tótems">
+  <div class="mm-stage">
+    <div class="mm-streaks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="mm-particles" aria-hidden="true"></div>
+
+    <div class="mm-orbit">
+    <a class="mm-totem" href="#" aria-label="Ver anuncio destacado">
+      <span class="mm-totem__screen">
+        <span class="mm-totem__img"></span>
+        <span class="mm-totem__text"></span>
+        <span class="mm-totem__cta">Ver más →</span>
+      </span>
+      <span class="mm-totem__base"></span>
+    </a>
+    </div>
+
+    <div class="mm-floor" aria-hidden="true"></div>
+
+    <button class="mm-nav mm-nav--prev" type="button" aria-label="Anterior">‹</button>
+    <button class="mm-nav mm-nav--next" type="button" aria-label="Siguiente">›</button>
+  </div>
+
+  <div class="mm-copy">
+    <h2 class="mm-title">
+      <span class="mm-pink">Cambia</span> <br>el mensaje. <br>Mantén <br>la <span class="mm-pink">atención.</span>
+    </h2>
+    <div class="mm-tag">
+      <strong>Tótems</strong>
+      <span class="mm-bar"></span>
+      <span>Puebla</span>
+    </div>
+  </div>
+</section>
+
+<style>
+#mm-totem{
+  --mm-pink:#ff0a6c; --mm-green:#22d65a; --mm-purple:#8a3ffc;
+  --mm-yellow:#f5e400; --mm-orange:#ff7a00; --mm-blue:#3aa0ff;
+  --mm-bg:#050608;
+  position:relative; overflow:hidden; isolation:isolate;
+  background:radial-gradient(ellipse at 50% 35%,#141a26 0%,var(--mm-bg) 65%);
+  color:#fff; font-family:'Montserrat',system-ui,sans-serif;
+  padding:40px 16px 56px; box-sizing:border-box;
+}
+#mm-totem *,#mm-totem *::before,#mm-totem *::after{box-sizing:border-box}
+
+/* ---------- escena ---------- */
+#mm-totem .mm-stage{
+  position:relative; height:clamp(380px,52vw,600px);
+  max-width:1200px; margin:0 auto;
+  touch-action:pan-y; user-select:none;
+}
+#mm-totem .mm-orbit{position:absolute; inset:0; perspective:1400px}
+
+/* paneles */
+#mm-totem .mm-panel{
+  position:absolute; left:50%; top:46%;
+  width:var(--pw); height:calc(var(--pw) * 1.5);
+  margin-left:calc(var(--pw) / -2); margin-top:calc(var(--pw) * -.75);
+  border-radius:6px; overflow:hidden; display:block; text-decoration:none; color:#fff;
+  background:var(--img) center/cover no-repeat, var(--fallback);
+  border:1px solid rgba(140,190,255,.35);
+  box-shadow:0 0 0 1px rgba(255,255,255,.04),0 20px 50px rgba(0,0,0,.6),0 0 30px rgba(58,160,255,.15);
+  will-change:transform,opacity; transition:box-shadow .3s,border-color .3s,filter .3s;
+}
+#mm-totem .mm-panel::before{ /* reflejo de vidrio */
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.18) 0%,transparent 35%,transparent 70%,rgba(58,160,255,.15) 100%);
+}
+#mm-totem .mm-panel::after{ /* oscurece para legibilidad */
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 40%,transparent 60%,rgba(0,0,0,.55) 100%);
+}
+#mm-totem .mm-panel__text{
+  position:absolute; z-index:2; left:10%; right:10%; top:8%;
+  font-weight:600; font-size:calc(var(--pw) * .085); line-height:1.2;
+  letter-spacing:.06em; text-transform:uppercase; text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+#mm-totem .mm-panel__text::after{content:""; display:block; width:18%; height:2px; background:#fff; margin-top:.6em}
+#mm-totem .mm-panel__cta{
+  position:absolute; z-index:2; left:10%; bottom:7%;
+  font-size:calc(var(--pw) * .07); font-weight:800; letter-spacing:.04em;
+  padding:.45em .9em; border-radius:999px; background:var(--mm-pink);
+  opacity:0; transform:translateY(8px); transition:.3s;
+}
+#mm-totem .mm-panel:hover,#mm-totem .mm-panel:focus-visible{
+  border-color:var(--mm-pink); outline:none;
+  box-shadow:0 0 0 2px var(--mm-pink),0 25px 60px rgba(0,0,0,.7),0 0 45px rgba(255,10,108,.45);
+}
+#mm-totem .mm-panel:hover .mm-panel__cta,#mm-totem .mm-panel:focus-visible .mm-panel__cta{opacity:1; transform:none}
+
+/* tótem central */
+#mm-totem .mm-totem{
+  position:absolute; left:50%; top:46%; z-index:1000;
+  width:var(--tw); height:calc(var(--tw) * 2.05);
+  margin-left:calc(var(--tw) / -2); margin-top:calc(var(--tw) * -.95);
+  display:block; text-decoration:none; color:#fff;
+}
+#mm-totem .mm-totem__screen{
+  position:absolute; inset:0 0 9% 0; border-radius:8px; overflow:hidden;
+  background:linear-gradient(160deg,#2b2f36,#0b0c0f 40%,#1b1e24);
+  padding:5.5%; box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 60px rgba(58,160,255,.25),inset 0 0 0 1px rgba(255,255,255,.12);
+  transition:box-shadow .3s;
+}
+#mm-totem .mm-totem__img{
+  position:absolute; inset:5.5%; border-radius:3px;
+  background:var(--img) center/cover no-repeat,var(--fallback);
+  transition:opacity .45s ease;
+}
+#mm-totem .mm-totem__img::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 40%,transparent 70%,rgba(0,0,0,.5)),
+             linear-gradient(115deg,rgba(255,255,255,.15),transparent 35%);
+}
+#mm-totem .mm-totem__text{
+  position:absolute; z-index:2; left:14%; right:14%; top:11%;
+  font-size:calc(var(--tw) * .1); font-weight:400; letter-spacing:.12em; line-height:1.25;
+  text-transform:uppercase; text-shadow:0 2px 10px rgba(0,0,0,.5); transition:opacity .45s;
+}
+#mm-totem .mm-totem__cta{
+  position:absolute; z-index:2; left:50%; bottom:9%; transform:translateX(-50%);
+  white-space:nowrap; font-size:calc(var(--tw) * .065); font-weight:800;
+  padding:.5em 1.1em; border-radius:999px; background:var(--mm-pink);
+  box-shadow:0 0 25px rgba(255,10,108,.6);
+}
+#mm-totem .mm-totem__base{
+  position:absolute; left:8%; right:8%; bottom:0; height:10%;
+  background:linear-gradient(#1a1c20,#08090b); border-radius:3px 3px 0 0;
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 20px 40px rgba(0,0,0,.8);
+}
+#mm-totem .mm-totem__base::after{
+  content:""; position:absolute; left:-25%; right:-25%; bottom:0; height:12%;
+  background:#0d0e11; border-radius:2px;
+}
+#mm-totem .mm-totem:hover .mm-totem__screen,#mm-totem .mm-totem:focus-visible .mm-totem__screen{
+  box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 0 2px var(--mm-pink),0 0 60px rgba(255,10,108,.45);
+}
+#mm-totem .mm-totem:focus-visible{outline:none}
+
+/* piso reflejante */
+#mm-totem .mm-floor{
+  position:absolute; left:-10%; right:-10%; bottom:0; height:34%; z-index:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(58,160,255,.18),transparent 60%),
+             linear-gradient(180deg,transparent,rgba(255,255,255,.03) 20%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 30%); mask-image:linear-gradient(180deg,transparent,#000 30%);
+}
+
+/* destellos de luz */
+#mm-totem .mm-streaks{position:absolute; inset:0; z-index:0; pointer-events:none}
+#mm-totem .mm-streaks i{
+  position:absolute; left:-30%; width:60%; height:2px; border-radius:2px; opacity:0;
+  background:linear-gradient(90deg,transparent,var(--c,#7cc4ff),#fff,transparent);
+  filter:drop-shadow(0 0 6px var(--c,#7cc4ff));
+  animation:mmStreak 6s linear infinite;
+}
+#mm-totem .mm-streaks i:nth-child(1){top:40%; --c:#7cc4ff}
+#mm-totem .mm-streaks i:nth-child(2){top:44%; --c:var(--mm-purple); animation-delay:1.5s; animation-duration:7s}
+#mm-totem .mm-streaks i:nth-child(3){top:52%; --c:#7cc4ff; animation-delay:3s}
+#mm-totem .mm-streaks i:nth-child(4){top:48%; --c:var(--mm-pink); animation-delay:4.2s; animation-duration:8s}
+@keyframes mmStreak{
+  0%{transform:translateX(0) rotate(-4deg); opacity:0}
+  10%{opacity:.9} 60%{opacity:.6}
+  100%{transform:translateX(260%) rotate(2deg); opacity:0}
+}
+#mm-totem .mm-particles{position:absolute; inset:0; z-index:0; pointer-events:none}
+#mm-totem .mm-particles span{
+  position:absolute; width:3px; height:3px; border-radius:50%; background:#9fd3ff;
+  box-shadow:0 0 6px #9fd3ff; opacity:0; animation:mmTwinkle var(--d) ease-in-out var(--dl) infinite;
+}
+@keyframes mmTwinkle{0%,100%{opacity:0; transform:translateY(0)}50%{opacity:.8; transform:translateY(-14px)}}
+
+/* flechas */
+#mm-totem .mm-nav{
+  position:absolute; top:46%; z-index:2000; transform:translateY(-50%);
+  width:44px; height:44px; border-radius:50%; cursor:pointer;
+  border:1px solid rgba(255,255,255,.25); background:rgba(10,12,16,.6); color:#fff;
+  font-size:26px; line-height:1; display:grid; place-items:center;
+  backdrop-filter:blur(6px); transition:.25s;
+}
+#mm-totem .mm-nav:hover,#mm-totem .mm-nav:focus-visible{background:var(--mm-pink); border-color:var(--mm-pink); outline:none}
+#mm-totem .mm-nav--prev{left:4px}
+#mm-totem .mm-nav--next{right:4px}
+
+/* texto inferior */
+#mm-totem .mm-copy{max-width:1000px; margin:8px auto 0; text-align:center}
+#mm-totem .mm-title{
+  display:inline-block; text-align:left; margin:0 0 28px; font-weight:900; text-transform:uppercase; color:#fff;
+  font-size:clamp(34px,6.5vw,76px); line-height:1.02; letter-spacing:-.01em;
+}
+#mm-totem .mm-pink{color:var(--mm-pink)}
+#mm-totem .mm-tag{display:inline-flex; flex-direction:column; align-items:center; gap:8px; font-size:clamp(18px,2.2vw,26px); text-transform:uppercase}
+#mm-totem .mm-tag strong{font-weight:800}
+#mm-totem .mm-bar{
+  width:min(560px,80vw); height:4px;
+  background:linear-gradient(90deg,var(--mm-green) 0 16.6%,var(--mm-purple) 0 33.3%,var(--mm-yellow) 0 50%,var(--mm-pink) 0 66.6%,var(--mm-pink) 0 83.3%,var(--mm-orange) 0);
+}
+@media (max-width:767px){
+  #mm-totem .mm-nav{width:38px; height:38px; font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  #mm-totem .mm-streaks,#mm-totem .mm-particles{display:none}
+}
+</style>
+
+<script>
+(function () {
+  /* ======================================================
+     CONFIGURA AQUÍ TUS PANELES
+     - texto:  título que aparece sobre la imagen
+     - imagen: URL de la imagen (Medios de WordPress → copiar URL)
+     - url:    página del sitio a la que lleva el clic
+     - color:  degradado de respaldo si la imagen no carga
+     ====================================================== */
+  var PANELES = [
+    { texto: "Llega más lejos",               imagen: "", url: "/totems/",            color: "#1e6fd9,#0a1a3a" },
+    { texto: "El mejor sabor siempre",        imagen: "", url: "/restaurantes/",      color: "#ff7a00,#3a0d00" },
+    { texto: "Tu belleza nuestra inspiración",imagen: "", url: "/belleza/",           color: "#ff0a6c,#2a0614" },
+    { texto: "Descubre la magia de viajar",   imagen: "", url: "/turismo/",           color: "#00b4d8,#023047" },
+    { texto: "Grandes momentos cada día",     imagen: "", url: "/bebidas/",           color: "#c77d3a,#1a0d05" },
+    { texto: "Tu mejor versión empieza aquí", imagen: "", url: "/deportes/",          color: "#8a3ffc,#0d0626" }
+  ];
+
+  var VELOCIDAD = 0.12;          // grados por frame (más alto = más rápido)
+  var ABRIR_EN_NUEVA_PESTANA = false;
+
+  /* ---------------- no es necesario editar abajo ---------------- */
+  var root = document.getElementById('mm-totem');
+  if (!root || root.dataset.ready) return;
+  root.dataset.ready = '1';
+
+  var stage = root.querySelector('.mm-stage');
+  var orbit = root.querySelector('.mm-orbit');
+  var totem = root.querySelector('.mm-totem');
+  var tImg = root.querySelector('.mm-totem__img');
+  var tText = root.querySelector('.mm-totem__text');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var target = ABRIR_EN_NUEVA_PESTANA ? '_blank' : '_self';
+
+  function bg(el, p) {
+    el.style.setProperty('--img', p.imagen ? 'url("' + p.imagen + '")' : 'none');
+    el.style.setProperty('--fallback', 'linear-gradient(160deg,' + p.color + ')');
+  }
+
+  var panels = PANELES.map(function (p) {
+    var a = document.createElement('a');
+    a.className = 'mm-panel';
+    a.href = p.url;
+    a.target = target;
+    if (target === '_blank') a.rel = 'noopener';
+    a.setAttribute('aria-label', p.texto);
+    a.innerHTML = '<span class="mm-panel__text"></span><span class="mm-panel__cta">Ver más →</span>';
+    a.querySelector('.mm-panel__text').textContent = p.texto;
+    bg(a, p);
+    orbit.appendChild(a);
+    return a;
+  });
+
+  // partículas
+  var pc = root.querySelector('.mm-particles');
+  for (var k = 0; k < 28; k++) {
+    var s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = 10 + Math.random() * 70 + '%';
+    s.style.setProperty('--d', 3 + Math.random() * 4 + 's');
+    s.style.setProperty('--dl', -Math.random() * 6 + 's');
+    pc.appendChild(s);
+  }
+
+  var n = panels.length, step = 360 / n;
+  var angle = 0, speed = reduce ? 0 : VELOCIDAD, current = speed;
+  var hovering = false, snapTo = null, W = 0, R = 0, active = -1;
+
+  function layout() {
+    W = stage.clientWidth;
+    var pw = Math.max(110, Math.min(200, W * 0.16));
+    var tw = Math.max(130, Math.min(250, W * 0.2));
+    stage.style.setProperty('--pw', pw + 'px');
+    stage.style.setProperty('--tw', tw + 'px');
+    R = Math.min(W * 0.4, 520);
+  }
+
+  function setActive(i) {
+    if (i === active) return;
+    active = i;
+    var p = PANELES[i];
+    tImg.style.opacity = 0; tText.style.opacity = 0;
+    setTimeout(function () {
+      bg(tImg, p);
+      tText.textContent = p.texto;
+      tImg.style.opacity = 1; tText.style.opacity = 1;
+    }, 220);
+    totem.href = p.url;
+    totem.target = target;
+    totem.setAttribute('aria-label', 'Ver: ' + p.texto);
+  }
+
+  function render() {
+    var best = 0, bestZ = -Infinity;
+    for (var i = 0; i < n; i++) {
+      var a = (angle + i * step) * Math.PI / 180;
+      var x = Math.sin(a) * R;
+      var z = Math.cos(a) * R * 0.9;
+      var depth = (z / R + 1) / 2;                 // 0 = atrás, 1 = frente
+      var el = panels[i];
+      el.style.transform =
+        'translate3d(' + x.toFixed(1) + 'px,' + (-depth * 12).toFixed(1) + 'px,' + (z - R * 0.15).toFixed(1) + 'px) ' +
+        'rotateY(' + (Math.sin(a) * -28).toFixed(1) + 'deg)';
+      el.style.zIndex = Math.round(1000 + z);
+      // al pasar frente al tótem el panel "entra" a la pantalla y se desvanece
+      var near = Math.min(1, Math.abs(x) / (W * 0.22));
+      var fade = z > 0 ? near : 1;
+      el.style.opacity = ((0.35 + depth * 0.65) * fade * fade).toFixed(2);
+      el.style.filter = 'brightness(' + (0.45 + depth * 0.55).toFixed(2) + ')';
+      // el panel detrás del tótem no debe ser clicable
+      el.style.pointerEvents = Math.abs(x) < W * 0.12 ? 'none' : 'auto';
+      if (z > bestZ) { bestZ = z; best = i; }
+    }
+    setActive(best);
+  }
+
+  function loop() {
+    if (snapTo !== null) {
+      var d = snapTo - angle;
+      angle += d * 0.12;
+      if (Math.abs(d) < 0.05) { angle = snapTo; snapTo = null; }
+    } else {
+      var goal = hovering ? 0 : speed;
+      current += (goal - current) * 0.08;        // frenado/arranque suave
+      angle -= current;
+    }
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  // pausa al pasar el cursor (paneles y tótem) o al enfocar con teclado
+  orbit.addEventListener('mouseover', function (e) { hovering = !!e.target.closest('.mm-panel,.mm-totem'); });
+  orbit.addEventListener('mouseleave', function () { hovering = false; });
+  root.addEventListener('focusin', function () { hovering = true; });
+  root.addEventListener('focusout', function () { hovering = false; });
+
+  // flechas
+  function go(dir) {
+    var base = snapTo !== null ? snapTo : Math.round(angle / step) * step;
+    snapTo = base + dir * step;
+  }
+  root.querySelector('.mm-nav--prev').addEventListener('click', function () { go(1); });
+  root.querySelector('.mm-nav--next').addEventListener('click', function () { go(-1); });
+
+  // deslizar en móvil
+  var sx = null, sa = 0, moved = false;
+  stage.addEventListener('touchstart', function (e) {
+    sx = e.touches[0].clientX; sa = angle; moved = false; hovering = true; snapTo = null;
+  }, { passive: true });
+  stage.addEventListener('touchmove', function (e) {
+    if (sx === null) return;
+    var dx = e.touches[0].clientX - sx;
+    if (Math.abs(dx) > 6) moved = true;
+    angle = sa + dx * 0.25;
+  }, { passive: true });
+  stage.addEventListener('touchend', function () {
+    sx = null;
+    if (moved) snapTo = Math.round(angle / step) * step;
+    setTimeout(function () { hovering = false; }, 2500);  // retoma el giro después de 2.5 s
+  });
+  stage.addEventListener('click', function (e) { if (moved) { e.preventDefault(); moved = false; } }, true);
+
+  // pausa si la pestaña no está visible
+  document.addEventListener('visibilitychange', function () { speed = document.hidden || reduce ? 0 : VELOCIDAD; });
+
+  window.addEventListener('resize', layout);
+  layout();
+  loop();
+})();
+</script>
