@@ -1,0 +1,455 @@
+<!-- ============================================================
+     MEDIAMASTER · Espectacular LED con carrusel de anuncios
+     Pegar completo en un widget "HTML" de Elementor.
+     1) Sube la imagen del espectacular (la versión con fondo
+        transparente) a Medios y pega su URL en IMAGEN_BASE.
+     2) Los anuncios son de ejemplo (marcas ficticias). Cambia el
+        tiempo en SEGUNDOS_POR_ANUNCIO.
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+
+<section class="mm-bb" aria-roledescription="carrusel" aria-label="Espectacular digital con anuncios de ejemplo">
+  <div class="mm-bb__frame">
+    <img class="mm-bb__base" alt="Espectacular digital Mediamaster" decoding="async">
+
+    <div class="mm-bb__screen" aria-live="off">
+      <div class="mm-bb__slides">
+
+        <!-- 1 · Autos (ficticio) -->
+        <article class="mm-ad mm-ad--car" aria-label="Volta Motors: Llega más lejos">
+          <div class="mm-ad__bg"></div>
+          <div class="mm-road"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">VOLTA MOTORS</span>
+            <h3 class="mm-ad__title mm-in">LLEGA<br>MÁS LEJOS</h3>
+            <p class="mm-ad__sub mm-in">Nuevo SUV Aero 2027 · Híbrido</p>
+            <span class="mm-ad__pill mm-in">Agenda tu prueba de manejo</span>
+          </div>
+          <svg class="mm-car mm-in" viewBox="0 0 620 260" aria-hidden="true">
+            <defs>
+              <linearGradient id="mmCarBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e9eef5"/><stop offset=".45" stop-color="#9aa7b8"/><stop offset="1" stop-color="#3b4452"/>
+              </linearGradient>
+              <linearGradient id="mmCarGlass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#0d1b2e"/><stop offset=".6" stop-color="#25466e"/><stop offset="1" stop-color="#0d1b2e"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="310" cy="232" rx="290" ry="16" fill="rgba(0,0,0,.45)"/>
+            <path d="M30 195 Q30 150 80 140 L170 128 L232 62 Q243 50 262 50 L470 50 Q492 50 503 66 L545 126 L575 134 Q600 142 600 175 L600 198 Q600 210 586 210 L36 210 Q30 210 30 200 Z" fill="url(#mmCarBody)"/>
+            <path d="M250 44 L480 44" stroke="#2a2f37" stroke-width="8" stroke-linecap="round"/>
+            <path d="M196 128 L250 70 L362 70 L362 128 Z" fill="url(#mmCarGlass)"/>
+            <path d="M376 70 L482 70 L522 128 L376 128 Z" fill="url(#mmCarGlass)"/>
+            <path d="M60 160 L585 160" stroke="rgba(255,255,255,.55)" stroke-width="3"/>
+            <path d="M575 140 L600 146 L598 160 L572 158 Z" fill="#fff7c2"/>
+            <path d="M32 150 L56 146 L58 160 L34 162 Z" fill="#ff3b3b"/>
+            <g class="mm-wheel"><circle cx="150" cy="208" r="46" fill="#111"/><circle cx="150" cy="208" r="28" fill="#8792a2"/><path d="M150 180 L150 236 M122 208 L178 208 M130 188 L170 228 M170 188 L130 228" stroke="#2a2f37" stroke-width="6"/><circle cx="150" cy="208" r="8" fill="#ccd3dc"/></g>
+            <g class="mm-wheel"><circle cx="478" cy="208" r="46" fill="#111"/><circle cx="478" cy="208" r="28" fill="#8792a2"/><path d="M478 180 L478 236 M450 208 L506 208 M458 188 L498 228 M498 188 L458 228" stroke="#2a2f37" stroke-width="6"/><circle cx="478" cy="208" r="8" fill="#ccd3dc"/></g>
+          </svg>
+        </article>
+
+        <!-- 2 · Hamburguesas (ficticio) -->
+        <article class="mm-ad mm-ad--burger" aria-label="Sabor Urbano: 2x1 los martes">
+          <div class="mm-ad__bg"></div>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">SABOR URBANO</span>
+            <h3 class="mm-ad__title mm-in"><span class="mm-big">2x1</span></h3>
+            <p class="mm-ad__sub mm-in">en hamburguesas<br><strong>todos los martes</strong></p>
+          </div>
+          <svg class="mm-burger mm-in" viewBox="0 0 500 420" aria-hidden="true">
+            <ellipse cx="250" cy="395" rx="210" ry="18" fill="rgba(0,0,0,.35)"/>
+            <path d="M60 330 Q60 385 120 385 L380 385 Q440 385 440 330 Z" fill="#e39a3b"/>
+            <rect x="45" y="268" width="410" height="66" rx="33" fill="#5a2d12"/>
+            <path d="M40 262 L460 262 L420 300 L370 270 L320 305 L270 270 L220 305 L170 270 L120 305 L80 270 Z" fill="#ffc21a"/>
+            <path d="M35 240 Q60 268 85 240 Q110 268 135 240 Q160 268 185 240 Q210 268 235 240 Q260 268 285 240 Q310 268 335 240 Q360 268 385 240 Q410 268 435 240 Q455 262 468 244 L468 258 L32 258 Z" fill="#43b02a"/>
+            <rect x="60" y="214" width="380" height="30" rx="10" fill="#e63b2e"/>
+            <path d="M50 220 Q50 60 250 55 Q450 60 450 220 Z" fill="#f2a33a"/>
+            <path d="M80 200 Q90 90 250 82 Q330 84 380 120" stroke="rgba(255,255,255,.35)" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <g fill="#fff4d6"><ellipse cx="170" cy="120" rx="10" ry="5" transform="rotate(-20 170 120)"/><ellipse cx="240" cy="100" rx="10" ry="5"/><ellipse cx="310" cy="118" rx="10" ry="5" transform="rotate(20 310 118)"/><ellipse cx="200" cy="160" rx="10" ry="5" transform="rotate(10 200 160)"/><ellipse cx="280" cy="150" rx="10" ry="5" transform="rotate(-15 280 150)"/><ellipse cx="360" cy="165" rx="10" ry="5" transform="rotate(25 360 165)"/><ellipse cx="130" cy="175" rx="10" ry="5" transform="rotate(-30 130 175)"/></g>
+          </svg>
+          <span class="mm-ad__badge mm-in">¡Solo<br>hoy!</span>
+        </article>
+
+        <!-- 3 · Café (ficticio) -->
+        <article class="mm-ad mm-ad--coffee" aria-label="Café Brisa: Cada taza, un buen momento">
+          <div class="mm-ad__bg"></div>
+          <svg class="mm-cup mm-in" viewBox="0 0 420 460" aria-hidden="true">
+            <g class="mm-steam" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="10" stroke-linecap="round">
+              <path d="M150 150 Q120 110 150 70 Q180 30 150 -10"/>
+              <path d="M210 150 Q180 105 210 60 Q240 15 210 -30"/>
+              <path d="M270 150 Q240 110 270 70 Q300 30 270 -10"/>
+            </g>
+            <ellipse cx="210" cy="430" rx="190" ry="22" fill="#1a0f0a"/>
+            <ellipse cx="210" cy="420" rx="170" ry="22" fill="#e9e1d8"/>
+            <path d="M330 230 Q400 230 400 290 Q400 350 320 350" fill="none" stroke="#f4efe9" stroke-width="26"/>
+            <path d="M70 175 L350 175 L330 360 Q325 410 270 410 L150 410 Q95 410 90 360 Z" fill="#f4efe9"/>
+            <path d="M70 175 L350 175 L346 210 L74 210 Z" fill="#c9a27a"/>
+            <ellipse cx="210" cy="175" rx="140" ry="22" fill="#5b3420"/>
+            <ellipse cx="210" cy="175" rx="100" ry="12" fill="#7a4a2c"/>
+            <path d="M110 250 L118 360" stroke="rgba(0,0,0,.06)" stroke-width="22" stroke-linecap="round"/>
+          </svg>
+          <div class="mm-ad__text">
+            <span class="mm-ad__brand mm-in">Café Brisa</span>
+            <h3 class="mm-ad__title mm-in">CADA TAZA,<br>UN BUEN<br>MOMENTO</h3>
+            <span class="mm-ad__pill mm-in">Nuevo frappé de caramelo</span>
+          </div>
+        </article>
+
+        <!-- 4 · Viajes (ficticio) -->
+        <article class="mm-ad mm-ad--travel" aria-label="Coral Resort: Descubre la magia del Caribe">
+          <div class="mm-ad__bg"></div>
+          <div class="mm-sun"></div>
+          <svg class="mm-sea" viewBox="0 0 1600 360" preserveAspectRatio="none" aria-hidden="true">
+            <path class="mm-wave1" d="M0 120 Q200 80 400 120 T800 120 T1200 120 T1600 120 T2000 120 T2400 120 L2400 360 L0 360 Z" fill="#1b6ca8"/>
+            <path class="mm-wave2" d="M0 190 Q200 150 400 190 T800 190 T1200 190 T1600 190 T2000 190 T2400 190 L2400 360 L0 360 Z" fill="#0f4c81"/>
+            <path d="M0 290 Q400 250 800 285 T1600 280 L1600 360 L0 360 Z" fill="#f2d3a0"/>
+          </svg>
+          <svg class="mm-palm mm-in" viewBox="0 0 400 600" aria-hidden="true">
+            <path d="M210 600 Q190 420 250 230" stroke="#1d1020" stroke-width="22" fill="none" stroke-linecap="round"/>
+            <g fill="#1d1020">
+              <path d="M250 230 Q160 170 60 210 Q160 150 250 225 Z"/>
+              <path d="M250 230 Q200 120 110 90 Q220 100 255 222 Z"/>
+              <path d="M250 230 Q290 120 380 100 Q300 150 258 225 Z"/>
+              <path d="M250 230 Q340 190 400 250 Q330 200 255 236 Z"/>
+              <path d="M250 230 Q230 300 170 340 Q220 280 246 234 Z"/>
+            </g>
+          </svg>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">CORAL RESORT</span>
+            <h3 class="mm-ad__title mm-in">DESCUBRE<br>LA MAGIA<br>DEL CARIBE</h3>
+            <span class="mm-ad__pill mm-in">Paquetes desde $4,999</span>
+          </div>
+        </article>
+
+        <!-- 5 · Gimnasio (ficticio) -->
+        <article class="mm-ad mm-ad--gym" aria-label="FitZone: Sin excusas">
+          <div class="mm-ad__bg"></div>
+          <div class="mm-stripes"><i></i><i></i><i></i></div>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">FITZONE GYM</span>
+            <h3 class="mm-ad__title mm-in">SIN<br>EXCUSAS.</h3>
+            <p class="mm-ad__sub mm-in">Inscripción <strong>$0</strong> todo este mes</p>
+          </div>
+          <svg class="mm-dumbbell mm-in" viewBox="0 0 600 260" aria-hidden="true">
+            <rect x="150" y="112" width="300" height="36" rx="10" fill="#c9ced6"/>
+            <rect x="60" y="40" width="50" height="180" rx="12" fill="#1b1f27" stroke="#b6ff3b" stroke-width="6"/>
+            <rect x="110" y="62" width="40" height="136" rx="10" fill="#262b35" stroke="#b6ff3b" stroke-width="6"/>
+            <rect x="490" y="40" width="50" height="180" rx="12" fill="#1b1f27" stroke="#b6ff3b" stroke-width="6"/>
+            <rect x="450" y="62" width="40" height="136" rx="10" fill="#262b35" stroke="#b6ff3b" stroke-width="6"/>
+            <rect x="20" y="105" width="40" height="50" rx="8" fill="#c9ced6"/>
+            <rect x="540" y="105" width="40" height="50" rx="8" fill="#c9ced6"/>
+          </svg>
+        </article>
+
+        <!-- 6 · Mediamaster -->
+        <article class="mm-ad mm-ad--mm" aria-label="Mediamaster: Este espacio puede ser tuyo">
+          <div class="mm-ad__bg"></div>
+          <svg class="mm-star mm-in" viewBox="0 0 200 200" aria-hidden="true">
+            <g fill="none" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M100 18 L148 168" stroke="#22d65a"/>
+              <path d="M148 168 L22 76" stroke="#ff7a00"/>
+              <path d="M22 76 L178 76" stroke="#8a3ffc"/>
+              <path d="M178 76 L52 168" stroke="#f5e400"/>
+              <path d="M52 168 L100 18" stroke="#ff0a6c"/>
+            </g>
+          </svg>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">mediamaster · medios publicitarios</span>
+            <h3 class="mm-ad__title mm-in">ESTE ESPACIO<br><span class="mm-pink">PUEDE SER TUYO</span></h3>
+            <div class="mm-brandbar mm-in"></div>
+            <p class="mm-ad__sub mm-in">Anúnciate en pantallas digitales y espectaculares</p>
+          </div>
+        </article>
+
+      </div>
+      <div class="mm-bb__scan" aria-hidden="true"></div>
+      <div class="mm-bb__leds" aria-hidden="true"></div>
+      <div class="mm-bb__glare" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="mm-bb__dots" role="tablist" aria-label="Elegir anuncio"></div>
+</section>
+
+<style>
+.mm-bb{
+  --mm-pink:#ff0a6c; --mm-glow:#3aa0ff;
+  position:relative; max-width:1100px; margin:0 auto; padding:0 16px;
+  font-family:'Montserrat',system-ui,sans-serif; box-sizing:border-box;
+}
+.mm-bb *,.mm-bb *::before,.mm-bb *::after{box-sizing:border-box}
+.mm-bb__frame{position:relative; width:100%; aspect-ratio:2000/1500}
+.mm-bb__base{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; pointer-events:none; user-select:none}
+
+/* pantalla: lienzo de 1600×900 que se deforma a la perspectiva del espectacular */
+.mm-bb__screen{
+  position:absolute; left:0; top:0; width:1600px; height:900px; z-index:2;
+  transform-origin:0 0; overflow:hidden; background:#000; visibility:hidden;
+  box-shadow:0 0 90px 10px color-mix(in srgb,var(--mm-glow) 35%,transparent);
+  transition:box-shadow .8s;
+}
+.mm-bb__screen.is-ready{visibility:visible}
+.mm-bb__slides{position:absolute; inset:0}
+
+/* capa LED, brillo y barrido de cambio */
+.mm-bb__leds{
+  position:absolute; inset:0; pointer-events:none; z-index:5;
+  background:radial-gradient(circle,transparent 1.6px,rgba(0,0,0,.32) 2.4px) 0 0/8px 8px;
+  mix-blend-mode:multiply; opacity:var(--led,1);
+}
+.mm-bb__glare{
+  position:absolute; inset:0; pointer-events:none; z-index:6;
+  background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,transparent 28%,transparent 70%,rgba(255,255,255,.06) 100%);
+}
+.mm-bb__scan{
+  position:absolute; left:0; right:0; top:-30%; height:30%; z-index:4; pointer-events:none; opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.35) 50%,transparent);
+}
+.mm-bb__screen.is-switching .mm-bb__scan{animation:mmScan .9s ease-out}
+@keyframes mmScan{0%{top:-30%; opacity:1}100%{top:110%; opacity:0}}
+
+/* ---------- anuncio base ---------- */
+.mm-ad{
+  position:absolute; inset:0; overflow:hidden; color:#fff;
+  opacity:0; transform:scale(1.04); transition:opacity .9s ease, transform 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.mm-ad.is-active{opacity:1; transform:none; z-index:2}
+.mm-ad__bg{position:absolute; inset:-4%; transition:transform 6s linear}
+.mm-ad.is-active .mm-ad__bg{transform:scale(1.06)}
+.mm-ad__text{position:absolute; z-index:3; left:110px; top:50%; transform:translateY(-50%); max-width:760px}
+.mm-ad__kicker{display:block; font-weight:800; font-size:34px; letter-spacing:.3em; opacity:.85}
+.mm-ad__title{margin:18px 0 22px; font-weight:900; font-size:128px; line-height:.95; letter-spacing:-.01em; color:#fff}
+.mm-ad__sub{margin:0 0 30px; font-weight:500; font-size:42px; line-height:1.25}
+.mm-ad__pill{
+  display:inline-block; font-weight:800; font-size:34px; padding:18px 40px; border-radius:999px;
+  background:#fff; color:#111;
+}
+/* entrada escalonada de los elementos */
+.mm-ad .mm-in{opacity:0; transform:translateY(40px); transition:opacity .7s ease, transform .9s cubic-bezier(.2,.8,.2,1)}
+.mm-ad.is-active .mm-in{opacity:1; transform:none}
+.mm-ad.is-active .mm-in:nth-child(2){transition-delay:.15s}
+.mm-ad.is-active .mm-in:nth-child(3){transition-delay:.3s}
+.mm-ad.is-active .mm-in:nth-child(4){transition-delay:.45s}
+.mm-ad.is-active .mm-in:nth-child(5){transition-delay:.6s}
+
+/* 1 · autos */
+.mm-ad--car .mm-ad__bg{background:linear-gradient(180deg,#071a3d 0%,#0e4c9e 45%,#f08a4b 78%,#f7c27a 100%)}
+.mm-road{position:absolute; left:0; right:0; bottom:0; height:190px; z-index:1; background:linear-gradient(#2a2f3a,#14171d)}
+.mm-road i{position:absolute; bottom:85px; width:140px; height:14px; border-radius:7px; background:#f5e9c4; animation:mmRoad 1.6s linear infinite}
+.mm-road i:nth-child(1){left:0}.mm-road i:nth-child(2){left:20%; animation-delay:-.32s}.mm-road i:nth-child(3){left:40%; animation-delay:-.64s}
+.mm-road i:nth-child(4){left:60%; animation-delay:-.96s}.mm-road i:nth-child(5){left:80%; animation-delay:-1.28s}
+@keyframes mmRoad{from{transform:translateX(0)}to{transform:translateX(-320px)}}
+.mm-car{position:absolute; z-index:2; right:50px; bottom:55px; width:860px}
+.mm-ad--car.is-active .mm-car{transition-delay:.25s}
+.mm-wheel{transform-box:fill-box; transform-origin:center; animation:mmSpin .6s linear infinite}
+@keyframes mmSpin{to{transform:rotate(360deg)}}
+.mm-ad--car .mm-ad__text{top:40%}
+.mm-ad--car .mm-ad__pill{background:#ffb703}
+
+/* 2 · hamburguesas */
+.mm-ad--burger .mm-ad__bg{background:radial-gradient(circle at 70% 50%,#ff7b00 0%,#d62828 55%,#7a0d0d 100%)}
+.mm-ad--burger .mm-big{font-size:330px; color:#ffd60a; line-height:.85; text-shadow:0 10px 0 #9d0208}
+.mm-ad--burger .mm-ad__title{margin:4px 0 10px}
+.mm-ad--burger .mm-ad__sub{font-size:52px}
+.mm-burger{position:absolute; z-index:2; right:110px; top:50%; width:620px; margin-top:-260px}
+.mm-ad--burger.is-active .mm-burger{animation:mmFloat 3s ease-in-out .9s infinite}
+.mm-ad__badge{
+  position:absolute; z-index:3; right:90px; top:70px; width:190px; height:190px; border-radius:50%;
+  display:grid; place-items:center; text-align:center; background:#ffd60a; color:#9d0208;
+  font-weight:900; font-size:40px; line-height:1; transform:rotate(12deg);
+}
+.mm-ad--burger.is-active .mm-ad__badge{transform:rotate(12deg); transition-delay:.6s}
+@keyframes mmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+
+/* 3 · café */
+.mm-ad--coffee .mm-ad__bg{background:radial-gradient(circle at 28% 60%,#8a5a36 0%,#3d2417 45%,#160c07 100%)}
+.mm-cup{position:absolute; z-index:2; left:140px; bottom:70px; width:470px}
+.mm-steam path{stroke-dasharray:240; animation:mmSteam 3s ease-in-out infinite}
+.mm-steam path:nth-child(2){animation-delay:.6s}.mm-steam path:nth-child(3){animation-delay:1.2s}
+@keyframes mmSteam{0%{stroke-dashoffset:240; opacity:0}40%{opacity:.9}100%{stroke-dashoffset:-240; opacity:0}}
+.mm-ad--coffee .mm-ad__text{left:auto; right:110px; max-width:740px}
+.mm-ad__brand{display:block; font-family:'Playfair Display',serif; font-style:italic; font-size:76px; color:#f3c892}
+.mm-ad--coffee .mm-ad__title{font-size:112px}
+.mm-ad--coffee .mm-ad__pill{background:#f3c892; color:#3d2417}
+
+/* 4 · viajes */
+.mm-ad--travel .mm-ad__bg{background:linear-gradient(180deg,#2a0f4a 0%,#8a2f6b 38%,#ff7a59 62%,#ffc36b 76%)}
+.mm-sun{position:absolute; z-index:1; left:58%; top:250px; width:300px; height:300px; border-radius:50%;
+  background:radial-gradient(circle,#fff3c4 0%,#ffd36b 55%,rgba(255,180,80,0) 72%); filter:blur(1px)}
+.mm-sea{position:absolute; z-index:1; left:0; bottom:0; width:100%; height:380px}
+.mm-wave1{animation:mmWave 9s linear infinite}.mm-wave2{animation:mmWave 6s linear infinite reverse}
+@keyframes mmWave{from{transform:translateX(0)}to{transform:translateX(-800px)}}
+.mm-palm{position:absolute; z-index:2; right:40px; bottom:0; height:860px}
+.mm-ad--travel .mm-ad__text{top:42%}
+.mm-ad--travel .mm-ad__title{font-size:116px; text-shadow:0 6px 30px rgba(42,15,74,.5)}
+.mm-ad--travel .mm-ad__pill{background:#00c2c7; color:#04243a}
+
+/* 5 · gimnasio */
+.mm-ad--gym .mm-ad__bg{background:#07080c}
+.mm-stripes{position:absolute; inset:0; z-index:1}
+.mm-stripes i{position:absolute; top:-30%; height:160%; width:120px; transform:rotate(22deg); opacity:.9}
+.mm-stripes i:nth-child(1){left:820px; background:#b6ff3b}
+.mm-stripes i:nth-child(2){left:980px; background:#8a3ffc; width:60px}
+.mm-stripes i:nth-child(3){left:1080px; background:#b6ff3b; width:24px}
+.mm-ad--gym.is-active .mm-stripes i{animation:mmStripe 1s cubic-bezier(.2,.8,.2,1) both}
+.mm-ad--gym.is-active .mm-stripes i:nth-child(2){animation-delay:.1s}
+.mm-ad--gym.is-active .mm-stripes i:nth-child(3){animation-delay:.2s}
+@keyframes mmStripe{from{transform:rotate(22deg) translateY(-110%)}to{transform:rotate(22deg) translateY(0)}}
+.mm-ad--gym .mm-ad__title{font-size:150px; font-style:italic}
+.mm-ad--gym .mm-ad__kicker{color:#b6ff3b}
+.mm-ad--gym .mm-ad__sub strong{color:#b6ff3b; font-weight:900}
+.mm-dumbbell{position:absolute; z-index:2; right:60px; top:50%; width:480px; margin-top:-120px; transform:rotate(-14deg)}
+.mm-ad--gym .mm-dumbbell.mm-in{transform:rotate(-14deg) translateY(40px)}
+.mm-ad--gym.is-active .mm-dumbbell.mm-in{transform:rotate(-14deg)}
+
+/* 6 · mediamaster */
+.mm-ad--mm .mm-ad__bg{background:radial-gradient(circle at 25% 50%,#1b2233 0%,#05060a 60%)}
+.mm-star{position:absolute; z-index:2; left:120px; top:50%; width:360px; margin-top:-180px}
+.mm-ad--mm.is-active .mm-star{animation:mmStarSpin 1.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mmStarSpin{from{transform:rotate(-120deg) scale(.6); opacity:0}to{transform:none; opacity:1}}
+.mm-ad--mm .mm-ad__text{left:560px; max-width:960px}
+.mm-ad--mm .mm-ad__kicker{font-size:28px; letter-spacing:.18em; text-transform:uppercase}
+.mm-ad--mm .mm-ad__title{font-size:100px}
+.mm-pink{color:var(--mm-pink)}
+.mm-brandbar{width:520px; height:10px; border-radius:5px; margin:0 0 30px;
+  background:linear-gradient(90deg,#22d65a 0 20%,#8a3ffc 0 40%,#f5e400 0 60%,#ff0a6c 0 80%,#ff7a00 0)}
+
+/* ---------- puntos de navegación ---------- */
+.mm-bb__dots{display:flex; justify-content:center; gap:10px; margin-top:8px}
+.mm-bb__dot{
+  position:relative; width:34px; height:5px; padding:0; border:0; border-radius:3px; cursor:pointer;
+  background:rgba(128,128,128,.35); overflow:hidden;
+}
+.mm-bb__dot::after{content:""; position:absolute; inset:0; width:calc(var(--p,0) * 100%); background:var(--mm-pink)}
+.mm-bb__dot:focus-visible{outline:2px solid var(--mm-pink); outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){
+  .mm-bb *{animation:none !important}
+  .mm-ad__bg{transition:none !important}
+}
+</style>
+
+<script>
+(function () {
+  /* ============ CONFIGURA AQUÍ ============ */
+  var IMAGEN_BASE = 'https://forestgreen-chicken-561284.hostingersite.com/wp-content/uploads/2026/10/mediamaster-espectacular-base.webp';
+  var SEGUNDOS_POR_ANUNCIO = 5;
+  var COLORES_BRILLO = ['#3aa0ff', '#ff5a1f', '#c98a4b', '#ff7a59', '#b6ff3b', '#ff0a6c']; // luz que emite la pantalla con cada anuncio
+
+  /* Esquinas de la pantalla dentro de la imagen (en % del ancho/alto).
+     Solo cámbialas si usas otra imagen base. */
+  var ESQUINAS = {
+    supIzq: [16.05, 30.20],
+    supDer: [76.50, 14.20],
+    infDer: [76.60, 68.90],
+    infIzq: [15.05, 74.85]
+  };
+  /* ======================================== */
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Resuelve la homografía que lleva el rectángulo 1600×900 a las 4 esquinas
+  function solve(A, b) {
+    var n = b.length, i, j, k;
+    for (i = 0; i < n; i++) A[i].push(b[i]);
+    for (i = 0; i < n; i++) {
+      var max = i;
+      for (k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[max][i])) max = k;
+      var t = A[i]; A[i] = A[max]; A[max] = t;
+      for (k = i + 1; k < n; k++) {
+        var f = A[k][i] / A[i][i];
+        for (j = i; j <= n; j++) A[k][j] -= f * A[i][j];
+      }
+    }
+    var x = new Array(n);
+    for (i = n - 1; i >= 0; i--) {
+      var s = A[i][n];
+      for (j = i + 1; j < n; j++) s -= A[i][j] * x[j];
+      x[i] = s / A[i][i];
+    }
+    return x;
+  }
+  function matrix3d(w, h, q) {
+    var src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], b = [];
+    for (var i = 0; i < 4; i++) {
+      var x = src[i][0], y = src[i][1], u = q[i][0], v = q[i][1];
+      A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u);
+      A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v);
+    }
+    var m = solve(A, b);
+    return 'matrix3d(' + [m[0], m[3], 0, m[6], m[1], m[4], 0, m[7], 0, 0, 1, 0, m[2], m[5], 0, 1].join(',') + ')';
+  }
+
+  document.querySelectorAll('.mm-bb:not([data-ready])').forEach(function (root) {
+    root.setAttribute('data-ready', '1');
+    var frame = root.querySelector('.mm-bb__frame');
+    var screen = root.querySelector('.mm-bb__screen');
+    var base = root.querySelector('.mm-bb__base');
+    var ads = [].slice.call(root.querySelectorAll('.mm-ad'));
+    var dotsEl = root.querySelector('.mm-bb__dots');
+    base.src = IMAGEN_BASE;
+
+    function fit() {
+      var W = frame.clientWidth, H = frame.clientHeight;
+      var q = [ESQUINAS.supIzq, ESQUINAS.supDer, ESQUINAS.infDer, ESQUINAS.infIzq].map(function (p) {
+        return [p[0] / 100 * W, p[1] / 100 * H];
+      });
+      screen.style.transform = matrix3d(1600, 900, q);
+      screen.style.setProperty('--led', W < 600 ? 0 : W < 900 ? 0.5 : 1);   // evita moiré en pantallas pequeñas
+      screen.classList.add('is-ready');
+    }
+
+    var dots = ads.map(function (ad, i) {
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'mm-bb__dot';
+      d.setAttribute('role', 'tab');
+      d.setAttribute('aria-label', ad.getAttribute('aria-label'));
+      d.addEventListener('click', function () { show(i); });
+      dotsEl.appendChild(d);
+      return d;
+    });
+
+    var index = -1, elapsed = 0, paused = false, last = performance.now();
+    function show(i) {
+      i = (i + ads.length) % ads.length;
+      if (i === index) return;
+      ads.forEach(function (a, k) {
+        a.classList.toggle('is-active', k === i);
+        a.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+      });
+      dots.forEach(function (d, k) { d.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+      screen.style.setProperty('--mm-glow', COLORES_BRILLO[i % COLORES_BRILLO.length]);
+      screen.classList.remove('is-switching');
+      void screen.offsetWidth;                       // reinicia el barrido
+      screen.classList.add('is-switching');
+      index = i;
+      elapsed = 0;
+    }
+
+    function tick(now) {
+      var dt = (now - last) / 1000;
+      last = now;
+      if (!paused && !document.hidden) {
+        elapsed += dt;
+        if (elapsed >= SEGUNDOS_POR_ANUNCIO) show(index + 1);
+      }
+      dots.forEach(function (d, k) {
+        d.style.setProperty('--p', k === index ? Math.min(1, elapsed / SEGUNDOS_POR_ANUNCIO) : 0);
+      });
+      requestAnimationFrame(tick);
+    }
+
+    // pausa al pasar el cursor sobre la pantalla
+    frame.addEventListener('mouseenter', function () { paused = true; });
+    frame.addEventListener('mouseleave', function () { paused = false; });
+
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(frame);
+    window.addEventListener('resize', fit);
+    fit();
+    show(0);
+    if (reduce) SEGUNDOS_POR_ANUNCIO = Math.max(SEGUNDOS_POR_ANUNCIO, 8);
+    requestAnimationFrame(tick);
+  });
+})();
+</script>
