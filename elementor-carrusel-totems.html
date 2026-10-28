@@ -46,10 +46,15 @@
   --mm-pink:#ff0a6c; --mm-green:#22d65a; --mm-purple:#8a3ffc;
   --mm-yellow:#f5e400; --mm-orange:#ff7a00;
   --mm-brand:linear-gradient(90deg,var(--mm-green),var(--mm-purple),var(--mm-yellow),var(--mm-pink),var(--mm-orange));
-  position:relative; overflow:hidden; isolation:isolate;
-  background:radial-gradient(ellipse at 50% 35%,#141a26 0%,#000 70%);
+  position:relative; isolation:isolate;
+  overflow-x:hidden; overflow-x:clip; overflow-y:visible;   /* recorta a los lados, no arriba ni abajo */
+  background:transparent;                                     /* se funde con el fondo del sitio */
   color:#fff; font-family:'Titillium Web',system-ui,sans-serif;
-  padding:24px 0 16px; box-sizing:border-box;
+  padding:70px 0 40px; box-sizing:border-box;
+}
+.mm-totem-wrap::before{ /* resplandor de fondo que se desvanece por completo antes de los bordes */
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(closest-side at 50% 45%,rgba(30,42,64,.85) 0%,rgba(20,26,38,.45) 45%,transparent 100%);
 }
 .mm-totem-wrap *,.mm-totem-wrap *::before,.mm-totem-wrap *::after{box-sizing:border-box}
 
