@@ -75,7 +75,63 @@
           </div>
         </article>
 
-        <!-- 2 · Autos (ficticio) -->
+        <!-- 2 · Estadio Corregidora (pantalla digital) -->
+        <article class="mm-ad mm-ad--stadium" aria-label="Pantallas digitales en el Estadio Corregidora, Querétaro">
+          <div class="mm-ad__bg"></div>
+          <svg class="mm-stadium" viewBox="0 0 1600 900" aria-hidden="true">
+            <defs>
+              <pattern id="mmCrowd" width="24" height="16" patternUnits="userSpaceOnUse"><rect width="24" height="16" fill="#151c2e"/><circle cx="8.1" cy="3.1" r="1.9" fill="#3aa0ff" opacity="0.80"/><circle cx="3.1" cy="9.2" r="2.1" fill="#f5e400" opacity="0.37"/><circle cx="10.5" cy="2.0" r="1.3" fill="#ffffff" opacity="0.38"/><circle cx="13.4" cy="14.3" r="1.8" fill="#e8edf5" opacity="0.67"/><circle cx="9.7" cy="14.7" r="1.2" fill="#ff0a6c" opacity="0.51"/><circle cx="4.2" cy="2.6" r="1.5" fill="#ff0a6c" opacity="0.41"/><circle cx="13.6" cy="3.6" r="1.3" fill="#3aa0ff" opacity="0.66"/><circle cx="14.6" cy="7.9" r="1.7" fill="#22d65a" opacity="0.61"/><circle cx="21.3" cy="6.1" r="1.4" fill="#ff0a6c" opacity="0.73"/></pattern>
+              <linearGradient id="mmBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe6" stop-opacity=".5"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></linearGradient>
+              <linearGradient id="mmRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef4fb"/><stop offset="1" stop-color="#7fe3d6"/></linearGradient>
+              <clipPath id="mmPitchClip"><ellipse cx="1050" cy="770" rx="470" ry="135"/></clipPath>
+            </defs>
+            <!-- torres de iluminación -->
+            <g class="mm-beams">
+              <path d="M520 150 L640 900 L980 900 Z" fill="url(#mmBeam)"/>
+              <path d="M1560 120 L1080 900 L1450 900 Z" fill="url(#mmBeam)"/>
+            </g>
+            <path d="M528 560 L528 160 M1552 560 L1552 130" stroke="#5d6675" stroke-width="8"/>
+            <rect x="480" y="120" width="100" height="44" rx="4" fill="#fffbe6"/>
+            <rect x="1505" y="90" width="100" height="44" rx="4" fill="#fffbe6"/>
+            <!-- techo de lona con mástiles -->
+            <path d="M461 455 L461 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="461" cy="393" r="4" fill="#ff3b3b"/><path d="M585 455 L585 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="585" cy="393" r="4" fill="#ff3b3b"/><path d="M709 455 L709 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="709" cy="393" r="4" fill="#ff3b3b"/><path d="M833 455 L833 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="833" cy="393" r="4" fill="#ff3b3b"/><path d="M957 455 L957 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="957" cy="393" r="4" fill="#ff3b3b"/><path d="M1081 455 L1081 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="1081" cy="393" r="4" fill="#ff3b3b"/><path d="M1205 455 L1205 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="1205" cy="393" r="4" fill="#ff3b3b"/><path d="M1329 455 L1329 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="1329" cy="393" r="4" fill="#ff3b3b"/><path d="M1453 455 L1453 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="1453" cy="393" r="4" fill="#ff3b3b"/><path d="M1577 455 L1577 395" stroke="#c9d3e0" stroke-width="3"/><circle class="mm-blink" cx="1577" cy="393" r="4" fill="#ff3b3b"/>
+            <path d="M430 492 L461 455 L492 492 L523 447 L554 492 L585 455 L616 492 L647 447 L678 492 L709 455 L740 492 L771 447 L802 492 L833 455 L864 492 L895 447 L926 492 L957 455 L988 492 L1019 447 L1050 492 L1081 455 L1112 492 L1143 447 L1174 492 L1205 455 L1236 492 L1267 447 L1298 492 L1329 455 L1360 492 L1391 447 L1422 492 L1453 455 L1484 492 L1515 447 L1546 492 L1577 455 L1608 492 L1639 447 L1670 492 L1670 520 L430 520 Z" fill="url(#mmRoof)" opacity=".95"/>
+            <!-- gradas con público -->
+            <ellipse cx="1050" cy="720" rx="640" ry="235" fill="url(#mmCrowd)"/>
+            <ellipse cx="1050" cy="720" rx="640" ry="235" fill="none" stroke="#2fd6c3" stroke-width="4" opacity=".6"/>
+            <!-- cancha -->
+            <g clip-path="url(#mmPitchClip)">
+              <rect x="560" y="620" width="980" height="300" fill="#1f8a3e"/>
+              <g fill="#23a049"><rect x="560" y="620" width="98" height="300"/><rect x="756" y="620" width="98" height="300"/><rect x="952" y="620" width="98" height="300"/><rect x="1148" y="620" width="98" height="300"/><rect x="1344" y="620" width="98" height="300"/></g>
+            </g>
+            <g fill="none" stroke="rgba(255,255,255,.75)" stroke-width="3">
+              <ellipse cx="1050" cy="770" rx="420" ry="112"/>
+              <path d="M1050 658 L1050 882"/>
+              <ellipse cx="1050" cy="770" rx="90" ry="26"/>
+            </g>
+          </svg>
+          <!-- pantalla digital del estadio -->
+          <div class="mm-scoreboard">
+            <div class="mm-sb__frame">
+              <div class="mm-sb__slide mm-sb__goal">¡GOOOL!</div>
+              <div class="mm-sb__slide mm-sb__brand">TU MARCA<br>AQUÍ<span></span></div>
+              <div class="mm-sb__slide mm-sb__mm">media<b>master</b></div>
+            </div>
+            <i></i><i></i>
+          </div>
+          <!-- cinta LED alrededor de la cancha -->
+          <div class="mm-ribbon"><div class="mm-ribbon__track">
+            <span>MEDIAMASTER</span><span>TU MARCA EN EL ESTADIO</span><span>PANTALLAS DIGITALES</span><span>MEDIAMASTER</span><span>TU MARCA EN EL ESTADIO</span><span>PANTALLAS DIGITALES</span>
+          </div></div>
+          <div class="mm-flashes"><i style="left:560px;top:640px;animation-delay:0s"></i><i style="left:700px;top:575px;animation-delay:0.7s"></i><i style="left:1210px;top:560px;animation-delay:1.4s"></i><i style="left:1390px;top:610px;animation-delay:0.3s"></i><i style="left:1520px;top:690px;animation-delay:1.9s"></i><i style="left:620px;top:720px;animation-delay:2.4s"></i><i style="left:1480px;top:560px;animation-delay:1.1s"></i><i style="left:860px;top:560px;animation-delay:2.9s"></i><i style="left:1300px;top:575px;animation-delay:0.5s"></i><i style="left:470px;top:690px;animation-delay:1.7s"></i></div>
+          <div class="mm-ad__text">
+            <span class="mm-ad__kicker mm-in">ESTADIO CORREGIDORA</span>
+            <h3 class="mm-ad__title mm-in">TU MARCA<br>FRENTE A<br><span class="mm-green">MILES</span></h3>
+            <p class="mm-ad__sub mm-in">Pantallas digitales · Querétaro</p>
+          </div>
+        </article>
+
+        <!-- 3 · Autos (ficticio) -->
         <article class="mm-ad mm-ad--car" aria-label="Volta Motors: Llega más lejos">
           <div class="mm-ad__bg"></div>
           <div class="mm-road"><i></i><i></i><i></i><i></i><i></i></div>
@@ -107,7 +163,7 @@
           </svg>
         </article>
 
-        <!-- 3 · Hamburguesas (ficticio) -->
+        <!-- 4 · Hamburguesas (ficticio) -->
         <article class="mm-ad mm-ad--burger" aria-label="Sabor Urbano: 2x1 los martes">
           <div class="mm-ad__bg"></div>
           <div class="mm-ad__text">
@@ -129,7 +185,7 @@
           <span class="mm-ad__badge mm-in">¡Solo<br>hoy!</span>
         </article>
 
-        <!-- 4 · Café (ficticio) -->
+        <!-- 5 · Café (ficticio) -->
         <article class="mm-ad mm-ad--coffee" aria-label="Café Brisa: Cada taza, un buen momento">
           <div class="mm-ad__bg"></div>
           <svg class="mm-cup mm-in" viewBox="0 0 420 460" aria-hidden="true">
@@ -154,7 +210,7 @@
           </div>
         </article>
 
-        <!-- 5 · Viajes (ficticio) -->
+        <!-- 6 · Viajes (ficticio) -->
         <article class="mm-ad mm-ad--travel" aria-label="Coral Resort: Descubre la magia del Caribe">
           <div class="mm-ad__bg"></div>
           <div class="mm-sun"></div>
@@ -180,7 +236,7 @@
           </div>
         </article>
 
-        <!-- 6 · Gimnasio (ficticio) -->
+        <!-- 7 · Gimnasio (ficticio) -->
         <article class="mm-ad mm-ad--gym" aria-label="FitZone: Sin excusas">
           <div class="mm-ad__bg"></div>
           <div class="mm-stripes"><i></i><i></i><i></i></div>
@@ -223,6 +279,10 @@
 .mm-bb__frame{position:relative; width:100%; aspect-ratio:1530/1380}
 .mm-bb__base,.mm-bb__lights{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; pointer-events:none; user-select:none; overflow:visible}
 .mm-bb__lights{z-index:3; mix-blend-mode:screen}
+.mm-bb__base{ /* difumina la parte de abajo del poste para que no se vea cortado */
+  -webkit-mask-image:linear-gradient(180deg,#000 80%,transparent 99%);
+          mask-image:linear-gradient(180deg,#000 80%,transparent 99%);
+}
 
 /* pantalla: lienzo de 1600×900 que se deforma a la perspectiva del espectacular */
 .mm-bb__screen{
@@ -357,6 +417,55 @@
 .mm-brandbar{width:520px; height:10px; border-radius:5px; margin:0 0 30px;
   background:linear-gradient(90deg,#22d65a 0 20%,#8a3ffc 0 40%,#f5e400 0 60%,#ff0a6c 0 80%,#ff7a00 0)}
 
+/* 2 · estadio */
+.mm-ad--stadium .mm-ad__bg{background:linear-gradient(180deg,#040817 0%,#0b1838 55%,#10224a 100%)}
+.mm-stadium{position:absolute; inset:0; width:100%; height:100%; z-index:1}
+/* el estadio se recorre a la derecha para dejar libre el texto */
+.mm-stadium,.mm-scoreboard,.mm-ribbon,.mm-flashes{translate:90px 0}
+.mm-flashes{position:absolute; inset:0; z-index:2; pointer-events:none}
+.mm-beams{animation:mmBeams 4s ease-in-out infinite}
+@keyframes mmBeams{0%,100%{opacity:.85}50%{opacity:.6}}
+.mm-blink{animation:mmBlink 1.4s steps(1) infinite}
+@keyframes mmBlink{50%{opacity:.15}}
+.mm-scoreboard{position:absolute; z-index:2; left:900px; top:300px; width:300px}
+.mm-scoreboard > i{position:absolute; top:150px; width:10px; height:70px; background:#4a5260}
+.mm-scoreboard > i:nth-of-type(1){left:70px}.mm-scoreboard > i:nth-of-type(2){right:70px}
+.mm-sb__frame{
+  position:relative; height:160px; border-radius:6px; overflow:hidden; background:#04060a;
+  border:6px solid #2a303a; box-shadow:0 0 50px rgba(47,214,107,.45);
+}
+.mm-sb__frame::after{content:""; position:absolute; inset:0; background:radial-gradient(circle,transparent 1.2px,rgba(0,0,0,.35) 1.8px) 0 0/6px 6px}
+.mm-sb__slide{
+  position:absolute; inset:0; display:grid; place-items:center; text-align:center;
+  font-weight:900; opacity:0; animation:mmSb 7.5s infinite;
+}
+.mm-sb__goal{font-size:62px; color:#f5e400; font-style:italic; text-shadow:0 0 18px rgba(245,228,0,.7)}
+.mm-ad--stadium.is-active .mm-sb__goal{animation:mmSb 7.5s infinite, mmGoal .25s steps(2) infinite}
+.mm-sb__brand{font-size:38px; line-height:1; color:#fff; background:linear-gradient(135deg,#ff0a6c,#8a3ffc); animation-delay:2.5s}
+.mm-sb__brand span{display:block; width:140px; height:6px; margin:10px auto 0; background:linear-gradient(90deg,#22d65a 0 20%,#8a3ffc 0 40%,#f5e400 0 60%,#ff0a6c 0 80%,#ff7a00 0)}
+.mm-sb__mm{font-size:36px; white-space:nowrap; font-weight:500; letter-spacing:-.01em; color:#fff; animation-delay:5s}
+.mm-sb__mm b{font-weight:900}
+@keyframes mmSb{0%{opacity:0}3%,30%{opacity:1}33%,100%{opacity:0}}
+@keyframes mmGoal{50%{color:#ff0a6c}}
+.mm-ribbon{
+  position:absolute; z-index:2; left:560px; top:612px; width:980px; height:28px; overflow:hidden;
+  background:#05070b; border-top:2px solid #2a303a; border-bottom:2px solid #2a303a;
+  box-shadow:0 0 30px rgba(182,255,59,.35);
+}
+.mm-ribbon__track{display:flex; width:max-content; animation:mmRibbon 9s linear infinite}
+.mm-ribbon__track span{padding:0 28px; font-weight:900; font-size:19px; line-height:24px; letter-spacing:.12em; color:#b6ff3b; white-space:nowrap}
+.mm-ribbon__track span:nth-child(3n+2){color:#ff0a6c}
+.mm-ribbon__track span:nth-child(3n){color:#fff}
+@keyframes mmRibbon{to{transform:translateX(-50%)}}
+.mm-flashes i{position:absolute; z-index:2; width:6px; height:6px; border-radius:50%; background:#fff; opacity:0;
+  box-shadow:0 0 14px 6px rgba(255,255,255,.8); animation:mmFlash 3.2s infinite}
+@keyframes mmFlash{0%,92%,100%{opacity:0}94%{opacity:1}}
+.mm-ad--stadium .mm-ad__text{left:80px; top:46%; max-width:520px}
+.mm-ad--stadium .mm-ad__kicker{font-size:24px; letter-spacing:.16em; color:#2fd6c3; white-space:nowrap}
+.mm-ad--stadium .mm-ad__title{font-size:84px; text-shadow:0 6px 30px rgba(0,0,0,.6)}
+.mm-ad--stadium .mm-ad__sub{font-size:34px}
+.mm-green{color:#22d65a}
+
 /* ---------- puntos de navegación ---------- */
 .mm-bb__dots{display:flex; justify-content:center; gap:10px; margin-top:8px}
 .mm-bb__dot{
@@ -376,7 +485,7 @@
 (function () {
   /* ============ CONFIGURA AQUÍ ============ */
   var SEGUNDOS_POR_ANUNCIO = 5;
-  var COLORES_BRILLO = ['#ff0a6c', '#3aa0ff', '#ff5a1f', '#c98a4b', '#ff7a59', '#b6ff3b']; // luz que emite la pantalla con cada anuncio
+  var COLORES_BRILLO = ['#ff0a6c', '#2fd66b', '#3aa0ff', '#ff5a1f', '#c98a4b', '#ff7a59', '#b6ff3b']; // luz que emite la pantalla con cada anuncio
 
   /* Esquinas de la pantalla dentro del dibujo (en % del ancho/alto).
      No las cambies a menos que modifiques el dibujo SVG. */
