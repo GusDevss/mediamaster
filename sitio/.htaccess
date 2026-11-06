@@ -1,0 +1,43 @@
+# ================= MEDIAMASTER =================
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+RewriteEngine On
+
+# Forzar HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Direcciones del sitio anterior (WordPress)
+RewriteRule ^pantallas-digitales/?$ /pantallas-digitales-queretaro [L,R=301]
+RewriteRule ^totems/?$ /totems-queretaro [L,R=301]
+RewriteRule ^espectaculares/?$ /espectaculares-queretaro [L,R=301]
+RewriteRule ^aeropuerto/aiq/?$ /aeropuerto-aiq [L,R=301]
+RewriteRule ^aeropuerto/aicm/?$ /aeropuerto-aicm [L,R=301]
+RewriteRule ^estadio/?$ /estadio-corregidora-queretaro [L,R=301]
+RewriteRule ^contacto/?$ /#contacto [L,R=301,NE]
+RewriteRule ^nosotros/?$ /#nosotros [L,R=301,NE]
+RewriteRule ^wp-(admin|login\.php) / [L,R=301]
+
+# Quitar ".html" y la diagonal final de las direcciones
+RewriteCond %{THE_REQUEST} \s/([^.\s?]+)\.html[\s?] [NC]
+RewriteRule ^ /%1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ /$1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L]
+
+# Compresión y caché
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/xml
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/webp "access plus 6 months"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType video/mp4 "access plus 6 months"
+</IfModule>

@@ -1,0 +1,31 @@
+
+/* ---------- ajustes de componentes dentro del sitio ---------- */
+.rail .mcard{flex:0 0 clamp(270px,27vw,370px); aspect-ratio:3/4; scroll-snap-align:start}
+.hhero__bb .mm-bb{padding:0}
+.mm-totem-wrap{padding-top:20px}
+.mm-bb__dot{border:0}
+@media (max-width:1024px){ .hhero__bb{max-width:680px; margin:10px auto 0; width:100%} }
+.ftr__top>*{min-width:0}
+.ftr ul a{overflow-wrap:anywhere}
+@media (max-width:767px){ .ftr__top>div:last-child{grid-column:1/-1} }
+[hidden]{display:none !important}
+.perks li{display:block; position:relative; padding-left:38px}
+.perks li::before{position:absolute; left:0; top:2px}
+.wrap.head--row{max-width:1260px; margin-left:auto; margin-right:auto}
+.rail{--rp:max(24px,calc((100vw - 1260px)/2 + 24px)); padding-inline:var(--rp); scroll-padding-inline:var(--rp)}
+.ftr__big{font-size:clamp(50px,12.4vw,190px)}
+.dims__fig{padding:56px 0 0 56px}
+.dims__box{position:relative}
+.dims__box .dims__w{left:0; right:0; top:-48px}
+.dims__box .dims__h{left:-52px; top:0; bottom:0}
+.dims__goal{position:static; display:block; height:auto; margin-top:14px}
+.dims__goal svg{display:block; width:36.6%; height:auto; color:#fff}
+.dims__goal span{display:block; margin-top:8px}
+@media (max-width:767px){ .rail{--rp:18px} .dims__fig{padding:48px 0 0 40px} .dims__box .dims__h{left:-40px} }
+.perks li::before{width:24px; height:24px}
+.mnav{background:#000}
+@media (max-width:767px){
+  .phero h1,.shero h1{font-size:clamp(36px,10.4vw,60px); overflow-wrap:anywhere}
+  .phero__bg::after{background:linear-gradient(0deg,#000 5%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.55))}
+  .hhero h1{font-size:clamp(40px,11vw,60px)}
+}

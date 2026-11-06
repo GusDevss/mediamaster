@@ -1,0 +1,213 @@
+
+.mm-bb{
+  --mm-pink:#ff0a6c; --mm-glow:#3aa0ff;
+  position:relative; width:100%; margin:0 auto; padding:0;
+  font-family:'Montserrat',system-ui,sans-serif; box-sizing:border-box;
+}
+.mm-bb *,.mm-bb *::before,.mm-bb *::after{box-sizing:border-box}
+.mm-bb__frame{position:relative; width:100%; aspect-ratio:1530/1380}
+.mm-bb__base,.mm-bb__lights{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; pointer-events:none; user-select:none; overflow:visible}
+.mm-bb__lights{z-index:3; mix-blend-mode:screen}
+.mm-bb__base{ /* difumina la parte de abajo del poste para que no se vea cortado */
+  -webkit-mask-image:linear-gradient(180deg,#000 80%,transparent 99%);
+          mask-image:linear-gradient(180deg,#000 80%,transparent 99%);
+}
+
+/* pantalla: lienzo de 1600×900 que se deforma a la perspectiva del espectacular */
+.mm-bb__screen{
+  position:absolute; left:0; top:0; width:1600px; height:900px; z-index:2;
+  transform-origin:0 0; overflow:hidden; background:#000; visibility:hidden;
+  box-shadow:0 0 90px 10px color-mix(in srgb,var(--mm-glow) 35%,transparent);
+  transition:box-shadow .8s;
+}
+.mm-bb__screen.is-ready{visibility:visible}
+.mm-bb__slides{position:absolute; inset:0}
+
+/* capa LED, brillo y barrido de cambio */
+.mm-bb__leds{
+  position:absolute; inset:0; pointer-events:none; z-index:5;
+  background:radial-gradient(circle,transparent 1.6px,rgba(0,0,0,.32) 2.4px) 0 0/8px 8px;
+  mix-blend-mode:multiply; opacity:var(--led,1);
+}
+.mm-bb__glare{
+  position:absolute; inset:0; pointer-events:none; z-index:6;
+  background:linear-gradient(115deg,rgba(255,255,255,.16) 0%,transparent 28%,transparent 70%,rgba(255,255,255,.06) 100%);
+}
+.mm-bb__scan{
+  position:absolute; left:0; right:0; top:-30%; height:30%; z-index:4; pointer-events:none; opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.35) 50%,transparent);
+}
+.mm-bb__screen.is-switching .mm-bb__scan{animation:mmScan .9s ease-out}
+@keyframes mmScan{0%{top:-30%; opacity:1}100%{top:110%; opacity:0}}
+
+/* ---------- anuncio base ---------- */
+.mm-ad{
+  position:absolute; inset:0; overflow:hidden; color:#fff;
+  opacity:0; transform:scale(1.04); transition:opacity .9s ease, transform 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.mm-ad.is-active{opacity:1; transform:none; z-index:2}
+.mm-ad__bg{position:absolute; inset:-4%; transition:transform 6s linear}
+.mm-ad.is-active .mm-ad__bg{transform:scale(1.06)}
+.mm-ad__text{position:absolute; z-index:3; left:110px; top:50%; transform:translateY(-50%); max-width:760px}
+.mm-ad__kicker{display:block; font-weight:800; font-size:34px; letter-spacing:.3em; opacity:.85}
+.mm-ad__title{margin:18px 0 22px; font-weight:900; font-size:128px; line-height:.95; letter-spacing:-.01em; color:#fff}
+.mm-ad__sub{margin:0 0 30px; font-weight:500; font-size:42px; line-height:1.25}
+.mm-ad__pill{
+  display:inline-block; font-weight:800; font-size:34px; padding:18px 40px; border-radius:999px;
+  background:#fff; color:#111;
+}
+/* entrada escalonada de los elementos */
+.mm-ad .mm-in{opacity:0; transform:translateY(40px); transition:opacity .7s ease, transform .9s cubic-bezier(.2,.8,.2,1)}
+.mm-ad.is-active .mm-in{opacity:1; transform:none}
+.mm-ad.is-active .mm-in:nth-child(2){transition-delay:.15s}
+.mm-ad.is-active .mm-in:nth-child(3){transition-delay:.3s}
+.mm-ad.is-active .mm-in:nth-child(4){transition-delay:.45s}
+.mm-ad.is-active .mm-in:nth-child(5){transition-delay:.6s}
+
+/* 1 · autos */
+.mm-ad--car .mm-ad__bg{background:linear-gradient(180deg,#071a3d 0%,#0e4c9e 45%,#f08a4b 78%,#f7c27a 100%)}
+.mm-road{position:absolute; left:0; right:0; bottom:0; height:190px; z-index:1; background:linear-gradient(#2a2f3a,#14171d)}
+.mm-road i{position:absolute; bottom:85px; width:140px; height:14px; border-radius:7px; background:#f5e9c4; animation:mmRoad 1.6s linear infinite}
+.mm-road i:nth-child(1){left:0}.mm-road i:nth-child(2){left:20%; animation-delay:-.32s}.mm-road i:nth-child(3){left:40%; animation-delay:-.64s}
+.mm-road i:nth-child(4){left:60%; animation-delay:-.96s}.mm-road i:nth-child(5){left:80%; animation-delay:-1.28s}
+@keyframes mmRoad{from{transform:translateX(0)}to{transform:translateX(-320px)}}
+.mm-car{position:absolute; z-index:2; right:50px; bottom:55px; width:860px}
+.mm-ad--car.is-active .mm-car{transition-delay:.25s}
+.mm-wheel{transform-box:fill-box; transform-origin:center; animation:mmSpin .6s linear infinite}
+@keyframes mmSpin{to{transform:rotate(360deg)}}
+.mm-ad--car .mm-ad__text{top:40%}
+.mm-ad--car .mm-ad__pill{background:#ffb703}
+
+/* 2 · hamburguesas */
+.mm-ad--burger .mm-ad__bg{background:radial-gradient(circle at 70% 50%,#ff7b00 0%,#d62828 55%,#7a0d0d 100%)}
+.mm-ad--burger .mm-big{font-size:330px; color:#ffd60a; line-height:.85; text-shadow:0 10px 0 #9d0208}
+.mm-ad--burger .mm-ad__title{margin:4px 0 10px}
+.mm-ad--burger .mm-ad__sub{font-size:52px}
+.mm-burger{position:absolute; z-index:2; right:110px; top:50%; width:620px; margin-top:-260px}
+.mm-ad--burger.is-active .mm-burger{animation:mmFloat 3s ease-in-out .9s infinite}
+.mm-ad__badge{
+  position:absolute; z-index:3; right:90px; top:70px; width:190px; height:190px; border-radius:50%;
+  display:grid; place-items:center; text-align:center; background:#ffd60a; color:#9d0208;
+  font-weight:900; font-size:40px; line-height:1; transform:rotate(12deg);
+}
+.mm-ad--burger.is-active .mm-ad__badge{transform:rotate(12deg); transition-delay:.6s}
+@keyframes mmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+
+/* 3 · café */
+.mm-ad--coffee .mm-ad__bg{background:radial-gradient(circle at 28% 60%,#8a5a36 0%,#3d2417 45%,#160c07 100%)}
+.mm-cup{position:absolute; z-index:2; left:140px; bottom:70px; width:470px}
+.mm-steam path{stroke-dasharray:240; animation:mmSteam 3s ease-in-out infinite}
+.mm-steam path:nth-child(2){animation-delay:.6s}.mm-steam path:nth-child(3){animation-delay:1.2s}
+@keyframes mmSteam{0%{stroke-dashoffset:240; opacity:0}40%{opacity:.9}100%{stroke-dashoffset:-240; opacity:0}}
+.mm-ad--coffee .mm-ad__text{left:auto; right:110px; max-width:740px}
+.mm-ad__brand{display:block; font-family:'Playfair Display',serif; font-style:italic; font-size:76px; color:#f3c892}
+.mm-ad--coffee .mm-ad__title{font-size:112px}
+.mm-ad--coffee .mm-ad__pill{background:#f3c892; color:#3d2417}
+
+/* 4 · viajes */
+.mm-ad--travel .mm-ad__bg{background:linear-gradient(180deg,#2a0f4a 0%,#8a2f6b 38%,#ff7a59 62%,#ffc36b 76%)}
+.mm-sun{position:absolute; z-index:1; left:58%; top:250px; width:300px; height:300px; border-radius:50%;
+  background:radial-gradient(circle,#fff3c4 0%,#ffd36b 55%,rgba(255,180,80,0) 72%); filter:blur(1px)}
+.mm-sea{position:absolute; z-index:1; left:0; bottom:0; width:100%; height:380px}
+.mm-wave1{animation:mmWave 9s linear infinite}.mm-wave2{animation:mmWave 6s linear infinite reverse}
+@keyframes mmWave{from{transform:translateX(0)}to{transform:translateX(-800px)}}
+.mm-palm{position:absolute; z-index:2; right:40px; bottom:0; height:860px}
+.mm-ad--travel .mm-ad__text{top:42%}
+.mm-ad--travel .mm-ad__title{font-size:116px; text-shadow:0 6px 30px rgba(42,15,74,.5)}
+.mm-ad--travel .mm-ad__pill{background:#00c2c7; color:#04243a}
+
+/* 5 · gimnasio */
+.mm-ad--gym .mm-ad__bg{background:#07080c}
+.mm-stripes{position:absolute; inset:0; z-index:1}
+.mm-stripes i{position:absolute; top:-30%; height:160%; width:120px; transform:rotate(22deg); opacity:.9}
+.mm-stripes i:nth-child(1){left:820px; background:#b6ff3b}
+.mm-stripes i:nth-child(2){left:980px; background:#8a3ffc; width:60px}
+.mm-stripes i:nth-child(3){left:1080px; background:#b6ff3b; width:24px}
+.mm-ad--gym.is-active .mm-stripes i{animation:mmStripe 1s cubic-bezier(.2,.8,.2,1) both}
+.mm-ad--gym.is-active .mm-stripes i:nth-child(2){animation-delay:.1s}
+.mm-ad--gym.is-active .mm-stripes i:nth-child(3){animation-delay:.2s}
+@keyframes mmStripe{from{transform:rotate(22deg) translateY(-110%)}to{transform:rotate(22deg) translateY(0)}}
+.mm-ad--gym .mm-ad__title{font-size:150px; font-style:italic}
+.mm-ad--gym .mm-ad__kicker{color:#b6ff3b}
+.mm-ad--gym .mm-ad__sub strong{color:#b6ff3b; font-weight:900}
+.mm-dumbbell{position:absolute; z-index:2; right:60px; top:50%; width:480px; margin-top:-120px; transform:rotate(-14deg)}
+.mm-ad--gym .mm-dumbbell.mm-in{transform:rotate(-14deg) translateY(40px)}
+.mm-ad--gym.is-active .mm-dumbbell.mm-in{transform:rotate(-14deg)}
+
+/* 6 · mediamaster */
+.mm-ad--mm .mm-ad__bg{background:radial-gradient(circle at 25% 50%,#1b2233 0%,#05060a 60%)}
+.mm-star{position:absolute; z-index:2; left:110px; top:50%; width:380px; height:auto; margin-top:-182px; display:block}
+.mm-ad--mm.is-active .mm-star{animation:mmStarSpin 1.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mmStarSpin{from{transform:rotate(-120deg) scale(.6); opacity:0}to{transform:none; opacity:1}}
+.mm-ad--mm .mm-ad__text{left:560px; max-width:960px}
+.mm-ad--mm .mm-ad__kicker{font-size:28px; letter-spacing:.18em; text-transform:uppercase}
+.mm-ad--mm .mm-ad__title{font-size:100px}
+.mm-pink{color:var(--mm-pink)}
+.mm-brandbar{width:520px; height:10px; border-radius:5px; margin:0 0 30px;
+  background:linear-gradient(90deg,#22d65a 0 20%,#8a3ffc 0 40%,#f5e400 0 60%,#ff0a6c 0 80%,#ff7a00 0)}
+
+/* 2 · estadio (foto + pantalla animada que cambia cada 3 s) */
+.mm-ad--stadium{background:#000}
+.mm-st-scene{position:absolute; inset:0; transform-origin:65% 30%; transition:transform 9s linear}
+.mm-ad--stadium.is-active .mm-st-scene{transform:scale(1.06)}
+.mm-st-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+.mm-st-flare i{position:absolute; width:90px; height:90px; margin:-45px 0 0 -45px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,244,210,.95) 0%,rgba(255,200,90,.35) 30%,transparent 70%);
+  mix-blend-mode:screen; animation:mmFlare 2.6s ease-in-out infinite}
+@keyframes mmFlare{0%,100%{opacity:.55; transform:scale(.9)}50%{opacity:1; transform:scale(1.15)}}
+.mm-st-screen{
+  position:absolute; left:888px; top:236px; width:306px; height:99px; overflow:hidden; background:#04050a;
+  clip-path:polygon(0 12%,100% 0,100% 95%,0 100%);
+}
+.mm-st-screen::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.18) .8px,transparent 1.3px) 0 0/7px 7px}
+.mm-st-slide{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; opacity:0}
+.mm-st-logo{opacity:1}
+.mm-ad--stadium.is-active .mm-st-slide{animation:mmStSlide 9s linear infinite both}
+.mm-ad--stadium.is-active .mm-st-goal{animation-delay:3s}
+.mm-ad--stadium.is-active .mm-st-brand{animation-delay:6s}
+@keyframes mmStSlide{
+  0%{opacity:1; clip-path:inset(0 100% 0 0)}
+  4%{clip-path:inset(0 0 0 0)}
+  31%{opacity:1; clip-path:inset(0 0 0 0)}
+  33.3%,100%{opacity:0; clip-path:inset(0 0 0 0)}
+}
+.mm-st-star{width:34px; height:auto; display:block; margin-bottom:3px}
+.mm-st-logo span{font-weight:500; font-size:26px; line-height:1; letter-spacing:-.01em; color:#fff}
+.mm-st-logo b{font-weight:900}
+.mm-st-logo small{font-size:9px; letter-spacing:.12em; color:rgba(255,255,255,.75); margin-top:3px}
+.mm-st-goal span{font-weight:900; font-style:italic; font-size:50px; color:#f5e400; text-shadow:0 0 14px rgba(245,228,0,.8)}
+.mm-ad--stadium.is-active .mm-st-goal span{animation:mmGoalPulse .4s ease-in-out infinite alternate}
+@keyframes mmGoalPulse{from{transform:scale(.94); color:#f5e400}to{transform:scale(1.06); color:#ff0a6c}}
+.mm-st-brand{background:linear-gradient(120deg,#ff0a6c,#8a3ffc)}
+.mm-st-brand span{font-weight:900; font-size:30px; color:#fff; letter-spacing:.02em}
+.mm-st-brand i{display:block; width:150px; height:5px; margin-top:6px;
+  background:linear-gradient(90deg,#22d65a 0 20%,#8a3ffc 0 40%,#f5e400 0 60%,#ff0a6c 0 80%,#ff7a00 0)}
+.mm-st-ribbon{ /* tableros LED alrededor de la cancha */
+  position:absolute; left:250px; top:463px; width:1350px; height:8px; transform:rotate(-.55deg); transform-origin:0 50%;
+  background:repeating-linear-gradient(90deg,#22d65a 0 60px,#05070b 60px 70px,#ff0a6c 70px 130px,#05070b 130px 140px,#f5e400 140px 200px,#05070b 200px 210px,#8a3ffc 210px 270px,#05070b 270px 280px);
+  opacity:.55; mix-blend-mode:screen; animation:mmRib 4s linear infinite;
+}
+@keyframes mmRib{to{background-position:-280px 0}}
+.mm-flashes{position:absolute; inset:0; pointer-events:none}
+.mm-flashes i{position:absolute; width:5px; height:5px; border-radius:50%; background:#fff; opacity:0;
+  box-shadow:0 0 12px 5px rgba(255,255,255,.8); animation:mmFlash 3.2s infinite}
+@keyframes mmFlash{0%,92%,100%{opacity:0}94%{opacity:1}}
+.mm-ad--stadium .mm-ad__text{top:auto; bottom:70px; left:80px; transform:none; max-width:900px}
+.mm-ad--stadium .mm-ad__kicker{font-size:26px; letter-spacing:.2em; color:#ffc65c}
+.mm-ad--stadium .mm-ad__title{margin-bottom:0; font-size:96px; text-shadow:0 6px 30px rgba(0,0,0,.85)}
+.mm-gold{color:#ffb21e}
+
+/* ---------- puntos de navegación ---------- */
+.mm-bb__dots{display:flex; justify-content:center; gap:10px; margin-top:8px}
+.mm-bb__dot{
+  position:relative; width:34px; height:5px; padding:0; border:0; border-radius:3px; cursor:pointer;
+  background:rgba(128,128,128,.35); overflow:hidden;
+}
+.mm-bb__dot::after{content:""; position:absolute; inset:0; width:calc(var(--p,0) * 100%); background:var(--mm-pink)}
+.mm-bb__dot:focus-visible{outline:2px solid var(--mm-pink); outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){
+  .mm-bb *{animation:none !important}
+  .mm-ad__bg{transition:none !important}
+}
