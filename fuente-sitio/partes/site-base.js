@@ -333,6 +333,11 @@
                 hoverOpacity: 1, rippleDuration: 2400, rippleThickness: 65, rippleDotSize: 5.5, rippleGlow: 15, rippleTrail: 85 };
     var hc = cfg.hover.join(','), glow = 'rgb(' + hc + ')';
     var W, H, dots = [], ripples = [], mouse = { x: -1e3, y: -1e3, active: false }, running = false;
+    // la portada del inicio lleva el efecto completo (onda al clic); el resto del sitio, una versión discreta
+    var hero = document.querySelector('.hhero'), hr = null;
+    var SUAVE = { base: .08, hoverSize: 1.8, hoverOpacity: .38, halo: .3 };
+    function heroRect() { hr = hero ? hero.getBoundingClientRect() : null; if (hr && (hr.bottom <= 0 || hr.top >= H)) hr = null; }
+    function enHero(x, y) { return hr && x >= hr.left && x <= hr.right && y >= hr.top && y <= hr.bottom; }
     function resize() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = innerWidth; H = innerHeight;
@@ -346,18 +351,20 @@
     function draw() {
       var now = performance.now();
       ctx.clearRect(0, 0, W, H);
+      heroRect();
+      var mHero = mouse.active && enHero(mouse.x, mouse.y);
       ripples = ripples.filter(function (r) { return (now - r.t) / cfg.rippleDuration < 1; });
       for (var i = 0; i < dots.length; i += 2) {
-        var x = dots[i], y = dots[i + 1], size = cfg.dotSize, op = cfg.baseOpacity, col = '255,255,255', wg = 0;
+        var x = dots[i], y = dots[i + 1], full = enHero(x, y), size = cfg.dotSize, op = full ? cfg.baseOpacity : SUAVE.base, col = '255,255,255', wg = 0;
         if (mouse.active) {
           var dx = x - mouse.x, dy = y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < cfg.hoverRadius) {
             var k = 1 - dist / cfg.hoverRadius; k = k * k * (3 - 2 * k);
-            size += (cfg.hoverSize - cfg.dotSize) * k; op += (cfg.hoverOpacity - cfg.baseOpacity) * k;
+            size += ((full ? cfg.hoverSize : SUAVE.hoverSize) - cfg.dotSize) * k; op += ((full ? cfg.hoverOpacity : SUAVE.hoverOpacity) - op) * k;
             col = Math.round(255 + (cfg.hover[0] - 255) * k) + ',' + Math.round(255 + (cfg.hover[1] - 255) * k) + ',' + Math.round(255 + (cfg.hover[2] - 255) * k);
           }
         }
-        for (var j = 0; j < ripples.length; j++) {
+        for (var j = 0; full && j < ripples.length; j++) {
           var r = ripples[j], p = (now - r.t) / cfg.rippleDuration;
           var rad = (1 - Math.pow(1 - p, 2.2)) * r.max, rx = x - r.x, ry = y - r.y, d = Math.sqrt(rx * rx + ry * ry), diff = Math.abs(d - rad);
           if (diff < cfg.rippleThickness) {
@@ -374,9 +381,9 @@
       }
       ctx.shadowBlur = 0;
       if (mouse.active) {
-        var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, cfg.hoverRadius);
-        g.addColorStop(0, 'rgba(' + hc + ',.30)'); g.addColorStop(.2, 'rgba(' + hc + ',.20)'); g.addColorStop(.4, 'rgba(' + hc + ',.11)');
-        g.addColorStop(.65, 'rgba(' + hc + ',.045)'); g.addColorStop(1, 'rgba(' + hc + ',0)');
+        var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, cfg.hoverRadius), f = mHero ? 1 : SUAVE.halo;
+        g.addColorStop(0, 'rgba(' + hc + ',' + .30 * f + ')'); g.addColorStop(.2, 'rgba(' + hc + ',' + .20 * f + ')'); g.addColorStop(.4, 'rgba(' + hc + ',' + .11 * f + ')');
+        g.addColorStop(.65, 'rgba(' + hc + ',' + .045 * f + ')'); g.addColorStop(1, 'rgba(' + hc + ',0)');
         ctx.beginPath(); ctx.arc(mouse.x, mouse.y, cfg.hoverRadius, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
       }
       // solo se sigue animando mientras hay cursor u ondas: ahorra batería
@@ -387,8 +394,10 @@
       window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; kick(); }, { passive: true });
       document.addEventListener('mouseleave', function () { mouse.active = false; kick(); });
       window.addEventListener('blur', function () { mouse.active = false; kick(); });
+      window.addEventListener('scroll', kick, { passive: true });
       window.addEventListener('click', function (e) {
         var x = e.clientX, y = e.clientY;
+        if (!hero || !hero.contains(e.target)) return;      // la onda solo en la portada del inicio
         ripples.push({ x: x, y: y, t: performance.now(), max: Math.sqrt(Math.pow(Math.max(x, W - x), 2) + Math.pow(Math.max(y, H - y), 2)) * 1.12 });
         kick();
       });
