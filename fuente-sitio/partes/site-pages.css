@@ -167,8 +167,6 @@
 @media (max-width:1180px){
   .nav,.hdr__cta{display:none}
   .burger{display:block; margin-left:auto}
-  .ftr__top{grid-template-columns:1fr 1fr 1fr}
-  .ftr__brand{grid-column:1/-1}
 }
 @media (max-width:1024px){
   .sec{padding:80px 0}
@@ -211,7 +209,6 @@
   .show__cap{left:18px; right:18px; bottom:16px}
   .form,.contact__side{padding:34px 22px}
   .form{grid-template-columns:1fr}
-  .ftr__top{grid-template-columns:1fr 1fr}
   .reviews{grid-template-columns:1fr}
   .stats{gap:10px} .stat{padding:20px 16px}
   .logos img{height:64px} .logos__t{gap:50px}

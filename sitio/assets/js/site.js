@@ -126,11 +126,29 @@
     run();
   }
 
-  /* ---------- preguntas: solo una abierta ---------- */
-  $$('.acc').forEach(function (acc) {
+  /* ---------- preguntas: se abre una y se cierran las demás, con animación suave ---------- */
+  $$('.acc, .mme-acc').forEach(function (acc) {
     var ds = $$('details', acc);
+    function body(d) { return d.querySelector('.acc__b'); }
+    function open(d) {
+      d.open = true;
+      var b = body(d); if (!b || reduce) return;
+      b.animate([{ height: '0px', opacity: 0 }, { height: b.scrollHeight + 'px', opacity: 1 }], { duration: 360, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
+    function close(d) {
+      var b = body(d);
+      if (!b || reduce) { d.open = false; return; }
+      var a = b.animate([{ height: b.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)' });
+      d.classList.add('is-closing');
+      a.onfinish = function () { d.open = false; d.classList.remove('is-closing'); };
+    }
     ds.forEach(function (d) {
-      d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); });
+      d.querySelector('summary').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (d.open && !d.classList.contains('is-closing')) { close(d); return; }
+        ds.forEach(function (o) { if (o !== d && o.open) close(o); });
+        open(d);
+      });
     });
   });
 
@@ -252,37 +270,132 @@
     });
   });
 
-  /* ---------- formulario de contacto → WhatsApp ---------- */
-  $$('.form').forEach(function (form) {
+  /* ---------- formulario de contacto: se envía por correo (enviar.php); WhatsApp como opción ---------- */
+  function texto(d) {
+    var medios = d.getAll('medio[]');
+    return 'Nombre: ' + d.get('nombre') + '\nCorreo: ' + d.get('correo') +
+      (d.get('telefono') ? '\nTeléfono: ' + d.get('telefono') : '') +
+      (d.get('empresa') ? '\nEmpresa: ' + d.get('empresa') : '') +
+      (medios.length ? '\nMe interesa: ' + medios.join(', ') : '') + '\n\n' + d.get('mensaje');
+  }
+  function valida(form) {
+    var ok = true;
+    $$('[required]', form).forEach(function (inp) {
+      var f = inp.closest('.fld'), bad = !inp.value.trim() || (inp.type === 'email' && !/^\S+@\S+\.\S+$/.test(inp.value));
+      if (f) f.classList.toggle('is-err', bad); if (bad && ok) { inp.focus(); ok = false; }
+    });
+    return ok;
+  }
+  function estado(form, tipo, msg) {
+    var box = $('.form__msg', form); if (!box) return;
+    box.className = 'form__msg is-' + tipo; box.textContent = msg;
+  }
+  $$('form.form, form.subs').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var ok = true;
-      $$('[required]', form).forEach(function (inp) {
-        var f = inp.closest('.fld'), bad = !inp.value.trim() || (inp.type === 'email' && !/^\S+@\S+\.\S+$/.test(inp.value));
-        f.classList.toggle('is-err', bad); if (bad && ok) { inp.focus(); ok = false; }
-      });
-      if (!ok) return;
-      var d = new FormData(form), medios = d.getAll('medio');
-      var msg = 'Hola Mediamaster, quiero cotizar una campaña.\n\n' +
-        'Nombre: ' + d.get('nombre') + '\nCorreo: ' + d.get('correo') +
-        (d.get('telefono') ? '\nTeléfono: ' + d.get('telefono') : '') +
-        (d.get('empresa') ? '\nEmpresa: ' + d.get('empresa') : '') +
-        (medios.length ? '\nMe interesa: ' + medios.join(', ') : '') +
-        '\n\n' + d.get('mensaje');
-      window.open(wa(msg), '_blank', 'noopener');
-      form.classList.add('is-sent');
+      if (!valida(form)) return;
+      var btn = $('button[type=submit]', form), d = new FormData(form);
+      btn.disabled = true; form.classList.add('is-busy');
+      estado(form, 'wait', 'Enviando…');
+      fetch(form.getAttribute('action'), { method: 'POST', body: d, headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error('envio');
+          form.reset();
+          estado(form, 'ok', form.classList.contains('subs') ? '¡Listo! Te suscribiste a nuestras novedades.' : '¡Gracias! Recibimos tu mensaje y te responderemos muy pronto.');
+        })
+        .catch(function () {
+          if (form.classList.contains('subs')) { estado(form, 'err', 'No pudimos registrarte. Inténtalo de nuevo más tarde.'); return; }
+          estado(form, 'err', 'No pudimos enviar el formulario. Se abrirá tu correo con el mensaje listo.');
+          location.href = 'mailto:' + CORREO + '?subject=' + encodeURIComponent('Cotización · ' + (d.get('empresa') || d.get('nombre'))) + '&body=' + encodeURIComponent(texto(d));
+        })
+        .then(function () { btn.disabled = false; form.classList.remove('is-busy'); });
     });
     $$('input,textarea,select', form).forEach(function (i) {
       i.addEventListener('input', function () { var f = i.closest('.fld'); if (f) f.classList.remove('is-err'); });
     });
-    var mail = $('[data-mail]', form);
-    if (mail) mail.addEventListener('click', function (e) {
+    var w = $('[data-form-wa]', form);
+    if (w) w.addEventListener('click', function (e) {
       e.preventDefault();
       var d = new FormData(form);
-      location.href = 'mailto:' + CORREO + '?subject=' + encodeURIComponent('Cotización · ' + (d.get('empresa') || d.get('nombre') || 'Mediamaster')) +
-        '&body=' + encodeURIComponent((d.get('mensaje') || '') + '\n\n' + (d.get('nombre') || '') + '\n' + (d.get('telefono') || ''));
+      window.open(wa('Hola Mediamaster, quiero cotizar una campaña.' + (d.get('nombre') ? '\n\n' + texto(d) : '')), '_blank', 'noopener');
     });
   });
+
+  /* ---------- fondo de puntos: brillo al pasar el cursor y onda al dar clic ---------- */
+  (function () {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'bg-dots'; canvas.setAttribute('aria-hidden', 'true');
+    document.body.prepend(canvas);
+    document.documentElement.classList.add('has-dots');
+    var ctx = canvas.getContext('2d');
+    var cfg = { spacing: 24, dotSize: 1.1, hoverSize: 2.8, hoverRadius: 145, baseOpacity: .20, base: [255, 255, 255], hover: [95, 130, 175],
+                hoverOpacity: 1, rippleDuration: 2400, rippleThickness: 65, rippleDotSize: 5.5, rippleGlow: 15, rippleTrail: 85 };
+    var hc = cfg.hover.join(','), glow = 'rgb(' + hc + ')';
+    var W, H, dots = [], ripples = [], mouse = { x: -1e3, y: -1e3, active: false }, running = false;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = innerWidth; H = innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dots = [];
+      for (var y = cfg.spacing / 2; y < H; y += cfg.spacing) for (var x = cfg.spacing / 2; x < W; x += cfg.spacing) dots.push(x, y);
+      kick();
+    }
+    function fade(p) { return Math.pow(Math.max(0, 1 - (p - .65) / .35), 1.4); }
+    function draw() {
+      var now = performance.now();
+      ctx.clearRect(0, 0, W, H);
+      ripples = ripples.filter(function (r) { return (now - r.t) / cfg.rippleDuration < 1; });
+      for (var i = 0; i < dots.length; i += 2) {
+        var x = dots[i], y = dots[i + 1], size = cfg.dotSize, op = cfg.baseOpacity, col = '255,255,255', wg = 0;
+        if (mouse.active) {
+          var dx = x - mouse.x, dy = y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < cfg.hoverRadius) {
+            var k = 1 - dist / cfg.hoverRadius; k = k * k * (3 - 2 * k);
+            size += (cfg.hoverSize - cfg.dotSize) * k; op += (cfg.hoverOpacity - cfg.baseOpacity) * k;
+            col = Math.round(255 + (cfg.hover[0] - 255) * k) + ',' + Math.round(255 + (cfg.hover[1] - 255) * k) + ',' + Math.round(255 + (cfg.hover[2] - 255) * k);
+          }
+        }
+        for (var j = 0; j < ripples.length; j++) {
+          var r = ripples[j], p = (now - r.t) / cfg.rippleDuration;
+          var rad = (1 - Math.pow(1 - p, 2.2)) * r.max, rx = x - r.x, ry = y - r.y, d = Math.sqrt(rx * rx + ry * ry), diff = Math.abs(d - rad);
+          if (diff < cfg.rippleThickness) {
+            var it = 1 - diff / cfg.rippleThickness; it = it * it * (3 - 2 * it); if (p >= .65) it *= fade(p);
+            if (cfg.rippleDotSize > size) size += (cfg.rippleDotSize - size) * it;
+            if (1 > op) op += (1 - op) * it;
+            col = hc; wg = Math.max(wg, it);
+          }
+          var td = rad - d;
+          if (td > 0 && td < cfg.rippleTrail) { var tr = 1 - td / cfg.rippleTrail; tr = tr * tr * .22; if (p > .75) tr *= fade(p); wg = Math.max(wg, tr); }
+        }
+        if (wg > 0) { ctx.shadowColor = glow; ctx.shadowBlur = cfg.rippleGlow * wg; } else ctx.shadowBlur = 0;
+        ctx.beginPath(); ctx.arc(x, y, size, 0, 6.2832); ctx.fillStyle = 'rgba(' + col + ',' + op + ')'; ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+      if (mouse.active) {
+        var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, cfg.hoverRadius);
+        g.addColorStop(0, 'rgba(' + hc + ',.30)'); g.addColorStop(.2, 'rgba(' + hc + ',.20)'); g.addColorStop(.4, 'rgba(' + hc + ',.11)');
+        g.addColorStop(.65, 'rgba(' + hc + ',.045)'); g.addColorStop(1, 'rgba(' + hc + ',0)');
+        ctx.beginPath(); ctx.arc(mouse.x, mouse.y, cfg.hoverRadius, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
+      }
+      // solo se sigue animando mientras hay cursor u ondas: ahorra batería
+      if ((mouse.active || ripples.length) && !document.hidden) requestAnimationFrame(draw); else running = false;
+    }
+    function kick() { if (!running) { running = true; requestAnimationFrame(draw); } }
+    if (!reduce) {
+      window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; kick(); }, { passive: true });
+      document.addEventListener('mouseleave', function () { mouse.active = false; kick(); });
+      window.addEventListener('blur', function () { mouse.active = false; kick(); });
+      window.addEventListener('click', function (e) {
+        var x = e.clientX, y = e.clientY;
+        ripples.push({ x: x, y: y, t: performance.now(), max: Math.sqrt(Math.pow(Math.max(x, W - x), 2) + Math.pow(Math.max(y, H - y), 2)) * 1.12 });
+        kick();
+      });
+    }
+    window.addEventListener('resize', resize);
+    resize();
+  })();
 
   /* ---------- estadio: video de YouTube de fondo ---------- */
   var shero = $('.shero');
@@ -644,5 +757,200 @@
     window.addEventListener('resize', layout);
     layout();
     requestAnimationFrame(loop);
+  });
+})();
+
+/* ---------- página de estadio ---------- */
+
+(function () {
+  /* ======================= CONFIGURA AQUÍ ======================= */
+  var CONFIG = {
+    // Carpeta de Medios donde subiste los archivos de "subir-a-wordpress"
+    MEDIOS: 'assets/',
+    YOUTUBE_ID: 'TGdE6jRWyb8',          // video oficial (fondo del encabezado y botón "Ver video")
+    WHATSAPP: '524421589486',
+    SEGUNDOS_POR_ESPACIO: 5               // cambio automático en el mapa del estadio
+  };
+
+  var ESPACIOS = [
+    { titulo: 'Pantalla gigante', img: 'img/estadio-pantalla.webp',
+      texto: 'La pantalla principal del Estadio Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
+      lista: ['5 × 20 m · 100 m² de pantalla LED', 'Visible desde todas las gradas', 'Spots en video o imagen fija', 'Antes del partido, medio tiempo y final'] }
+  ];
+
+  var CLIENTES = ['att','coca-cola','el-encanto','heb','jose-cuervo','la-comer','macdonald','maestro-dobel-tequila','megacable','omoda','oxxo','queretalove','sephora','telcel','the-cheesecake-factory'];
+  var CLIENTES_URL = 'assets/img/clientes/';
+  /* ============================================================== */
+
+  var root = document.getElementById('mme');
+  if (!root || root.getAttribute('data-ready')) return;
+  root.setAttribute('data-ready', '1');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var M = function (f) { return CONFIG.MEDIOS + f; };
+  var wa = function (t) { return 'https://wa.me/' + CONFIG.WHATSAPP + '?text=' + encodeURIComponent(t); };
+
+  // ---------- medios y enlaces ----------
+  root.querySelectorAll('[data-mm-src]').forEach(function (el) {
+    if (el.tagName === 'VIDEO') el.setAttribute('data-src', M(el.getAttribute('data-mm-src')));
+    else el.src = M(el.getAttribute('data-mm-src'));
+  });
+  root.querySelectorAll('[data-mm-poster]').forEach(function (el) { el.poster = M(el.getAttribute('data-mm-poster')); });
+  root.querySelectorAll('[data-mm-wa]').forEach(function (a) { a.href = wa(a.getAttribute('data-mm-wa')); });
+
+  // los videos se cargan y reproducen solo cuando están en pantalla
+  function playWhenVisible(v) {
+    if (!('IntersectionObserver' in window)) { v.src = v.getAttribute('data-src'); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) {
+          if (!v.src) v.src = v.getAttribute('data-src');
+          if (!reduce) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        } else if (v.src) v.pause();
+      });
+    }, { rootMargin: '200px' }).observe(v);
+  }
+  root.querySelectorAll('video[data-src]').forEach(playWhenVisible);
+
+  // ventanas: se mueven al <body> para que nada del tema las recorte
+  var modal = root.querySelector('[data-mm-modal]');
+  var lb = root.querySelector('[data-mm-lightbox]');
+  document.body.appendChild(modal);
+  document.body.appendChild(lb);
+
+  // ---------- encabezado con YouTube de fondo ----------
+  var hero = root.querySelector('.mme-hero');
+  var ytBox = root.querySelector('.mme-hero__yt');
+  var soundBtn = root.querySelector('.mme-sound');
+  var ytFrame = null;
+  function ytCover() {
+    if (!ytFrame) return;
+    var w = hero.clientWidth, h = hero.clientHeight;
+    var fw = Math.max(w, h * 16 / 9) * 1.22, fh = fw * 9 / 16;   // 1.22: oculta los controles y el título de YouTube
+    ytFrame.style.width = fw + 'px'; ytFrame.style.height = fh + 'px';
+  }
+  function yt(cmd, args) {
+    if (ytFrame) ytFrame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: cmd, args: args || [] }), '*');
+  }
+  if (CONFIG.YOUTUBE_ID && !reduce) {
+    var id = CONFIG.YOUTUBE_ID;
+    ytFrame = document.createElement('iframe');
+    ytFrame.title = 'Video oficial Estadio Corregidora';
+    ytFrame.allow = 'autoplay; encrypted-media; picture-in-picture';
+    ytFrame.setAttribute('tabindex', '-1');
+    ytFrame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + id +
+      '&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&fs=0&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+    ytFrame.addEventListener('load', function () {
+      setTimeout(function () { ytBox.classList.add('is-on'); soundBtn.hidden = false; }, 1500);
+    });
+    ytBox.appendChild(ytFrame);
+    ytCover();
+    window.addEventListener('resize', ytCover);
+  }
+  soundBtn.addEventListener('click', function () {
+    var on = soundBtn.getAttribute('aria-pressed') !== 'true';
+    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    soundBtn.querySelector('span').textContent = on ? 'Silenciar' : 'Activar sonido';
+    if (on) { yt('unMute'); yt('setVolume', [100]); } else yt('mute');
+  });
+
+  // ---------- video oficial en ventana ----------
+  var frameBox = modal.querySelector('.mme-modal__frame');
+  function openModal() {
+    if (CONFIG.YOUTUBE_ID) {
+      frameBox.innerHTML = '<iframe allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Video oficial" src="https://www.youtube-nocookie.com/embed/' +
+        CONFIG.YOUTUBE_ID + '?autoplay=1&rel=0&modestbranding=1&playsinline=1"></iframe>';
+    } else {
+      frameBox.innerHTML = '<video controls autoplay playsinline src="' + M('video/estadio-interior.mp4') + '"></video>';
+    }
+    if (soundBtn.getAttribute('aria-pressed') === 'true') soundBtn.click();
+    yt('pauseVideo');
+    show(modal);
+  }
+  function closeModal() { hide(modal, function () { frameBox.innerHTML = ''; }); yt('playVideo'); }
+  function show(m) { m.hidden = false; requestAnimationFrame(function () { m.classList.add('is-open'); }); document.documentElement.style.overflow = 'hidden'; m.querySelector('.mme-modal__close').focus(); }
+  function hide(m, done) { m.classList.remove('is-open'); document.documentElement.style.overflow = ''; setTimeout(function () { m.hidden = true; if (done) done(); }, 300); }
+  root.querySelectorAll('[data-mm-play]').forEach(function (b) { b.addEventListener('click', openModal); });
+  modal.addEventListener('click', function (e) { if (e.target === modal || e.target.closest('.mme-modal__close')) closeModal(); });
+
+  // ---------- galería con visor ----------
+  var shots = [].slice.call(root.querySelectorAll('.mme-shot'));
+  var lbImg = lb.querySelector('img'), lbIndex = 0;
+  function lbShow(i) {
+    lbIndex = (i + shots.length) % shots.length;
+    var s = shots[lbIndex];
+    lbImg.src = M(s.getAttribute('data-mm-full'));
+    lbImg.alt = s.querySelector('img').alt;
+  }
+  shots.forEach(function (s, i) { s.addEventListener('click', function () { lbShow(i); show(lb); }); });
+  lb.querySelector('.mme-lb__prev').addEventListener('click', function () { lbShow(lbIndex - 1); });
+  lb.querySelector('.mme-lb__next').addEventListener('click', function () { lbShow(lbIndex + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb || e.target.closest('.mme-modal__close')) hide(lb); });
+  document.addEventListener('keydown', function (e) {
+    if (!modal.hidden && e.key === 'Escape') closeModal();
+    if (!lb.hidden) {
+      if (e.key === 'Escape') hide(lb);
+      if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+      if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+    }
+  });
+
+  // ---------- animaciones al hacer scroll ----------
+  var counted = false;
+  function countUp(el) {
+    var to = +el.getAttribute('data-mm-count'), from = +(el.getAttribute('data-from') || 0);
+    var pre = el.getAttribute('data-prefix') || '', suf = el.getAttribute('data-suffix') || '';
+    var t0 = performance.now(), dur = 1800;
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = pre + Math.round(from + (to - from) * e) + suf;
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+        if (!counted && e.target.classList.contains('mme-stat')) {
+          counted = true;
+          root.querySelectorAll('[data-mm-count]').forEach(countUp);
+        }
+      });
+    }, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+    root.querySelectorAll('.mme-rv').forEach(function (el) { io.observe(el); });
+  } else {
+    root.querySelectorAll('.mme-rv').forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  // línea de "día de partido" que se llena con el scroll
+  var day = root.querySelector('.mme-day'), dayLine = root.querySelector('.mme-day__line');
+  function dayProgress() {
+    var r = day.getBoundingClientRect(), vh = window.innerHeight;
+    var p = Math.min(1, Math.max(0, (vh * .85 - r.top) / (r.height * .7)));
+    dayLine.style.setProperty('--p', p.toFixed(3));
+  }
+  window.addEventListener('scroll', dayProgress, { passive: true });
+  dayProgress();
+
+  // ---------- la pantalla gigante ----------
+  var panel = root.querySelector('.mme-panel'), e0 = ESPACIOS[0], pImg = panel.querySelector('.mme-panel__img img');
+  pImg.src = M(e0.img); pImg.alt = e0.titulo;
+  panel.querySelector('.mme-panel__title').textContent = e0.titulo;
+  panel.querySelector('.mme-panel__text').textContent = e0.texto;
+  var pList = panel.querySelector('.mme-panel__list');
+  e0.lista.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; pList.appendChild(li); });
+  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio Corregidora.');
+  root.querySelectorAll('.mme-spot').forEach(function (s) { s.classList.add('is-active'); });
+
+  // ---------- clientes ----------
+  var track = root.querySelector('.mme-clients__track');
+  CLIENTES.concat(CLIENTES).forEach(function (c, i) {
+    var im = document.createElement('img');
+    im.src = CLIENTES_URL + c + '.webp'; im.alt = i < CLIENTES.length ? c.replace(/-/g, ' ') : '';
+    im.loading = 'lazy';
+    if (i >= CLIENTES.length) im.setAttribute('aria-hidden', 'true');
+    im.onerror = function () { im.remove(); };
+    track.appendChild(im);
   });
 })();

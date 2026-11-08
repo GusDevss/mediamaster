@@ -46,6 +46,9 @@ ICO = {
     'mail': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
     'mapa': '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     'sonido_off': '<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor" stroke="none"/><path class="off" d="M17 9l5 6M22 9l-5 6"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+    'movil': '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+    'avion': '<path d="M2 16l20-6-2-2-7 2-5-5H6l3 6-4 1-2-2H2l1 4z"/><path d="M3 21h18"/>',
+    'estadio': '<ellipse cx="12" cy="12" rx="10" ry="6"/><ellipse cx="12" cy="12" rx="5" ry="2.5"/><path d="M12 6v12"/>',
     'subir': '<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>',
 }
 def ico(n, cls='ico'):
@@ -112,54 +115,81 @@ def header(actual):
 
 def contacto(medio_pre=''):
     opciones = ['Pantallas digitales', 'Tótems', 'Espectaculares', 'Aeropuertos', 'Estadio']
-    pills = ''.join('<label><input type="checkbox" name="medio" value="%s"%s><span>%s</span></label>'
+    pills = ''.join('<label><input type="checkbox" name="medio[]" value="%s"%s><span>%s</span></label>'
                     % (o, ' checked' if o == medio_pre else '', o) for o in opciones)
     return '''
 <section class="sec" id="contacto"><div class="wrap"><div class="contact rv">
   <div class="contact__side">
-    <span class="kicker" style="color:#fff">Contacto</span>
+    <span class="kicker">Contacto</span>
     <h2>Hablemos de tu próximo proyecto</h2>
-    <p>Solicita tu cotización ahora mismo. Te respondemos el mismo día con opciones de ubicaciones y precios para tu campaña.</p>
+    <p>Solicita tu cotización ahora mismo. Te respondemos con opciones de ubicaciones y precios para tu campaña.</p>
     <ul class="clist">
       <li><a href="tel:%s"><i>%s</i><span><small>Teléfono</small>%s</span></a></li>
       <li><a href="mailto:%s"><i>%s</i><span><small>Correo</small>%s</span></a></li>
       <li><a href="%s" target="_blank" rel="noopener"><i>%s</i><span><small>Visítanos</small>%s</span></a></li>
     </ul>
   </div>
-  <form class="form" novalidate>
+  <form class="form" action="enviar.php" method="post" novalidate>
+    <input type="hidden" name="tipo" value="contacto">
+    <div class="hp" aria-hidden="true"><label>No llenar <input name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
     <div class="fld"><label for="f-nombre">Nombre *</label><input id="f-nombre" name="nombre" autocomplete="name" required><em>Escribe tu nombre</em></div>
     <div class="fld"><label for="f-correo">Correo *</label><input id="f-correo" name="correo" type="email" autocomplete="email" required><em>Escribe un correo válido</em></div>
     <div class="fld"><label for="f-tel">Teléfono</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel"></div>
     <div class="fld"><label for="f-emp">Empresa</label><input id="f-emp" name="empresa" autocomplete="organization"></div>
     <div class="fld fld--w"><label>¿Qué medio te interesa?</label><div class="pills">%s</div></div>
     <div class="fld fld--w"><label for="f-msg">Mensaje *</label><textarea id="f-msg" name="mensaje" required placeholder="Cuéntanos sobre tu campaña: fechas, ciudad, presupuesto…"></textarea><em>Cuéntanos un poco sobre tu campaña</em></div>
-    <div class="form__ok">¡Gracias! Se abrió WhatsApp con tu mensaje listo para enviar.</div>
-    <div class="form__foot"><small>* Campos requeridos · <a href="#" data-mail style="text-decoration:underline">Prefiero enviarlo por correo</a></small>
-      <button class="btn btn--pk" type="submit">Enviar por WhatsApp %s</button></div>
+    <p class="form__msg" role="status" aria-live="polite"></p>
+    <div class="form__foot">
+      <a href="#" class="form__wa" data-form-wa>%s Prefiero enviarlo por WhatsApp</a>
+      <button class="btn btn--pk" type="submit">Enviar mensaje %s</button>
+    </div>
+    <small class="form__legal">* Campos requeridos. Al enviar aceptas nuestro <a href="aviso-de-privacidad">aviso de privacidad</a>.</small>
   </form>
-</div></div></section>''' % (TEL.replace(' ', ''), ico('tel'), TEL, CORREO, ico('mail'), CORREO, MAPA_OFICINA, ico('pin'), DIRECCION, pills, ico('flecha'))
+</div></div></section>''' % (TEL.replace(' ', ''), ico('tel'), TEL, CORREO, ico('mail'), CORREO, MAPA_OFICINA, ico('pin'), DIRECCION, pills, WA_SVG, ico('flecha'))
 
 def footer():
-    col = lambda t, links: '<div><h4>%s</h4><ul>%s</ul></div>' % (t, ''.join('<li><a href="%s">%s</a></li>' % (href(s), n) for s, n in links))
+    def col(t, links):
+        return '<div><h4>%s</h4><ul>%s</ul></div>' % (t, ''.join('<li><a href="%s">%s<span>%s</span></a></li>' % (href(sl), ico(ic), n) for sl, n, ic in links))
     redes = ''.join('<a href="%s" target="_blank" rel="noopener" aria-label="%s"><svg viewBox="0 0 24 24" aria-hidden="true">%s</svg></a>' % (u, n, p) for n, (u, p) in SOCIAL.items())
+    mapa = 'https://maps.google.com/maps?q=' + DIRECCION.replace(' ', '+').replace('#', '') + '&z=15&output=embed'
     return '''
-<footer class="ftr"><div class="wrap">
+<footer class="ftr"><div class="ftr__panel"><div class="wrap">
   <div class="ftr__top">
-    <div class="ftr__brand">%s<p>Con sede en Querétaro desde 2013, transformamos espacios en oportunidades para destacar tu marca.</p><div class="socials">%s</div></div>
-    %s%s%s
-    <div><h4>Contacto</h4><ul><li><a href="tel:%s">%s</a></li><li><a href="mailto:%s">%s</a></li><li><a href="%s" target="_blank" rel="noopener">%s</a></li></ul></div>
+    <div class="ftr__brand">
+      <a class="flogo" href="./" aria-label="Mediamaster, ir al inicio"><img src="assets/img/icono.png" alt="" width="84" height="84" loading="lazy"><b>media<strong>master</strong><sup>®</sup></b><small>medios publicitarios</small></a>
+      <p><strong>Mediamaster</strong>, con más de 13 años de experiencia, transforma espacios en oportunidades para destacar tu marca.</p>
+      <div class="socials">%s</div>
+    </div>
+    <div class="ftr__subs">
+      <h3>Suscríbete</h3>
+      <p>Recibe novedades, nuevas ubicaciones y promociones para tu marca.</p>
+      <form class="subs" action="enviar.php" method="post" novalidate>
+        <input type="hidden" name="tipo" value="suscripcion">
+        <div class="hp" aria-hidden="true"><label>No llenar <input name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
+        <div class="fld"><label class="sr" for="s-correo">Correo</label><input id="s-correo" name="correo" type="email" placeholder="tu@correo.com" autocomplete="email" required><em>Escribe un correo válido</em></div>
+        <button class="btn btn--pk" type="submit">Suscribirme</button>
+        <p class="form__msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
-  <div class="ftr__big" aria-hidden="true">media<span>master</span></div>
-  <div class="ftr__bot"><span>© <span data-year>2026</span> Mediamaster · Medios publicitarios</span><span>Pantallas digitales · Tótems · Espectaculares · Aeropuertos · Estadio</span></div>
-</div></footer>
+  <div class="ftr__cols">
+    %s%s%s
+    <div><h4>Visítanos</h4>
+      <div class="ftr__map"><iframe src="%s" title="Mapa: oficinas de Mediamaster" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+      <ul><li><a href="%s" target="_blank" rel="noopener">%s<span>%s</span></a></li><li><a href="tel:%s">%s<span>%s</span></a></li><li><a href="mailto:%s">%s<span>%s</span></a></li></ul>
+    </div>
+  </div>
+</div></div>
+<div class="ftr__bot"><div class="wrap"><span>Copyright © <span data-year>2026</span> <a class="pk" href="./">Mediamaster</a></span><a href="aviso-de-privacidad">Aviso de privacidad</a></div></div>
+</footer>
 <a class="wa" data-wa="Hola Mediamaster, me gustaría cotizar una campaña." aria-label="Escríbenos por WhatsApp">%s<span class="wa__tip">¿Cotizamos tu campaña?</span></a>
 <button class="totop" type="button" aria-label="Volver arriba"><svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20"/></svg>%s</button>
 <div class="modal" hidden><div class="modal__box" role="dialog" aria-modal="true" aria-label="Video"><button class="modal__x" type="button" aria-label="Cerrar">×</button><div class="modal__frame"></div></div></div>
-''' % (logo(), redes,
-       col('Servicios', [('pantallas-digitales-queretaro', 'Pantallas digitales'), ('totems-queretaro', 'Tótems'), ('espectaculares-queretaro', 'Espectaculares'), ('estadio-corregidora-queretaro', 'Estadio Corregidora')]),
-       col('Ciudades', [('pantallas-digitales-queretaro', 'Querétaro'), ('pantallas-digitales-puebla', 'Puebla'), ('aeropuerto-aicm', 'CDMX')]),
-       col('Aeropuertos', [('aeropuerto-aiq', 'AIQ · Querétaro'), ('aeropuerto-aicm', 'AICM · CDMX')]),
-       TEL.replace(' ', ''), TEL, CORREO, CORREO, MAPA_OFICINA, DIRECCION, WA_SVG, ico('arriba', 'arr ico'))
+''' % (redes,
+       col('Servicios', [('pantallas-digitales-queretaro', 'Pantallas digitales', 'resolucion'), ('totems-queretaro', 'Tótems', 'movil'), ('espectaculares-queretaro', 'Espectaculares', 'medida'), ('estadio-corregidora-queretaro', 'Estadio Corregidora', 'estadio')]),
+       col('Ciudades', [('pantallas-digitales-queretaro', 'Querétaro', 'pin'), ('pantallas-digitales-puebla', 'Puebla', 'pin'), ('aeropuerto-aicm', 'CDMX', 'pin')]),
+       col('Aeropuertos', [('aeropuerto-aiq', 'AIQ · Querétaro', 'avion'), ('aeropuerto-aicm', 'AICM · CDMX', 'avion')]),
+       E(mapa), MAPA_OFICINA, ico('pin'), DIRECCION, TEL.replace(' ', ''), ico('tel'), TEL, CORREO, ico('mail'), CORREO, WA_SVG, ico('arriba', 'arr ico'))
 
 def pagina(slug, titulo, desc, imagen_og, cuerpo):
     url = DOMINIO + ('/' if slug == 'index' else '/' + slug)
@@ -202,7 +232,7 @@ def specs_html(specs):
         for i, (ic, lbl, val, nota) in enumerate(specs))
 
 def faq_html(preguntas, titulo='Resolvemos <span class="y">tus dudas</span>'):
-    items = ''.join('<details class="rv"%s><summary>%s</summary><div class="acc__a">%s</div></details>'
+    items = ''.join('<details class="rv"%s><summary>%s</summary><div class="acc__b"><div class="acc__a">%s</div></div></details>'
                     % (' open' if i == 0 else '', E(q), a) for i, (q, a) in enumerate(preguntas))
     return '''
 <section class="sec"><div class="wrap faq">
@@ -590,88 +620,145 @@ def home():
                   'queretaro-noche.webp', cuerpo)
 
 # --------------------------------------------------------------------- ESTADIO
+# Diseño original de la página de estadio (partes/estadio-original.html),
+# adaptado a un solo espacio: la pantalla gigante de 5 × 20 m.
+ESTADIO_ARCHIVOS = {
+    'mediamaster-estadio-interior.mp4': 'video/estadio-interior.mp4',
+    'mediamaster-estadio-exterior.mp4': 'video/estadio-exterior.mp4',
+    'mediamaster-estadio-interior-poster.webp': 'img/estadio-interior.webp',
+    'mediamaster-estadio-exterior-poster.webp': 'img/estadio-exterior.webp',
+    'mediamaster-estadio-pantalla.webp': 'img/estadio-pantalla.webp',
+    'mediamaster-estadio-cancha.webp': 'img/estadio-cancha.webp',
+    'mediamaster-estadio-aficion.webp': 'img/estadio-aficion.webp',
+    'mediamaster-estadio-llegada.webp': 'img/estadio-llegada.webp',
+}
+ESTADIO_FAQ = [
+    ('¿Qué medidas tiene la pantalla gigante?', 'Mide 5 × 20 metros (100 m²) y es visible desde todas las gradas del estadio.'),
+    ('¿Puedo anunciarme solo en un partido?', 'Sí. Armamos campañas por partido, por torneo o por temporada completa, según tus objetivos y la disponibilidad.'),
+    ('¿Qué formato necesita mi anuncio?', 'Aceptamos video o imagen fija. Al cotizar te compartimos la resolución y especificaciones técnicas exactas para que tu anuncio se vea perfecto.'),
+    ('¿En qué momentos se transmite mi anuncio?', 'Tu anuncio entra en la rotación de la pantalla antes del partido, en el medio tiempo y al final, cuando la atención de la afición está en la pantalla.'),
+    ('¿Me ayudan a diseñar el anuncio?', 'Te asesoramos para que tu mensaje funcione en un estadio: textos cortos, alto contraste y tu marca siempre visible. Si lo necesitas, te apoyamos con la producción.'),
+    ('¿Cómo compruebo que mi anuncio salió al aire?', 'Damos seguimiento a cada campaña y te entregamos evidencia de su exhibición.'),
+]
+ESTADIO_JS_PANTALLA = """  // ---------- la pantalla gigante ----------
+  var panel = root.querySelector('.mme-panel'), e0 = ESPACIOS[0], pImg = panel.querySelector('.mme-panel__img img');
+  pImg.src = M(e0.img); pImg.alt = e0.titulo;
+  panel.querySelector('.mme-panel__title').textContent = e0.titulo;
+  panel.querySelector('.mme-panel__text').textContent = e0.texto;
+  var pList = panel.querySelector('.mme-panel__list');
+  e0.lista.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; pList.appendChild(li); });
+  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio Corregidora.');
+  root.querySelectorAll('.mme-spot').forEach(function (s) { s.classList.add('is-active'); });
+
+"""
+ESTADIO_JS_ESPACIOS = """  var ESPACIOS = [
+    { titulo: 'Pantalla gigante', img: 'img/estadio-pantalla.webp',
+      texto: 'La pantalla principal del Estadio Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
+      lista: ['5 × 20 m · 100 m² de pantalla LED', 'Visible desde todas las gradas', 'Spots en video o imagen fija', 'Antes del partido, medio tiempo y final'] }
+  ];"""
+ESTADIO_CSS_EXTRA = """
+/* ajustes de la página de estadio dentro del sitio */
+.mme{background:transparent; background-image:none}
+.mme-panel__cta{align-self:flex-start}
+.mme-acc details p{margin:0}
+.mme .mme-spot.is-active,.mme .mme-spot.is-active:focus,.mme .mme-spot.is-active:hover{animation:mmeSpotOn 2s infinite !important}
+@keyframes mmeSpotOn{0%{box-shadow:0 0 0 0 rgba(235,255,0,.6)}70%{box-shadow:0 0 0 18px rgba(235,255,0,0)}100%{box-shadow:0 0 0 0 rgba(235,255,0,0)}}
+"""
+
+def estadio_partes():
+    s = leer('estadio-original.html')
+    s = re.sub(r'^<!--.*?-->\s*', '', s, flags=re.S)
+    s = re.sub(r'<link[^>]*>\n?', '', s)
+    for a, b in ESTADIO_ARCHIVOS.items():
+        s = s.replace(a, b)
+
+    def rep(a, b):
+        nonlocal s
+        assert a in s, a[:70]
+        s = s.replace(a, b, 1)
+
+    # ---- hero
+    rep('TU MARCA ENTRA<br>A LA <span>CANCHA</span>', 'TU MARCA EN LA<br><span>PANTALLA GIGANTE</span>')
+    rep('Pantalla gigante, tableros LED y espacios en todo el estadio para que <strong>más de 30 mil aficionados</strong> vean tu marca justo en el momento de mayor emoción.',
+        'Una pantalla de <strong>5 × 20 metros</strong> frente a <strong>más de 30 mil aficionados</strong>: tu marca justo en el momento de mayor emoción.')
+    rep('data-mm-wa="Hola, me interesa anunciarme en el Estadio Corregidora."', 'data-mm-wa="Hola, me interesa anunciarme en la pantalla gigante del Estadio Corregidora."')
+    s = re.sub(r'(<div class="mme-ticker__track">).*?(</div></div>)', lambda m: m.group(1) + ''.join(
+        '<span>%s</span>' % t for t in ['PANTALLA GIGANTE', '5 × 20 METROS', '100 M² DE LED', 'DÍA DE PARTIDO', '+30 MIL AFICIONADOS', 'TU MARCA AQUÍ'] * 2) + m.group(2), s, count=1, flags=re.S)
+    # ---- cifras
+    rep('<div class="mme-stat mme-rv"><b><span data-mm-count="2">2</span></b><p>torneos al año: Apertura y Clausura</p></div>',
+        '<div class="mme-stat mme-rv"><b><span data-mm-count="100" data-suffix=" m²">100 m²</span></b><p>de pantalla LED (5 × 20 m)</p></div>')
+    # ---- intro
+    rep('<strong>Presencia de principio a fin.</strong> Desde el estacionamiento hasta el silbatazo final.',
+        '<strong>Imposible de no ver.</strong> 100 m² de LED visibles desde todas las gradas.')
+    # ---- mapa: solo la pantalla gigante
+    rep('ESPACIOS PUBLICITARIOS</span>', 'LA PANTALLA GIGANTE</span>')
+    rep('ELIGE DÓNDE <span class="mme-y">BRILLA</span> TU MARCA', '5 × 20 METROS DE <span class="mme-y">PURA EMOCIÓN</span>')
+    rep('Toca cada punto del estadio para conocer el espacio. Combínalos para acompañar a la afición durante toda su experiencia.',
+        'La pantalla principal del estadio, frente a la cancha y visible desde todas las gradas. Ahí voltean miles de aficionados en cada repetición, cada gol y cada anuncio del marcador.')
+    s = re.sub(r'\n\s*<button class="mme-spot" type="button" style="[^"]*"\s+data-spot="[1-5]".*?</button>', '', s)
+    rep('<rect class="mme-map__screen" x="240" y="30" width="120" height="26" rx="3"/>',
+        '<rect class="mme-map__screen" x="240" y="30" width="120" height="26" rx="3"/><text x="372" y="49" text-anchor="start" fill="#EBFF00" font-family="Titillium Web" font-weight="700" font-size="15">5 × 20 m</text>')
+    rep('<div class="mme-tabs" role="tablist" aria-label="Espacios publicitarios"></div>', '')
+    rep('<div class="mme-panel__bar"><i></i></div>', '')
+    # ---- momentos
+    rep('ESTRATEGIA 360°', 'MOMENTOS DE EXPOSICIÓN')
+    rep('ACOMPAÑA A LA AFICIÓN <span class="mme-y">TODO</span> EL PARTIDO', 'TU ANUNCIO CUANDO <span class="mme-y">TODOS</span> ESTÁN MIRANDO')
+    rep('La llegada: estacionamiento, accesos y explanada. Tu marca es lo primero que ve la afición al llegar al estadio.',
+        'La previa: la afición llega, busca su lugar y mira la pantalla mientras calientan los equipos.')
+    rep('<span class="mme-step__tag">Estacionamiento · Accesos</span>', '<span class="mme-step__tag">Previa del partido</span>')
+    rep('Pantalla gigante y tableros LED en el punto exacto donde están todas las miradas: la cancha.',
+        'El medio tiempo: 15 minutos en los que la pantalla es protagonista y tu marca se roba la atención.')
+    rep('<span class="mme-step__tag">Pantalla · Tableros LED</span>', '<span class="mme-step__tag">Medio tiempo</span>')
+    rep('La salida y las redes: fotos, videos y recuerdos del partido donde tu marca sigue presente.',
+        'El cierre: la emoción del resultado, con las fotos y videos que la afición comparte con tu marca en pantalla.')
+    rep('<span class="mme-step__tag">Salidas · Contenido digital</span>', '<span class="mme-step__tag">Final y redes sociales</span>')
+    rep('Ver espacios <svg', 'Ver la pantalla <svg')
+    # ---- preguntas
+    items = ''.join('<details class="mme-rv"%s><summary>%s</summary><div class="acc__b"><p>%s</p></div></details>'
+                    % (' open' if k == 0 else '', E(q), E(a)) for k, (q, a) in enumerate(ESTADIO_FAQ))
+    s, n = re.subn(r'(<div class="mme-acc">).*?(\n      </div>\n    </div>\n  </section>)', lambda m: m.group(1) + items + m.group(2), s, count=1, flags=re.S)
+    assert n == 1
+    # ---- CTA
+    rep('data-mm-wa="Hola, quiero una propuesta para anunciarme en el Estadio Corregidora."', 'data-mm-wa="Hola, quiero una propuesta para la pantalla gigante del Estadio Corregidora."')
+    rep('te armamos una propuesta para el Estadio Corregidora.', 'te armamos una propuesta para la pantalla gigante del Estadio Corregidora.')
+
+    css = re.search(r'<style>(.*?)</style>', s, re.S).group(1) + ESTADIO_CSS_EXTRA
+    js = re.search(r'<script>(.*?)</script>', s, re.S).group(1)
+    cuerpo = re.sub(r'<style>.*?</style>', '', s, flags=re.S)
+    cuerpo = re.sub(r'<script>.*?</script>', '', cuerpo, flags=re.S).strip()
+
+    def jrep(a, b):
+        nonlocal js
+        assert a in js, a[:70]
+        js = js.replace(a, b)
+    jrep("MEDIOS: 'https://maroon-oyster-970439.hostingersite.com/wp-content/uploads/2026/11/'", "MEDIOS: 'assets/'")
+    jrep("var CLIENTES_URL = 'https://maroon-oyster-970439.hostingersite.com/wp-content/uploads/2026/09/mediamaster-publicidad-exterior-';", "var CLIENTES_URL = 'assets/img/clientes/';")
+    js, n = re.subn(r"  var ESPACIOS = \[.*?\n  \];", lambda m: ESTADIO_JS_ESPACIOS, js, count=1, flags=re.S); assert n == 1
+    js, n = re.subn(r"  // ---------- mapa interactivo ----------.*?(  // ---------- clientes ----------)", lambda m: ESTADIO_JS_PANTALLA + m.group(1), js, count=1, flags=re.S); assert n == 1
+    return cuerpo, css, js
+
 def estadio():
-    slides = ('<div class="scr-slides"><div class="scr-slide scr-logo"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
-              '<div class="scr-slide scr-goal"><span>¡GOOOL!</span></div><div class="scr-slide scr-brand"><span>Tu marca aquí</span><i></i></div></div>'
-              '<div class="scr-user"><img alt="Tu logo en la pantalla"></div>')
-    faq = [('¿Qué medidas tiene la pantalla gigante?', P % 'La pantalla mide 5 × 20 metros (100 m²) y es visible desde todas las gradas del estadio.'),
-           ('¿Puedo anunciarme solo en un partido?', P % 'Sí. Armamos campañas por partido, por torneo o por temporada completa, según tus objetivos y la disponibilidad.'),
-           ('¿Qué formato necesita mi anuncio?', P % 'Aceptamos video o imagen fija. Al cotizar te compartimos la resolución y especificaciones técnicas exactas para que tu anuncio se vea perfecto en la pantalla.'),
-           ('¿En qué momentos se transmite mi anuncio?', P % 'Tu anuncio entra en la rotación de la pantalla antes del partido, en el medio tiempo y al final, cuando la atención de la afición está en la pantalla.'),
-           ('¿Me ayudan a diseñar el anuncio?', P % 'Te asesoramos para que tu mensaje funcione en un estadio: textos cortos, alto contraste y tu marca siempre visible. Si lo necesitas, te apoyamos con la producción.'),
-           ('¿Cómo compruebo que mi anuncio salió al aire?', P % 'Damos seguimiento a cada campaña y te entregamos evidencia de su exhibición.')]
-    galeria = ''.join('<button class="rail__it" type="button" data-video="%s"%s><img src="assets/img/%s" alt="%s" loading="lazy"><span>%s</span></button>' % (v, vv, im, E(t), E(t)) for im, t, v, vv in [
-        ('estadio-pantalla.webp', 'Pantalla gigante', 'yt:TGdE6jRWyb8', ''), ('estadio-exterior.webp', 'Día de partido', 'assets/video/estadio-exterior.mp4', ''),
-        ('estadio-cancha.webp', 'Nivel cancha', 'assets/video/estadio-interior.mp4', ''), ('estadio-aficion.webp', 'Afición', 'assets/video/estadio-interior.mp4', ''),
-        ('estadio-interior.webp', 'Ambiente', 'assets/video/estadio-interior.mp4', '')])
-    wa_msg = 'Hola Mediamaster, me interesa anunciarme en la pantalla gigante del Estadio Corregidora.'
-    porteria = '<svg viewBox="0 0 90 30" aria-hidden="true"><path d="M2 30V2h86v28" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M2 10h86M2 18h86M14 2v28M26 2v28M38 2v28M50 2v28M62 2v28M74 2v28" stroke="currentColor" stroke-width=".5" opacity=".45"/></svg>'
-    cuerpo = '''
-<section class="shero" data-yt="TGdE6jRWyb8">
-  <div class="shero__media" aria-hidden="true"><video muted loop playsinline autoplay preload="auto" src="assets/video/estadio-interior.mp4" poster="assets/img/estadio-interior.webp"></video><div class="shero__yt"></div></div>
-  <div class="wrap shero__in">
-    <nav class="crumbs rv" aria-label="Ruta"><a href="./">Inicio</a><i></i><span class="y">Estadio Corregidora</span></nav>
-    <span class="chip rv" style="margin-bottom:24px"><span class="live"></span>ESTADIO CORREGIDORA · QUERÉTARO</span>
-    <h1 class="split">Tu marca en la <em>pantalla</em> más grande del estadio</h1>
-    <p class="lead rv">Una pantalla gigante de <strong>5 × 20 metros</strong> frente a <strong>más de 30 mil aficionados</strong>, justo en el momento de mayor emoción.</p>
-    <div class="btns rv"><a class="btn btn--pk" data-wa="%s">Cotiza tu campaña %s</a><button class="btn btn--gh" type="button" data-video="yt:TGdE6jRWyb8"><span class="play"></span>Ver video oficial</button></div>
-  </div>
-  <button class="sound" type="button" aria-pressed="false" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">%s</svg><span>Activar sonido</span></button>
-  %s
-</section>
-<section class="sec sec--tight"><div class="wrap kpis">
-  <div class="stat"><b><i style="font-style:normal" data-count="100">100</i><span>m²</span></b><small>de pantalla LED</small></div>
-  <div class="stat"><b><span>+</span><i style="font-style:normal" data-count="30">30</i>K</b><small>aficionados por partido</small></div>
-  <div class="stat"><b><i style="font-style:normal" data-count="90">90</i>'</b><small>de atención en vivo</small></div>
-  <div class="stat"><b><i style="font-style:normal" data-count="2">2</i></b><small>torneos al año</small></div>
-</div></section>
-<section class="sec"><div class="wrap dims">
-  <div>
-    <span class="kicker rv">La pantalla gigante</span><h2 class="h2 split">5 × 20 metros de <span class="y">pura emoción</span></h2>
-    <p class="txt rv">En el estadio no hay botón de “saltar anuncio”. La afición llega con tiempo, se queda 90 minutos y voltea a la pantalla en cada repetición, cada gol y cada anuncio del marcador. Ahí tu marca no interrumpe: <strong>forma parte del partido</strong>.</p>
-    %s
-  </div>
-  <div class="dims__fig rv" data-scr>
-    <div class="dims__box"><div class="dims__w"><span>20 m</span></div><div class="dims__h"><span>5 m</span></div>
-    <div class="dims__scr">%s</div></div>
-    <div class="dims__goal">%s<span>Portería oficial (7.32 × 2.44 m) a la misma escala</span></div>
-  </div>
-</div></section>
-<section class="sec sec--tight"><div class="wrap">
-  <div class="head head--c"><span class="kicker rv">Pruébalo</span><h2 class="h2 split">Mira tu marca en la <span class="y">pantalla</span></h2>
-    <p class="lead rv">Sube tu logo y velo al instante en la pantalla gigante del estadio. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
-  <div class="tryit rv" data-scr><img src="assets/img/estadio-pantalla.webp" alt="Pantalla gigante en el estadio con afición" loading="lazy" width="1600" height="899"><div class="tryit__scr">%s</div></div>
-  <div class="tryit__ui" style="border:1px solid var(--line); border-top:0; border-radius:0 0 20px 20px; margin-top:-20px; padding-top:40px">
-    <p><strong>Recomendación:</strong> logo en PNG con fondo transparente y colores contrastantes.</p>
-    <div class="btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi logo</button>
-      <label class="btn btn--pk btn--sm upl">%s Subir mi logo<input id="mm-logo" type="file" accept="image/*"></label></div>
-  </div>
-</div></section>
-<section class="sec"><div class="wrap">
-  <div class="head"><span class="kicker rv">Momentos de exposición</span><h2 class="h2 split">Tu anuncio cuando todos <span class="y">están mirando</span></h2></div>
-  <div class="moments">
-    <div class="moment rv rv-d1"><span class="moment__t">Antes</span><h3>La previa</h3><p>La afición llega, busca su lugar y mira la pantalla mientras calientan los equipos.</p></div>
-    <div class="moment rv rv-d2"><span class="moment__t">Medio tiempo</span><h3>El descanso</h3><p>15 minutos en los que la pantalla es protagonista y tu marca se roba la atención.</p></div>
-    <div class="moment rv rv-d3"><span class="moment__t">Final</span><h3>El cierre</h3><p>La emoción del resultado: tu marca se queda en la memoria y en las fotos de la afición.</p></div>
-  </div>
-</div></section>
-<section class="sec sec--tight"><div class="wrap head head--row"><div><span class="kicker rv">Galería</span><h2 class="h2 split">Así se vive <span class="y">el estadio</span></h2></div>
-<div class="rail-nav rv"><button class="rbtn" type="button" data-rail="rail-est" data-dir="-1" aria-label="Anterior">%s</button><button class="rbtn" type="button" data-rail="rail-est" data-dir="1" aria-label="Siguiente">%s</button></div></div>
-<div class="rail" id="rail-est">%s</div></section>
-%s%s
-''' % (E(wa_msg), ico('flecha'), ICO['sonido_off'], ticker(['Pantalla gigante', '5 × 20 metros', '100 m² de LED', 'Día de partido', '+30 mil aficionados', 'Tu marca aquí']),
-       '<ul class="perks">%s</ul>' % ''.join('<li class="rv">%s</li>' % x for x in [
-           '<strong>100 m² de pantalla LED</strong> visibles desde todas las gradas.',
-           '<strong>Video o imagen fija</strong>, con tu marca en rotación durante el partido.',
-           'Campañas <strong>por partido, torneo o temporada</strong>.',
-           'Contenido que la afición <strong>graba y comparte</strong> en redes.']),
-       slides, porteria, slides, ico('subir'), ico('izq'), ico('der'), galeria,
-       otros_medios('estadio-corregidora-queretaro'), faq_html(faq))
-    cuerpo += cta('Que tu marca también se <span class="pk">celebre</span>', 'Cuéntanos tu objetivo y te armamos una propuesta para la pantalla gigante del Estadio Corregidora.',
-                  'estadio-aficion.webp', wa_msg) + contacto('Estadio')
+    cuerpo, _, _ = estadio_partes()
     return pagina('estadio-corregidora-queretaro', 'Pantalla gigante en el Estadio Corregidora · 5 × 20 m | Mediamaster',
                   'Anúnciate en la pantalla gigante de 5 × 20 m del Estadio Corregidora en Querétaro, frente a más de 30 mil aficionados por partido.',
-                  'estadio-pantalla.webp', cuerpo)
+                  'estadio-pantalla.webp', cuerpo + contacto('Estadio'))
+
+# --------------------------------------------------------------------- AVISO DE PRIVACIDAD
+def aviso():
+    sec = [
+        ('Responsable de tus datos', 'Mediamaster (“Mediamaster”, “nosotros”), con domicilio en %s, es responsable del uso y protección de tus datos personales, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.' % DIRECCION),
+        ('Datos que recabamos', 'A través de este sitio, WhatsApp, correo o teléfono podemos recabar: nombre, correo electrónico, teléfono, empresa y la información que nos compartas sobre tu campaña. No recabamos datos personales sensibles.'),
+        ('Para qué usamos tus datos', 'Finalidades necesarias: responder a tus solicitudes, elaborar cotizaciones y propuestas, y dar seguimiento a los servicios contratados. Finalidades adicionales: enviarte novedades, nuevas ubicaciones y promociones. Si no deseas que tus datos se usen para las finalidades adicionales, escríbenos al correo indicado abajo.'),
+        ('Con quién compartimos tus datos', 'No vendemos ni compartimos tus datos personales con terceros, salvo con proveedores que nos ayudan a prestar el servicio (por ejemplo, alojamiento del sitio o correo electrónico) y en los casos que exija la ley.'),
+        ('Derechos ARCO', 'Puedes Acceder, Rectificar, Cancelar u Oponerte al uso de tus datos, así como revocar tu consentimiento, enviando una solicitud a %s con tu nombre, el derecho que deseas ejercer y una identificación. Te responderemos en un plazo máximo de 20 días hábiles.' % CORREO),
+        ('Cookies y tecnologías similares', 'Este sitio no usa cookies propias de rastreo. Al cargar videos de YouTube o mapas de Google, estos servicios pueden usar sus propias cookies conforme a sus políticas de privacidad.'),
+        ('Cambios a este aviso', 'Cualquier cambio a este aviso de privacidad se publicará en esta misma página.'),
+    ]
+    cuerpo = '''<section class="phero phero--min"><div class="phero__bg"><img src="assets/img/queretaro-noche.webp" alt=""></div>
+<div class="wrap phero__in"><nav class="crumbs" aria-label="Ruta"><a href="./">Inicio</a><i></i><span class="y">Aviso de privacidad</span></nav><h1>Aviso de <em>privacidad</em></h1>
+<p class="lead">Última actualización: noviembre de 2026.</p></div></section>
+<section class="sec sec--tight"><div class="wrap legal">%s</div></section>''' % ''.join('<h2>%s</h2><p>%s</p>' % (E(t), E(x)) for t, x in sec)
+    return pagina('aviso-de-privacidad', 'Aviso de privacidad | Mediamaster', 'Aviso de privacidad de Mediamaster: cómo recabamos, usamos y protegemos tus datos personales.', 'queretaro-noche.webp', cuerpo)
 
 # --------------------------------------------------------------------- 404
 def no_encontrada():
@@ -684,10 +771,13 @@ def no_encontrada():
 def main():
     css = leer('site-base.css') + leer('site-pages.css') + '\n/* ---------- espectacular LED (home) ---------- */\n' + leer('billboard.css') + \
           '\n/* ---------- carrusel de tótem (home) ---------- */\n' + leer('totem.css') + leer('extra.css')
-    js = leer('site-base.js') + '\n/* ---------- espectacular LED ---------- */\n' + leer('billboard.js') + '\n/* ---------- carrusel de tótem ---------- */\n' + leer('totem.js')
+    _, est_css, est_js = estadio_partes()
+    css += '\n/* ---------- página de estadio ---------- */\n' + est_css
+    js = leer('site-base.js') + '\n/* ---------- espectacular LED ---------- */\n' + leer('billboard.js') + '\n/* ---------- carrusel de tótem ---------- */\n' + leer('totem.js') + \
+         '\n/* ---------- página de estadio ---------- */\n' + est_js
     with open(os.path.join(SALIDA, 'assets/css/site.css'), 'w', encoding='utf-8') as f: f.write(css)
     with open(os.path.join(SALIDA, 'assets/js/site.js'), 'w', encoding='utf-8') as f: f.write(js)
-    paginas = {'index': home(), 'estadio-corregidora-queretaro': estadio(), '404': no_encontrada()}
+    paginas = {'index': home(), 'estadio-corregidora-queretaro': estadio(), 'aviso-de-privacidad': aviso(), '404': no_encontrada()}
     for d in paginas_medios():
         paginas[d['slug']] = pagina_medio(d)
     for slug, h in paginas.items():

@@ -13,10 +13,12 @@
 html{scroll-behavior:smooth; scroll-padding-top:calc(var(--hdr) + 10px); -webkit-text-size-adjust:100%}
 html,body{overflow-x:hidden; overflow-x:clip}
 body{margin:0; background:var(--bg); color:#fff; font:400 17px/1.65 var(--body); -webkit-font-smoothing:antialiased}
-body::before{ /* rejilla de puntos de la marca */
+body::before{ /* rejilla de puntos (respaldo si no carga el JavaScript) */
   content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background-image:radial-gradient(rgba(255,255,255,.085) 1px,transparent 1.4px); background-size:26px 26px;
+  background-image:radial-gradient(rgba(255,255,255,.085) 1px,transparent 1.4px); background-size:24px 24px;
 }
+.has-dots body::before{display:none}
+.bg-dots{position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none}
 img,video,iframe{display:block; max-width:100%}
 a{color:inherit; text-decoration:none}
 button{font:inherit; color:inherit; cursor:pointer}
@@ -245,7 +247,9 @@ p{margin:0 0 1em}
 .acc summary::-webkit-details-marker{display:none}
 .acc summary::after{content:""; position:absolute; right:22px; top:50%; width:32px; height:32px; margin-top:-16px; border-radius:50%; background:rgba(255,255,255,.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2367FB94' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") center/16px no-repeat; transition:transform .3s,background-color .3s}
 .acc details[open] summary::after{transform:rotate(45deg); background-color:var(--green); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E")}
+.acc__b{overflow:hidden}
 .acc__a{padding:0 24px 22px; color:var(--gray); font-size:16px}
+.acc details.is-closing,.mme-acc details.is-closing{border-color:var(--line)}
 .acc__a p:last-child{margin:0}
 .acc__a ul{margin:0; padding-left:20px}
 
@@ -293,22 +297,42 @@ p{margin:0 0 1em}
 .form__ok{grid-column:1/-1; display:none; padding:14px 16px; border-radius:10px; background:rgba(103,251,148,.1); border:1px solid rgba(103,251,148,.4); color:var(--green); font-size:15px}
 .form.is-sent .form__ok{display:block}
 
-/* ---------------- footer ---------------- */
-.ftr{position:relative; padding:90px 0 0; background:linear-gradient(180deg,transparent,#06080c 30%)}
-.ftr__top{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr; gap:40px; padding-bottom:60px}
-.ftr__brand p{color:var(--gray); font-size:15px; margin:20px 0 24px; max-width:320px}
-.ftr h4{font:600 13px/1 var(--body); letter-spacing:.22em; text-transform:uppercase; color:var(--green); margin:6px 0 20px}
-.ftr ul{list-style:none; margin:0; padding:0; display:grid; gap:12px}
-.ftr ul a{color:var(--gray); font-size:15px; transition:color .2s}
-.ftr ul a:hover{color:var(--yellow)}
+/* ---------------- footer (estilo original del sitio) ---------------- */
+.ftr{position:relative; margin-top:40px}
+.ftr__panel{background:#171D26; padding:80px 0 60px}
+.ftr__top{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; padding-bottom:56px; border-bottom:1px solid rgba(255,255,255,.07)}
+.flogo{display:inline-flex; flex-direction:column; align-items:center; line-height:1}
+.flogo img{width:84px; height:84px; margin-bottom:10px}
+.flogo b{font:400 42px/1 var(--body); letter-spacing:-.02em}
+.flogo b strong{font-weight:800}
+.flogo sup{font-size:12px; font-weight:400; vertical-align:super}
+.flogo small{font:600 13px/1 var(--body); letter-spacing:.08em; margin-top:8px}
+.ftr__brand p{color:var(--gray); font-size:15px; line-height:2; margin:22px 0 22px; max-width:440px}
+.ftr__brand p strong{color:#fff}
+.ftr__subs h3{font:700 34px/1.1 var(--head); text-transform:none; margin:20px 0 10px}
+.ftr__subs>p{color:var(--gray); font-size:15px; margin:0 0 18px}
+.subs{display:grid; grid-template-columns:1fr auto; gap:10px; max-width:520px}
+.subs .fld input{width:100%; font:400 16px/1.4 var(--body); color:#fff; background:#0d1118; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:15px 16px}
+.subs .fld input:focus{outline:none; border-color:var(--green)}
+.subs .fld.is-err input{border-color:var(--pink)}
+.subs .form__msg{grid-column:1/-1}
+.ftr__cols{display:grid; grid-template-columns:repeat(4,1fr); gap:40px; padding-top:50px}
+.ftr h4{font:700 19px/1 var(--head); text-transform:uppercase; color:#fff; margin:0 0 26px}
+.ftr ul{list-style:none; margin:0; padding:0; display:grid; gap:16px}
+.ftr ul a{display:flex; align-items:flex-start; gap:10px; color:var(--gray); font-size:16px; line-height:1.4; transition:color .2s}
+.ftr ul a svg{flex:0 0 20px; width:20px; height:20px; margin-top:1px}
+.ftr ul a:hover{color:#fff}
+.ftr ul a:hover svg{color:var(--pink)}
+.ftr__map{border-radius:6px; overflow:hidden; aspect-ratio:2/1; background:#0d1118; margin-bottom:18px}
+.ftr__map iframe{width:100%; height:100%; border:0}
 .socials{display:flex; gap:10px}
-.socials a{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; border:1px solid var(--line); background:rgba(255,255,255,.03); transition:.25s}
+.socials a{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03); transition:.25s}
 .socials a:hover{background:var(--pink); border-color:var(--pink); transform:translateY(-3px)}
 .socials svg{width:18px; height:18px; fill:currentColor}
-.ftr__big{font:900 clamp(60px,15vw,230px)/.8 var(--head); letter-spacing:-.03em; text-align:center; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.12); user-select:none; padding:10px 0 0; white-space:nowrap; overflow:hidden}
-.ftr__big span{background:var(--brand); -webkit-background-clip:text; background-clip:text; -webkit-text-stroke:0; color:transparent}
-.ftr__bot{display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; padding:26px 0 32px; border-top:1px solid var(--line); font-size:14px; color:var(--gray)}
+.ftr__bot{background:#000; padding:24px 0}
+.ftr__bot .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; font-size:14px; color:var(--gray)}
 .ftr__bot a:hover{color:#fff}
+.ftr__bot .pk:hover{color:var(--yellow)}
 
 /* ---------------- flotantes ---------------- */
 .wa{position:fixed; z-index:900; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%; display:grid; place-items:center; background:#25D366; color:#fff; box-shadow:0 10px 30px rgba(37,211,102,.4); transition:transform .25s}

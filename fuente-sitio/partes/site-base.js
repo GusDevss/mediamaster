@@ -126,11 +126,29 @@
     run();
   }
 
-  /* ---------- preguntas: solo una abierta ---------- */
-  $$('.acc').forEach(function (acc) {
+  /* ---------- preguntas: se abre una y se cierran las demás, con animación suave ---------- */
+  $$('.acc, .mme-acc').forEach(function (acc) {
     var ds = $$('details', acc);
+    function body(d) { return d.querySelector('.acc__b'); }
+    function open(d) {
+      d.open = true;
+      var b = body(d); if (!b || reduce) return;
+      b.animate([{ height: '0px', opacity: 0 }, { height: b.scrollHeight + 'px', opacity: 1 }], { duration: 360, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
+    function close(d) {
+      var b = body(d);
+      if (!b || reduce) { d.open = false; return; }
+      var a = b.animate([{ height: b.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)' });
+      d.classList.add('is-closing');
+      a.onfinish = function () { d.open = false; d.classList.remove('is-closing'); };
+    }
     ds.forEach(function (d) {
-      d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); });
+      d.querySelector('summary').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (d.open && !d.classList.contains('is-closing')) { close(d); return; }
+        ds.forEach(function (o) { if (o !== d && o.open) close(o); });
+        open(d);
+      });
     });
   });
 
@@ -252,37 +270,132 @@
     });
   });
 
-  /* ---------- formulario de contacto → WhatsApp ---------- */
-  $$('.form').forEach(function (form) {
+  /* ---------- formulario de contacto: se envía por correo (enviar.php); WhatsApp como opción ---------- */
+  function texto(d) {
+    var medios = d.getAll('medio[]');
+    return 'Nombre: ' + d.get('nombre') + '\nCorreo: ' + d.get('correo') +
+      (d.get('telefono') ? '\nTeléfono: ' + d.get('telefono') : '') +
+      (d.get('empresa') ? '\nEmpresa: ' + d.get('empresa') : '') +
+      (medios.length ? '\nMe interesa: ' + medios.join(', ') : '') + '\n\n' + d.get('mensaje');
+  }
+  function valida(form) {
+    var ok = true;
+    $$('[required]', form).forEach(function (inp) {
+      var f = inp.closest('.fld'), bad = !inp.value.trim() || (inp.type === 'email' && !/^\S+@\S+\.\S+$/.test(inp.value));
+      if (f) f.classList.toggle('is-err', bad); if (bad && ok) { inp.focus(); ok = false; }
+    });
+    return ok;
+  }
+  function estado(form, tipo, msg) {
+    var box = $('.form__msg', form); if (!box) return;
+    box.className = 'form__msg is-' + tipo; box.textContent = msg;
+  }
+  $$('form.form, form.subs').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var ok = true;
-      $$('[required]', form).forEach(function (inp) {
-        var f = inp.closest('.fld'), bad = !inp.value.trim() || (inp.type === 'email' && !/^\S+@\S+\.\S+$/.test(inp.value));
-        f.classList.toggle('is-err', bad); if (bad && ok) { inp.focus(); ok = false; }
-      });
-      if (!ok) return;
-      var d = new FormData(form), medios = d.getAll('medio');
-      var msg = 'Hola Mediamaster, quiero cotizar una campaña.\n\n' +
-        'Nombre: ' + d.get('nombre') + '\nCorreo: ' + d.get('correo') +
-        (d.get('telefono') ? '\nTeléfono: ' + d.get('telefono') : '') +
-        (d.get('empresa') ? '\nEmpresa: ' + d.get('empresa') : '') +
-        (medios.length ? '\nMe interesa: ' + medios.join(', ') : '') +
-        '\n\n' + d.get('mensaje');
-      window.open(wa(msg), '_blank', 'noopener');
-      form.classList.add('is-sent');
+      if (!valida(form)) return;
+      var btn = $('button[type=submit]', form), d = new FormData(form);
+      btn.disabled = true; form.classList.add('is-busy');
+      estado(form, 'wait', 'Enviando…');
+      fetch(form.getAttribute('action'), { method: 'POST', body: d, headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error('envio');
+          form.reset();
+          estado(form, 'ok', form.classList.contains('subs') ? '¡Listo! Te suscribiste a nuestras novedades.' : '¡Gracias! Recibimos tu mensaje y te responderemos muy pronto.');
+        })
+        .catch(function () {
+          if (form.classList.contains('subs')) { estado(form, 'err', 'No pudimos registrarte. Inténtalo de nuevo más tarde.'); return; }
+          estado(form, 'err', 'No pudimos enviar el formulario. Se abrirá tu correo con el mensaje listo.');
+          location.href = 'mailto:' + CORREO + '?subject=' + encodeURIComponent('Cotización · ' + (d.get('empresa') || d.get('nombre'))) + '&body=' + encodeURIComponent(texto(d));
+        })
+        .then(function () { btn.disabled = false; form.classList.remove('is-busy'); });
     });
     $$('input,textarea,select', form).forEach(function (i) {
       i.addEventListener('input', function () { var f = i.closest('.fld'); if (f) f.classList.remove('is-err'); });
     });
-    var mail = $('[data-mail]', form);
-    if (mail) mail.addEventListener('click', function (e) {
+    var w = $('[data-form-wa]', form);
+    if (w) w.addEventListener('click', function (e) {
       e.preventDefault();
       var d = new FormData(form);
-      location.href = 'mailto:' + CORREO + '?subject=' + encodeURIComponent('Cotización · ' + (d.get('empresa') || d.get('nombre') || 'Mediamaster')) +
-        '&body=' + encodeURIComponent((d.get('mensaje') || '') + '\n\n' + (d.get('nombre') || '') + '\n' + (d.get('telefono') || ''));
+      window.open(wa('Hola Mediamaster, quiero cotizar una campaña.' + (d.get('nombre') ? '\n\n' + texto(d) : '')), '_blank', 'noopener');
     });
   });
+
+  /* ---------- fondo de puntos: brillo al pasar el cursor y onda al dar clic ---------- */
+  (function () {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'bg-dots'; canvas.setAttribute('aria-hidden', 'true');
+    document.body.prepend(canvas);
+    document.documentElement.classList.add('has-dots');
+    var ctx = canvas.getContext('2d');
+    var cfg = { spacing: 24, dotSize: 1.1, hoverSize: 2.8, hoverRadius: 145, baseOpacity: .20, base: [255, 255, 255], hover: [95, 130, 175],
+                hoverOpacity: 1, rippleDuration: 2400, rippleThickness: 65, rippleDotSize: 5.5, rippleGlow: 15, rippleTrail: 85 };
+    var hc = cfg.hover.join(','), glow = 'rgb(' + hc + ')';
+    var W, H, dots = [], ripples = [], mouse = { x: -1e3, y: -1e3, active: false }, running = false;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = innerWidth; H = innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dots = [];
+      for (var y = cfg.spacing / 2; y < H; y += cfg.spacing) for (var x = cfg.spacing / 2; x < W; x += cfg.spacing) dots.push(x, y);
+      kick();
+    }
+    function fade(p) { return Math.pow(Math.max(0, 1 - (p - .65) / .35), 1.4); }
+    function draw() {
+      var now = performance.now();
+      ctx.clearRect(0, 0, W, H);
+      ripples = ripples.filter(function (r) { return (now - r.t) / cfg.rippleDuration < 1; });
+      for (var i = 0; i < dots.length; i += 2) {
+        var x = dots[i], y = dots[i + 1], size = cfg.dotSize, op = cfg.baseOpacity, col = '255,255,255', wg = 0;
+        if (mouse.active) {
+          var dx = x - mouse.x, dy = y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < cfg.hoverRadius) {
+            var k = 1 - dist / cfg.hoverRadius; k = k * k * (3 - 2 * k);
+            size += (cfg.hoverSize - cfg.dotSize) * k; op += (cfg.hoverOpacity - cfg.baseOpacity) * k;
+            col = Math.round(255 + (cfg.hover[0] - 255) * k) + ',' + Math.round(255 + (cfg.hover[1] - 255) * k) + ',' + Math.round(255 + (cfg.hover[2] - 255) * k);
+          }
+        }
+        for (var j = 0; j < ripples.length; j++) {
+          var r = ripples[j], p = (now - r.t) / cfg.rippleDuration;
+          var rad = (1 - Math.pow(1 - p, 2.2)) * r.max, rx = x - r.x, ry = y - r.y, d = Math.sqrt(rx * rx + ry * ry), diff = Math.abs(d - rad);
+          if (diff < cfg.rippleThickness) {
+            var it = 1 - diff / cfg.rippleThickness; it = it * it * (3 - 2 * it); if (p >= .65) it *= fade(p);
+            if (cfg.rippleDotSize > size) size += (cfg.rippleDotSize - size) * it;
+            if (1 > op) op += (1 - op) * it;
+            col = hc; wg = Math.max(wg, it);
+          }
+          var td = rad - d;
+          if (td > 0 && td < cfg.rippleTrail) { var tr = 1 - td / cfg.rippleTrail; tr = tr * tr * .22; if (p > .75) tr *= fade(p); wg = Math.max(wg, tr); }
+        }
+        if (wg > 0) { ctx.shadowColor = glow; ctx.shadowBlur = cfg.rippleGlow * wg; } else ctx.shadowBlur = 0;
+        ctx.beginPath(); ctx.arc(x, y, size, 0, 6.2832); ctx.fillStyle = 'rgba(' + col + ',' + op + ')'; ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+      if (mouse.active) {
+        var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, cfg.hoverRadius);
+        g.addColorStop(0, 'rgba(' + hc + ',.30)'); g.addColorStop(.2, 'rgba(' + hc + ',.20)'); g.addColorStop(.4, 'rgba(' + hc + ',.11)');
+        g.addColorStop(.65, 'rgba(' + hc + ',.045)'); g.addColorStop(1, 'rgba(' + hc + ',0)');
+        ctx.beginPath(); ctx.arc(mouse.x, mouse.y, cfg.hoverRadius, 0, 6.2832); ctx.fillStyle = g; ctx.fill();
+      }
+      // solo se sigue animando mientras hay cursor u ondas: ahorra batería
+      if ((mouse.active || ripples.length) && !document.hidden) requestAnimationFrame(draw); else running = false;
+    }
+    function kick() { if (!running) { running = true; requestAnimationFrame(draw); } }
+    if (!reduce) {
+      window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; kick(); }, { passive: true });
+      document.addEventListener('mouseleave', function () { mouse.active = false; kick(); });
+      window.addEventListener('blur', function () { mouse.active = false; kick(); });
+      window.addEventListener('click', function (e) {
+        var x = e.clientX, y = e.clientY;
+        ripples.push({ x: x, y: y, t: performance.now(), max: Math.sqrt(Math.pow(Math.max(x, W - x), 2) + Math.pow(Math.max(y, H - y), 2)) * 1.12 });
+        kick();
+      });
+    }
+    window.addEventListener('resize', resize);
+    resize();
+  })();
 
   /* ---------- estadio: video de YouTube de fondo ---------- */
   var shero = $('.shero');

@@ -5,15 +5,11 @@
 .mm-totem-wrap{padding-top:20px}
 .mm-bb__dot{border:0}
 @media (max-width:1024px){ .hhero__bb{max-width:680px; margin:10px auto 0; width:100%} }
-.ftr__top>*{min-width:0}
-.ftr ul a{overflow-wrap:anywhere}
-@media (max-width:767px){ .ftr__top>div:last-child{grid-column:1/-1} }
 [hidden]{display:none !important}
 .perks li{display:block; position:relative; padding-left:38px}
 .perks li::before{position:absolute; left:0; top:2px}
 .wrap.head--row{max-width:1260px; margin-left:auto; margin-right:auto}
 .rail{--rp:max(24px,calc((100vw - 1260px)/2 + 24px)); padding-inline:var(--rp); scroll-padding-inline:var(--rp)}
-.ftr__big{font-size:clamp(50px,12.4vw,190px)}
 .dims__fig{padding:56px 0 0 56px}
 .dims__box{position:relative}
 .dims__box .dims__w{left:0; right:0; top:-48px}
@@ -29,3 +25,44 @@
   .phero__bg::after{background:linear-gradient(0deg,#000 5%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.55))}
   .hhero h1{font-size:clamp(40px,11vw,60px)}
 }
+
+/* ---------- formulario: fondo más discreto, envío por correo ---------- */
+.contact__side::before{filter:grayscale(.7) brightness(.55)}
+.contact__side::after{background:linear-gradient(160deg,rgba(23,29,38,.78),rgba(10,13,18,.94) 60%,rgba(5,6,9,.98)),linear-gradient(0deg,rgba(255,1,91,.10),transparent 60%)}
+.contact__side .kicker{color:var(--green)}
+.contact__side p{color:var(--gray)}
+.clist i{background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); color:var(--pink)}
+.hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+.form__foot{justify-content:flex-end; gap:22px}
+.form__wa{display:inline-flex; align-items:center; gap:8px; font-size:15px; font-weight:600; color:var(--gray); transition:color .2s}
+.form__wa svg{width:20px; height:20px; fill:#25D366}
+.form__wa:hover{color:#fff}
+.form__legal{grid-column:1/-1; color:var(--gray); font-size:13px}
+.form__legal a{text-decoration:underline}
+.form__msg{grid-column:1/-1; margin:0; font-size:15px; border-radius:10px; padding:0; max-height:0; overflow:hidden; transition:.3s}
+.form__msg.is-ok,.form__msg.is-err,.form__msg.is-wait{padding:12px 16px; max-height:120px; border:1px solid var(--line)}
+.form__msg.is-ok{background:rgba(103,251,148,.1); border-color:rgba(103,251,148,.4); color:var(--green)}
+.form__msg.is-err{background:rgba(255,1,91,.1); border-color:rgba(255,1,91,.4); color:#ff7aa8}
+.form__msg.is-wait{color:var(--gray)}
+.is-busy button[type=submit]{opacity:.6; cursor:wait}
+
+/* ---------- aviso de privacidad ---------- */
+.phero--min{min-height:auto; padding-bottom:60px}
+.legal{max-width:860px}
+.legal h2{font-size:28px; margin:40px 0 14px; color:var(--yellow)}
+.legal p{color:var(--gray)}
+
+@media (max-width:1024px){ .ftr__top{grid-template-columns:1fr} .ftr__cols{grid-template-columns:1fr 1fr} }
+@media (max-width:767px){
+  .ftr__panel{padding:56px 0 44px}
+  .ftr__cols{grid-template-columns:1fr; gap:34px}
+  .subs{grid-template-columns:1fr}
+  .flogo b{font-size:34px}
+  .form__foot{flex-direction:column-reverse; align-items:stretch}
+  .form__foot .btn{width:100%}
+  .form__wa{justify-content:center}
+}
+
+.ftr__cols>*,.ftr__top>*{min-width:0}
+.ftr ul a span{overflow-wrap:anywhere}

@@ -32,6 +32,13 @@ python3 fuente-sitio/build.py
 Esto vuelve a generar `sitio/` (HTML, `site.css` y `site.js`). Los estilos y scripts base
 están en `fuente-sitio/partes/`.
 
-## Formulario de contacto
-No necesita servidor: al enviarlo abre WhatsApp (442 158 9486) con el mensaje listo.
-También ofrece la opción de enviarlo por correo a coordinacionventas@mediamaster.mx.
+## Formulario de contacto y suscripción
+Se envían **por correo** a coordinacionventas@mediamaster.mx mediante `sitio/enviar.php`
+(PHP `mail()`, incluido en Hostinger). Para que lleguen bien:
+
+1. En Hostinger crea el buzón `no-responder@mediamaster.mx` (o cambia `$REMITENTE` en `enviar.php`
+   por un correo que ya exista en el dominio).
+2. Haz una prueba desde el sitio publicado y revisa también la carpeta de spam.
+
+Si el envío falla, el sitio abre el correo del visitante con el mensaje listo.
+Debajo del formulario está la opción "Prefiero enviarlo por WhatsApp".
