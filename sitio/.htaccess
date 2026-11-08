@@ -41,3 +41,10 @@ RewriteRule ^(.+)$ $1.html [L]
   ExpiresByType image/png "access plus 6 months"
   ExpiresByType video/mp4 "access plus 6 months"
 </IfModule>
+
+# El HTML siempre se pide de nuevo (así toma la versión nueva de CSS/JS)
+<FilesMatch "\.(html|php)$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, must-revalidate"
+  </IfModule>
+</FilesMatch>

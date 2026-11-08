@@ -780,7 +780,11 @@ def main():
     paginas = {'index': home(), 'estadio-corregidora-queretaro': estadio(), 'aviso-de-privacidad': aviso(), '404': no_encontrada()}
     for d in paginas_medios():
         paginas[d['slug']] = pagina_medio(d)
+    # versión según el contenido: cada cambio de CSS/JS genera una URL nueva y el navegador no usa la copia vieja
+    import hashlib
+    v = hashlib.md5((css + js).encode('utf-8')).hexdigest()[:10]
     for slug, h in paginas.items():
+        h = h.replace('assets/css/site.css"', 'assets/css/site.css?v=%s"' % v).replace('assets/js/site.js"', 'assets/js/site.js?v=%s"' % v)
         with open(os.path.join(SALIDA, slug + '.html'), 'w', encoding='utf-8') as f: f.write(h)
     urls = ''.join('<url><loc>%s%s</loc></url>' % (DOMINIO, '/' if s == 'index' else '/' + s) for s in paginas if s != '404')
     with open(os.path.join(SALIDA, 'sitemap.xml'), 'w', encoding='utf-8') as f:
