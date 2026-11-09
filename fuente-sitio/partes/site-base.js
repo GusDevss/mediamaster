@@ -434,21 +434,162 @@
     document.addEventListener('mm:modalclose', function () { yt('playVideo'); });
   }
 
-  /* ---------- estadio: prueba tu logo en la pantalla ---------- */
+  /* ---------- estadio: prueba tu diseño en la pantalla gigante ---------- */
   var upl = $('#mm-logo');
   if (upl) {
-    upl.addEventListener('change', function () {
-      var f = upl.files && upl.files[0];
-      if (!f || !/^image\//.test(f.type)) return;
-      var url = URL.createObjectURL(f);
-      $$('.scr-user img').forEach(function (im) { im.src = url; });
-      $$('[data-scr]').forEach(function (s) { s.classList.add('has-user'); });
-      var rs = $('[data-scr-reset]'); if (rs) rs.hidden = false;
-    });
-    var rs = $('[data-scr-reset]');
+    var info = $('[data-try-info]'), rs = $('[data-scr-reset]'), drop = $('[data-drop]'), lastUrl = null;
+    function cargar(f) {
+      if (!f || !/^image\//.test(f.type)) { mostrar('err', 'Ese archivo no es una imagen. Usa PNG, JPG o WEBP.'); return; }
+      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      var url = lastUrl = URL.createObjectURL(f), probe = new Image();
+      probe.onload = function () {
+        var w = probe.naturalWidth, h = probe.naturalHeight, r = w / h, msg, tipo = 'ok';
+        if (Math.abs(r - 4) / 4 <= .12) msg = '✓ ' + w + ' × ' + h + ' px · proporción ideal para la pantalla.';
+        else { tipo = 'warn'; msg = w + ' × ' + h + ' px · proporción ' + r.toFixed(2).replace(/\.?0+$/, '') + ' : 1. La pantalla es 4 : 1 (por ejemplo 3840 × 960 px): con “Imagen completa” verás franjas y con “Llenar pantalla” se recortará.'; }
+        if (w < 1920 && f.type !== 'image/svg+xml') { tipo = 'warn'; msg += ' Tu imagen mide menos de 1920 px de ancho y podría verse pixeleada.'; }
+        mostrar(tipo, msg);
+        $$('.scr-user img').forEach(function (im) { im.src = url; });
+        $$('[data-scr]').forEach(function (s) { s.classList.add('has-user'); });
+        if (rs) rs.hidden = false;
+      };
+      probe.src = url;
+    }
+    function mostrar(t, m) { if (!info) return; info.hidden = false; info.className = 'try__info is-' + t; info.textContent = m; }
+    upl.addEventListener('change', function () { cargar(upl.files && upl.files[0]); });
+    if (drop) {
+      ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); }); });
+      ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('is-over'); }); });
+      drop.addEventListener('drop', function (e) { cargar(e.dataTransfer.files && e.dataTransfer.files[0]); });
+    }
     if (rs) rs.addEventListener('click', function () {
       $$('[data-scr]').forEach(function (s) { s.classList.remove('has-user'); });
-      upl.value = ''; rs.hidden = true;
+      upl.value = ''; rs.hidden = true; if (info) info.hidden = true;
+    });
+    $$('[data-fit]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        $$('[data-fit]').forEach(function (o) { o.classList.toggle('is-on', o === b); });
+        $$('[data-scr]').forEach(function (s) { s.classList.toggle('fit-cover', b.getAttribute('data-fit') === 'cover'); });
+      });
     });
   }
+
+  $$('.try__row').forEach(function (r) {
+    var sc = $('.try__screen', r), man = $('.try__man', r);
+    var fit = function () { man.style.setProperty('--man', (sc.offsetHeight * 1.75 / 5).toFixed(1) + 'px'); };
+    fit(); window.addEventListener('resize', fit);
+  });
+
+  /* ---------- aeropuertos: explorador de planos ---------- */
+  $$('.ax').forEach(function (ax) {
+    var datos = JSON.parse($('.ax__data', ax).textContent);
+    var tip = $('.ax__tip', ax), stage = $('.ax__stage', ax), piso = 0, filtro = '*';
+    var pins = $$('.ax__pin', ax), items = $$('.ax__item', ax);
+    var touch = window.matchMedia('(hover: none)').matches;
+    function visibles() { return datos.map(function (d, i) { return i; }).filter(function (i) { return filtro === '*' || datos[i].tipo === filtro; }); }
+    function aplicar() {
+      $$('.ax__plan', ax).forEach(function (p) { p.hidden = +p.getAttribute('data-piso') !== piso; });
+      $$('.ax__ul', ax).forEach(function (u) { u.hidden = +u.getAttribute('data-piso') !== piso; });
+      $$('.ax__floor', ax).forEach(function (f) { var on = +f.getAttribute('data-piso') === piso; f.classList.toggle('is-on', on); f.setAttribute('aria-selected', on); });
+      var n = 0;
+      pins.concat(items).forEach(function (el) {
+        var ok = filtro === '*' || el.getAttribute('data-tipo') === filtro;
+        el.classList.toggle('is-off', !ok);
+        if (el.classList.contains('ax__item')) el.parentNode.hidden = !ok;
+      });
+      $$('.ax__ul[data-piso="' + piso + '"] li', ax).forEach(function (li) { if (!li.hidden) n++; });
+      var c = $('[data-ax-count]', ax); if (c) c.textContent = n;
+      $$('.ax__chip', ax).forEach(function (c) { c.classList.toggle('is-on', c.getAttribute('data-tipo') === filtro); });
+      ocultar();
+    }
+    $$('.ax__floor', ax).forEach(function (f) { f.addEventListener('click', function () { piso = +f.getAttribute('data-piso'); aplicar(); }); });
+    $$('.ax__chip', ax).forEach(function (c) { c.addEventListener('click', function () { filtro = c.getAttribute('data-tipo'); aplicar(); }); });
+
+    function resaltar(i, on) {
+      pins.forEach(function (p) { if (+p.getAttribute('data-i') === i) p.classList.toggle('is-hot', on); });
+      items.forEach(function (p) { if (+p.getAttribute('data-i') === i) p.classList.toggle('is-hot', on); });
+    }
+    function mostrar(i) {
+      var d = datos[i], pin = pins[i];
+      tip.innerHTML = '<img src="assets/img/aero/' + d.foto + '-t.webp" alt="">' +
+        '<div><b>' + esc(d.codigo) + '</b><span style="--c:' + getComputedStyle(pin).getPropertyValue('--c') + '">' + esc(d.tipo) + '</span>' +
+        (d.detalle ? '<small>' + esc(d.detalle) + '</small>' : '') + '<em>Medida: ' + esc(d.medida) + '</em><i>Clic para ver la ficha completa</i></div>';
+      tip.hidden = false;
+      var sr = stage.getBoundingClientRect(), pr = pin.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+      var x = pr.left - sr.left + pr.width / 2 - tw / 2, y = pr.top - sr.top - th - 14, abajo = false;
+      if (y < 4) { y = pr.bottom - sr.top + 14; abajo = true; }
+      x = Math.max(6, Math.min(sr.width - tw - 6, x));
+      tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.classList.toggle('is-down', abajo);
+      requestAnimationFrame(function () { tip.classList.add('is-on'); });
+    }
+    function ocultar() { tip.classList.remove('is-on'); tip.hidden = true; }
+    pins.forEach(function (p) {
+      var i = +p.getAttribute('data-i');
+      p.addEventListener('mouseenter', function () { if (!touch) { mostrar(i); resaltar(i, true); } });
+      p.addEventListener('mouseleave', function () { ocultar(); resaltar(i, false); });
+      p.addEventListener('focus', function () { mostrar(i); });
+      p.addEventListener('blur', ocultar);
+      p.addEventListener('click', function () { ocultar(); abrir(i); });
+    });
+    items.forEach(function (it) {
+      var i = +it.getAttribute('data-i');
+      it.addEventListener('mouseenter', function () { resaltar(i, true); });
+      it.addEventListener('mouseleave', function () { resaltar(i, false); });
+      it.addEventListener('click', function () { abrir(i); });
+    });
+
+    // ficha completa
+    var m = document.createElement('div');
+    m.className = 'axm'; m.hidden = true;
+    m.innerHTML = '<div class="axm__box" role="dialog" aria-modal="true" aria-label="Ficha del espacio">' +
+      '<button class="axm__x" type="button" aria-label="Cerrar">×</button>' +
+      '<div class="axm__media"><img alt=""><button class="axm__nav axm__prev" type="button" aria-label="Anterior">‹</button><button class="axm__nav axm__next" type="button" aria-label="Siguiente">›</button></div>' +
+      '<div class="axm__info"><span class="axm__n"></span><h3></h3><p class="axm__tipo"></p><dl></dl>' +
+      '<a class="btn btn--pk btn--sm axm__cta" target="_blank" rel="noopener">Cotizar este espacio</a><p class="axm__count"></p><div class="axm__strip"></div></div></div>';
+    document.body.appendChild(m);
+    var actual = 0, lista = [];
+    function abrir(i) {
+      lista = visibles().filter(function (k) { return datos[k].piso === datos[i].piso; });
+      if (lista.indexOf(i) < 0) lista = [i];
+      pintar(i);
+      m.hidden = false; requestAnimationFrame(function () { m.classList.add('is-open'); });
+      document.documentElement.style.overflow = 'hidden';
+      $('.axm__x', m).focus();
+    }
+    function pintar(i) {
+      actual = i;
+      var d = datos[i], col = getComputedStyle(pins[i]).getPropertyValue('--c');
+      var img = $('.axm__media img', m);
+      img.classList.remove('is-in'); img.onload = function () { img.classList.add('is-in'); };
+      img.src = 'assets/img/aero/' + d.foto + '.webp'; img.alt = d.codigo + ' · ' + d.tipo;
+      $('.axm__n', m).textContent = d.n; $('.axm__n', m).style.background = col;
+      $('h3', m).textContent = d.codigo;
+      $('.axm__tipo', m).textContent = d.tipo + (d.detalle ? ' · ' + d.detalle : '');
+      $('dl', m).innerHTML = '<dt>Medida</dt><dd>' + esc(d.medida) + '</dd><dt>Ubicación</dt><dd>' + esc(d.piso) + '<br><small>' + esc(d.sub) + '</small></dd>';
+      $('.axm__cta', m).href = wa('Hola Mediamaster, me interesa el espacio ' + d.codigo + ' (' + d.tipo + ', ' + d.medida + ') en el ' + (ax.getAttribute('data-aero') === 'aicm' ? 'AICM' : 'AIQ') + '.');
+      var k = lista.indexOf(i);
+      $('.axm__count', m).textContent = (k + 1) + ' de ' + lista.length + ' espacios en ' + d.piso.toLowerCase();
+      $('.axm__strip', m).innerHTML = lista.map(function (j) {
+        return '<button type="button" data-j="' + j + '" class="' + (j === i ? 'is-on' : '') + '" aria-label="' + esc(datos[j].codigo) + '"><img src="assets/img/aero/' + datos[j].foto + '-t.webp" alt="" loading="lazy"></button>';
+      }).join('');
+      var on = $('.axm__strip .is-on', m); if (on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
+      $$('.axm__nav', m).forEach(function (b) { b.hidden = lista.length < 2; });
+    }
+    function mover(dir) { var k = lista.indexOf(actual); pintar(lista[(k + dir + lista.length) % lista.length]); }
+    function cerrar() { m.classList.remove('is-open'); document.documentElement.style.overflow = ''; setTimeout(function () { m.hidden = true; }, 300); }
+    m.addEventListener('click', function (e) {
+      if (e.target === m || e.target.closest('.axm__x')) cerrar();
+      else if (e.target.closest('.axm__prev')) mover(-1);
+      else if (e.target.closest('.axm__next')) mover(1);
+      else if (e.target.closest('.axm__strip button')) pintar(+e.target.closest('button').getAttribute('data-j'));
+    });
+    document.addEventListener('keydown', function (e) {
+      if (m.hidden) return;
+      if (e.key === 'Escape') cerrar(); if (e.key === 'ArrowLeft') mover(-1); if (e.key === 'ArrowRight') mover(1);
+    });
+    var sx = null;
+    $('.axm__media', m).addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    $('.axm__media', m).addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) mover(dx < 0 ? 1 : -1); sx = null; });
+    aplicar();
+  });
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 })();

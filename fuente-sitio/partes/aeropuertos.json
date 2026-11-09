@@ -1,0 +1,503 @@
+{
+ "aiq": [
+  {
+   "id": "aiq-p2",
+   "nombre": "Planta alta",
+   "sub": "P2 · Salas de última espera",
+   "plano": "aero/aiq-p2.webp",
+   "ratio": "1796/700",
+   "espacios": [
+    {
+     "n": "18",
+     "codigo": "AIQ044",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1920 px × 832 px",
+     "foto": "aiq044",
+     "x": 72.13,
+     "y": 29.71
+    },
+    {
+     "n": "19",
+     "codigo": "AIQ045",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1920 px × 1080px",
+     "foto": "aiq045",
+     "x": 74.8,
+     "y": 18.15
+    },
+    {
+     "n": "20",
+     "codigo": "AIQ046",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1920 px × 832 px",
+     "foto": "aiq046",
+     "x": 75.33,
+     "y": 10.45
+    },
+    {
+     "n": "21",
+     "codigo": "AIQ020",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1536 px × 704 px",
+     "foto": "aiq020",
+     "x": 44.87,
+     "y": 53.6
+    },
+    {
+     "n": "22",
+     "codigo": "AIQ058",
+     "tipo": "Mega vinil",
+     "detalle": "",
+     "medida": "11.90 m × 1.90 m",
+     "foto": "aiq058-b",
+     "x": 24.55,
+     "y": 58.22
+    },
+    {
+     "n": "23",
+     "codigo": "AIQ058",
+     "tipo": "Mega vinil",
+     "detalle": "",
+     "medida": "11.60 m × 1.90 m",
+     "foto": "aiq058",
+     "x": 42.73,
+     "y": 33.56
+    },
+    {
+     "n": "9",
+     "codigo": "AIQ009",
+     "tipo": "Bastidor",
+     "detalle": "Mega bastidor",
+     "medida": "8.60 m × 3.10 m",
+     "foto": "aiq009",
+     "x": 95.11,
+     "y": 39.73
+    },
+    {
+     "n": "24",
+     "codigo": "AIQ054 - A",
+     "tipo": "Bastidor",
+     "detalle": "Bastidor en la parte superior",
+     "medida": "7.80 m × 1.60 m",
+     "foto": "aiq-mediamaster",
+     "x": 65.18,
+     "y": 63.61
+    },
+    {
+     "n": "24",
+     "codigo": "AIQ054 - C",
+     "tipo": "Bastidor",
+     "detalle": "Bastidor en la parte superior",
+     "medida": "7.80 m × 1.60 m",
+     "foto": "aiq-mediamaster",
+     "x": 68.92,
+     "y": 79.79
+    },
+    {
+     "n": "24",
+     "codigo": "AIQ054 - D",
+     "tipo": "Bastidor",
+     "detalle": "Bastidor en la parte superior",
+     "medida": "7.80 m × 1.60 m",
+     "foto": "aiq054-d",
+     "x": 56.95,
+     "y": 7.36
+    },
+    {
+     "n": "24",
+     "codigo": "AIQ054 - B",
+     "tipo": "Bastidor",
+     "detalle": "Bastidor en la parte superior",
+     "medida": "7.80 m × 1.60 m",
+     "foto": "aiq054-b",
+     "x": 59.3,
+     "y": 4.28
+    },
+    {
+     "n": "25",
+     "codigo": "AIQ019 - A",
+     "tipo": "Caja de luz",
+     "detalle": "Cajas de luz verticales",
+     "medida": "0.86 m × 0.97 m",
+     "foto": "aiq019-a",
+     "x": 71.06,
+     "y": 89.81
+    },
+    {
+     "n": "25",
+     "codigo": "AIQ019 - B",
+     "tipo": "Caja de luz",
+     "detalle": "Cajas de luz verticales",
+     "medida": "0.86 m × 0.97 m",
+     "foto": "aiq019-b",
+     "x": 69.45,
+     "y": 87.5
+    },
+    {
+     "n": "25",
+     "codigo": "AIQ019 - C",
+     "tipo": "Caja de luz",
+     "detalle": "Cajas de luz verticales",
+     "medida": "0.86 m × 0.97 m",
+     "foto": "aiq019-c",
+     "x": 67.32,
+     "y": 76.71
+    },
+    {
+     "n": "25",
+     "codigo": "AIQ019 - D",
+     "tipo": "Caja de luz",
+     "detalle": "Cajas de luz verticales",
+     "medida": "0.86 m × 0.97 m",
+     "foto": "aiq019-d",
+     "x": 68.92,
+     "y": 73.63
+    },
+    {
+     "n": "25",
+     "codigo": "AIQ019 - E",
+     "tipo": "Caja de luz",
+     "detalle": "Cajas de luz verticales",
+     "medida": "0.86 m × 0.97 m",
+     "foto": "aiq019-e",
+     "x": 66.78,
+     "y": 70.55
+    }
+   ]
+  },
+  {
+   "id": "aiq-p1",
+   "nombre": "Planta baja",
+   "sub": "P1 · Documentación y llegadas",
+   "plano": "aero/aiq-p1.webp",
+   "ratio": "1825/720",
+   "espacios": [
+    {
+     "n": "1",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004-1",
+     "x": 56.28,
+     "y": 73.5
+    },
+    {
+     "n": "2.1",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004",
+     "x": 59.96,
+     "y": 73.5
+    },
+    {
+     "n": "2",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004-1",
+     "x": 63.64,
+     "y": 73.5
+    },
+    {
+     "n": "3",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004",
+     "x": 67.32,
+     "y": 73.5
+    },
+    {
+     "n": "5",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004-1",
+     "x": 59.96,
+     "y": 85.5
+    },
+    {
+     "n": "6",
+     "codigo": "AIQ004",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "2.10 m × 1.65 m",
+     "foto": "aiq004",
+     "x": 64.17,
+     "y": 85.5
+    },
+    {
+     "n": "7",
+     "codigo": "AIQ056",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "3.20 m × 1.60 m",
+     "foto": "aiq056",
+     "x": 98.36,
+     "y": 60.0
+    },
+    {
+     "n": "8",
+     "codigo": "AIQ-P053",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "3.90 m × 4.60m · Pantalla (1536px × 1792px)",
+     "foto": "aiqp053",
+     "x": 98.36,
+     "y": 46.5
+    },
+    {
+     "n": "9",
+     "codigo": "AIQ009",
+     "tipo": "Bastidor",
+     "detalle": "Mega bastidor",
+     "medida": "8.60 m × 3.10 m",
+     "foto": "aiq009",
+     "x": 94.67,
+     "y": 39.0
+    },
+    {
+     "n": "10",
+     "codigo": "AIQ047",
+     "tipo": "Bastidor",
+     "detalle": "Mega bastidor",
+     "medida": "5.56 m × 4.60 m",
+     "foto": "aiq047",
+     "x": 91.52,
+     "y": 34.5
+    },
+    {
+     "n": "11",
+     "codigo": "AIQ047",
+     "tipo": "Bastidor",
+     "detalle": "Mega bastidor",
+     "medida": "8.37 m × 4.60 m",
+     "foto": "aiq047",
+     "x": 88.89,
+     "y": 30.0
+    },
+    {
+     "n": "12",
+     "codigo": "AIQ047",
+     "tipo": "Bastidor",
+     "detalle": "Mega bastidor",
+     "medida": "6.08 m × 4.60 m",
+     "foto": "aiq047",
+     "x": 86.79,
+     "y": 24.0
+    }
+   ]
+  },
+  {
+   "id": "aiq-p1b",
+   "nombre": "Planta baja · 2ª parte",
+   "sub": "P1 · Llegadas y reclamo de equipaje",
+   "plano": "aero/aiq-p1b.webp",
+   "ratio": "1796/603",
+   "espacios": [
+    {
+     "n": "A",
+     "codigo": "AIQ024 - A",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024",
+     "x": 6.59,
+     "y": 35.06
+    },
+    {
+     "n": "B",
+     "codigo": "AIQ024 - B",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024",
+     "x": 13.01,
+     "y": 35.06
+    },
+    {
+     "n": "C",
+     "codigo": "AIQ024 - C",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024-c",
+     "x": 27.44,
+     "y": 35.06
+    },
+    {
+     "n": "D",
+     "codigo": "AIQ024 - D",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024",
+     "x": 32.25,
+     "y": 35.06
+    },
+    {
+     "n": "F",
+     "codigo": "AIQ024 - F",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024-f",
+     "x": 5.52,
+     "y": 85.21
+    },
+    {
+     "n": "G",
+     "codigo": "AIQ024 - G",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024-f",
+     "x": 10.87,
+     "y": 85.21
+    },
+    {
+     "n": "i",
+     "codigo": "AIQ024 - I",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024-i",
+     "x": 22.63,
+     "y": 85.21
+    },
+    {
+     "n": "H",
+     "codigo": "AIQ024 - H",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "1.97 m × 0.97 m",
+     "foto": "aiq024-h",
+     "x": 36.53,
+     "y": 85.21
+    },
+    {
+     "n": "14",
+     "codigo": "AIQ 024 C",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1920 px × 498 px",
+     "foto": "aiq024-c",
+     "x": 21.56,
+     "y": 31.48
+    },
+    {
+     "n": "15",
+     "codigo": "AIQ039",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1080 px × 1920 px",
+     "foto": "aiq039",
+     "x": 30.65,
+     "y": 79.83
+    },
+    {
+     "n": "16",
+     "codigo": "AIQ024",
+     "tipo": "Caja de luz",
+     "detalle": "Caja de luz vertical",
+     "medida": "0.97 m × 1.81 m",
+     "foto": "aiq024",
+     "x": 38.13,
+     "y": 29.68
+    },
+    {
+     "n": "17",
+     "codigo": "AIQ050",
+     "tipo": "Pantalla digital",
+     "detalle": "",
+     "medida": "1920 px × 1080 px",
+     "foto": "aiq050",
+     "x": 60.04,
+     "y": 47.6
+    },
+    {
+     "n": "F2",
+     "codigo": "AIQ039",
+     "tipo": "Pantalla digital",
+     "detalle": "Pantalla vertical",
+     "medida": "1080 px × 1920 px",
+     "foto": "aiq039",
+     "x": 46.15,
+     "y": 11.77
+    },
+    {
+     "n": "F1",
+     "codigo": "AIQ023-B",
+     "tipo": "Caja de luz",
+     "detalle": "",
+     "medida": "5.34 m × 1.55 m",
+     "foto": "aiq023-b",
+     "x": 54.7,
+     "y": 9.09
+    }
+   ]
+  }
+ ],
+ "aicm": [
+  {
+   "id": "aicm",
+   "nombre": "Sala de espera",
+   "sub": "4 megapantallas digitales",
+   "plano": "aero/aicm-mapa.webp",
+   "ratio": "732/533",
+   "claro": true,
+   "espacios": [
+    {
+     "n": "1",
+     "codigo": "Megapantalla 1",
+     "tipo": "Pantalla digital",
+     "detalle": "Megapantalla digital",
+     "medida": "1920 × 512 px",
+     "foto": "aicm-mediamaster-1",
+     "x": 20.5,
+     "y": 24.4
+    },
+    {
+     "n": "2",
+     "codigo": "Megapantalla 2",
+     "tipo": "Pantalla digital",
+     "detalle": "Megapantalla digital",
+     "medida": "1920 × 512 px",
+     "foto": "aicm-mediamaster-2",
+     "x": 52,
+     "y": 11.6
+    },
+    {
+     "n": "3",
+     "codigo": "Megapantalla 3",
+     "tipo": "Pantalla digital",
+     "detalle": "Megapantalla digital",
+     "medida": "1920 × 512 px",
+     "foto": "aicm-mediamaster-3",
+     "x": 19,
+     "y": 75
+    },
+    {
+     "n": "4",
+     "codigo": "Megapantalla 4",
+     "tipo": "Pantalla digital",
+     "detalle": "Megapantalla digital",
+     "medida": "1920 × 512 px",
+     "foto": "aicm-mediamaster-4",
+     "x": 81,
+     "y": 75
+    }
+   ]
+  }
+ ]
+}

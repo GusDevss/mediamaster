@@ -525,6 +525,137 @@ def paginas_medios():
                           'Megapantallas en el <span class="y">AICM</span>', 'Aeropuerto Internacional de la CDMX')),
     ]
 
+# --------------------------------------------------------------------- AEROPUERTOS (explorador interactivo)
+# Los espacios de cada aeropuerto están en partes/aeropuertos.json (código, tipo, medida, foto y posición en el plano).
+AERO_COLORES = {'Pantalla digital': '#FF015B', 'Caja de luz': '#EBFF00', 'Bastidor': '#67FB94', 'Mega vinil': '#8a3ffc'}
+
+def explorador(clave, pisos, titulo, texto):
+    import json
+    tipos = []
+    for p in pisos:
+        for e in p['espacios']:
+            if e['tipo'] not in tipos: tipos.append(e['tipo'])
+    total = sum(len(p['espacios']) for p in pisos)
+    datos, idx = [], 0
+    pisos_html, listas_html, tabs = [], [], []
+    for k, p in enumerate(pisos):
+        pins, items = [], []
+        for e in p['espacios']:
+            col = AERO_COLORES.get(e['tipo'], '#FF015B')
+            datos.append(dict(e, piso=p['nombre'], sub=p['sub']))
+            pins.append('<button class="ax__pin" type="button" style="left:%s%%;top:%s%%;--c:%s" data-i="%d" data-tipo="%s" aria-label="%s, %s"><span>%s</span></button>'
+                        % (e['x'], e['y'], col, idx, E(e['tipo']), E(e['codigo']), E(e['tipo']), E(e['n'])))
+            items.append('<li><button class="ax__item" type="button" data-i="%d" data-tipo="%s" style="--c:%s"><img src="assets/img/aero/%s-t.webp" alt="" loading="lazy" width="84" height="64">'
+                         '<span><b>%s</b><small>%s</small><em>%s</em></span><i>%s</i></button></li>'
+                         % (idx, E(e['tipo']), col, e['foto'], E(e['codigo']), E(e['tipo']), E(e['medida']), E(e['n'])))
+            idx += 1
+        oculto = '' if k == 0 else ' hidden'
+        pisos_html.append('<div class="ax__plan%s" data-piso="%d"%s style="aspect-ratio:%s"><img src="assets/img/%s" alt="Plano %s, %s" loading="%s">%s</div>'
+                          % (' ax__plan--claro' if p.get('claro') else '', k, oculto, p['ratio'], p['plano'], E(p['nombre']), E(p['sub']), 'eager' if k == 0 else 'lazy', ''.join(pins)))
+        listas_html.append('<ul class="ax__ul" data-piso="%d"%s>%s</ul>' % (k, oculto, ''.join(items)))
+        tabs.append('<button class="ax__floor%s" type="button" role="tab" aria-selected="%s" data-piso="%d"><b>%s</b><small>%s</small><i>%d</i></button>'
+                    % (' is-on' if k == 0 else '', 'true' if k == 0 else 'false', k, E(p['nombre']), E(p['sub']), len(p['espacios'])))
+    filtros = '<button class="ax__chip is-on" type="button" data-tipo="*">Todos <i>%d</i></button>' % total + ''.join(
+        '<button class="ax__chip" type="button" data-tipo="%s" style="--c:%s"><span></span>%s</button>' % (E(t), AERO_COLORES.get(t, '#FF015B'), E(t)) for t in tipos)
+    return '''
+<section class="sec" id="ubicaciones"><div class="wrap">
+  <div class="head head--c"><span class="kicker rv">Ubicaciones</span><h2 class="h2 split">%s</h2><p class="lead rv">%s</p></div>
+  <div class="ax rv" data-aero="%s">
+    <div class="ax__bar">%s<div class="ax__filters" aria-label="Filtrar por tipo">%s</div></div>
+    <div class="ax__body">
+      <div class="ax__stage"><div class="ax__scroll">%s</div><div class="ax__tip" role="tooltip" hidden></div>
+        <p class="ax__hint"><span class="live"></span>Pasa el cursor por un número · da clic para ver la ficha completa</p></div>
+      <aside class="ax__list"><div class="ax__lhead"><b data-ax-count>%d</b> espacios en esta planta</div>%s</aside>
+    </div>
+    <script type="application/json" class="ax__data">%s</script>
+  </div>
+</div></section>''' % (titulo, E(texto), clave, ('<div class="ax__floors" role="tablist">%s</div>' % ''.join(tabs)) if len(pisos) > 1 else '',
+                       filtros, ''.join(pisos_html), len(pisos[0]['espacios']), ''.join(listas_html),
+                       json.dumps(datos, ensure_ascii=False).replace('</', '<\\/'))
+
+def kpis(items):
+    return '<section class="sec sec--tight"><div class="wrap kpis">%s</div></section>' % ''.join(
+        '<div class="stat rv rv-d%d"><b>%s</b><small>%s</small></div>' % (i % 4 + 1, v, E(t)) for i, (v, t) in enumerate(items))
+
+def pagina_aeropuerto(d):
+    slug = d['slug']
+    wa_msg = 'Hola Mediamaster, me interesa anunciarme en el %s.' % d['nombre_largo']
+    chips = ''.join('<span class="chip"><b>%s</b>%s</span>' % (b, E(t)) for b, t in d['chips'])
+    grupos = ''.join('<div class="axs rv"><h3>%s</h3>%s</div>' % (g, specs_html(sp)) for g, sp in d['specs'])
+    cuerpo = '''
+<section class="phero">
+  <div class="phero__bg"><img src="assets/img/%s" alt="" fetchpriority="high"></div>
+  <div class="wrap phero__in">
+    <nav class="crumbs rv" aria-label="Ruta"><a href="./">Inicio</a><i></i><span>Aeropuertos</span><i></i><span class="y">%s</span></nav>
+    <h1 class="split">%s</h1>
+    <p class="lead rv">%s</p>
+    <div class="btns rv"><a class="btn btn--pk" href="#ubicaciones">Explorar ubicaciones %s</a><a class="btn btn--gh" data-wa="%s">Cotizar por WhatsApp</a></div>
+    <div class="chips rv">%s</div>
+  </div>
+  <span class="scrolldown" aria-hidden="true">SCROLL</span>
+</section>
+%s
+%s
+<section class="sec"><div class="wrap intro">
+  <div><span class="kicker rv">%s</span><h2 class="h2 split">%s</h2>%s%s</div>
+  <figure class="intro__media rv" style="margin:0"><img src="assets/img/%s" alt="%s" loading="lazy"><figcaption class="intro__badge"><b>%s</b><span>%s</span></figcaption></figure>
+</div></section>
+%s%s%s%s%s''' % (d['hero_img'], d['cod'], d['h1'], E(d['lead']), ico('flecha'), E(wa_msg), chips,
+                  ticker(d['ticker']), kpis(d['kpis']),
+                  d['nombre_largo'], d['intro_title'], ''.join('<p class="txt rv">%s</p>' % p for p in d['intro']), grupos,
+                  d['intro_img'], E(d['nombre_largo']), d['badge'][0], E(d['badge'][1]),
+                  explorador(d['cod'].lower(), d['pisos'], d['explora_title'], d['explora_text']),
+                  otros_medios(slug), faq_html(d['faq']),
+                  cta('Listo para llevar tu marca al <span class="y">siguiente nivel</span>', 'Trabajemos juntos: te armamos un plan con los espacios ideales para tu marca.', d['cta_img'], wa_msg),
+                  contacto('Aeropuertos'))
+    return pagina(slug, d['title'], d['desc'], d['hero_img'], cuerpo)
+
+def paginas_aeropuertos():
+    import json
+    datos = json.loads(leer('aeropuertos.json'))
+    total_aiq = sum(len(p['espacios']) for p in datos['aiq'])
+    aiq = dict(
+        slug='aeropuerto-aiq', cod='AIQ', nombre_largo='Aeropuerto Internacional de Querétaro',
+        title='Publicidad en el Aeropuerto de Querétaro (AIQ) | Mediamaster',
+        desc='Publicidad en el Aeropuerto Internacional de Querétaro: %d espacios entre pantallas digitales, cajas de luz, bastidores y mega viniles. Explora el plano interactivo.' % total_aiq,
+        hero_img='aeropuerto-pasajeros.webp', h1='Aeropuerto <em>AIQ</em>',
+        lead='Potencia tu marca en el Aeropuerto Internacional de Querétaro, un punto estratégico para impactar a miles de viajeros diarios, 24 horas al día.',
+        chips=[('%d' % total_aiq, 'espacios'), ('+10', 'pantallas'), ('24/7', 'exposición')],
+        ticker=['Viajeros', 'Pantallas digitales', 'Cajas de luz', 'Bastidores', 'Mega viniles', 'Alto perfil'],
+        kpis=[('<span>+</span><i style="font-style:normal" data-count="1.3">1.3</i>M', 'pasajeros al año'), ('<span>+</span><i style="font-style:normal" data-count="10">10</i>', 'rutas nacionales e internacionales'),
+              ('<span>+</span><i style="font-style:normal" data-count="120">120</i>', 'vuelos semanales'), ('<i style="font-style:normal" data-count="%d">%d</i>' % (total_aiq, total_aiq), 'espacios publicitarios')],
+        intro_title='Donde tu marca <span class="y">despega</span>',
+        intro=['Potencia tu marca en el <strong>Aeropuerto Internacional de Querétaro (AIQ)</strong>, un punto estratégico para impactar a miles de viajeros diarios.',
+               'Con espacios publicitarios innovadores y formatos versátiles, interiores y exteriores, garantizamos <strong>máxima visibilidad las 24 horas</strong> del día.'],
+        specs=[('Espacios interiores', [('resolucion', 'Pantallas', '+10 pantallas', '1920×1080 · 1920×832 · 1920×512 · 1920×498 · 1536×704 px'),
+                                         ('reloj', 'Exposición', 'Spots de 10 s', 'Tu anuncio se repite cada minuto.'),
+                                         ('archivo', 'Formatos', '.MOV · .MP4 · .JPG', ''), ('contrato', 'Contrato', 'Mínimo 30 días', '')]),
+               ('Espacios exteriores', [('capas', 'Formato', 'Lonas de gran formato', 'Impresión fija de alta calidad.'), ('ojo', 'Exposición', '24 h · 7 días', '')])],
+        intro_img='aeropuerto-gran-campana.webp', badge=('1.3M', 'pasajeros al año en el AIQ'),
+        pisos=datos['aiq'], explora_title='Explora el <span class="y">AIQ</span>',
+        explora_text='Elige la planta, filtra por tipo de espacio y pasa el cursor por los números. Da clic para ver la ficha completa de cada ubicación.',
+        faq=FAQ_AIQ, cta_img='aeropuerto-pasajeros.webp')
+    aicm = dict(
+        slug='aeropuerto-aicm', cod='AICM', nombre_largo='Aeropuerto Internacional de la Ciudad de México',
+        title='Publicidad en el Aeropuerto de la CDMX (AICM) | Mediamaster',
+        desc='4 megapantallas digitales en el Aeropuerto Internacional de la Ciudad de México (AICM), uno de los lugares de mayor tráfico del país.',
+        hero_img='terminal-autobuses.webp', h1='Aeropuerto <em>AICM</em>',
+        lead='4 megapantallas digitales en uno de los lugares de mayor tráfico del país, frente a miles de viajeros todos los días.',
+        chips=[('4', 'megapantallas'), ('1920×512', 'px'), ('30', 'días mínimo')],
+        ticker=['Megapantallas', 'Entorno premium', 'Alto tráfico', 'Viajeros de negocios', 'Turismo', 'Contenido dinámico'],
+        kpis=[('<i style="font-style:normal" data-count="4">4</i>', 'megapantallas digitales'), ('1920×512', 'píxeles por pantalla'),
+              ('<i style="font-style:normal" data-count="10">10</i> s', 'por spot'), ('<i style="font-style:normal" data-count="30">30</i>', 'días de contratación mínima')],
+        intro_title='Donde tu marca <span class="y">despega</span>',
+        intro=['En el <strong>Aeropuerto Internacional de la Ciudad de México</strong> contamos con <strong>4 megapantallas digitales</strong> diseñadas para maximizar el impacto de las campañas en uno de los lugares de mayor tráfico del país.',
+               'Ofrecen una calidad visual excepcional y ubicaciones estratégicas, ideales para captar la atención de miles de viajeros diariamente con contenido dinámico en un entorno premium.'],
+        specs=[('Especificaciones', [('resolucion', 'Resolución', '1920 × 512 px', ''), ('archivo', 'Formatos', '.MOV · .MP4 · .JPG', ''),
+                                     ('ojo', 'Exposición', 'Spots de 10 segundos', ''), ('contrato', 'Contrato', 'Mínimo 30 días', '')])],
+        intro_img='aicm-pantalla.webp', badge=('4', 'megapantallas en la sala de espera'),
+        pisos=datos['aicm'], explora_title='Explora el <span class="y">AICM</span>',
+        explora_text='Pasa el cursor por cada número para ver la megapantalla y da clic para verla en grande.',
+        faq=FAQ_AICM, cta_img='aeropuerto-pasajeros.webp')
+    return [aiq, aicm]
+
 # --------------------------------------------------------------------- HOME
 def home():
     bb = leer('billboard.html')
@@ -665,6 +796,44 @@ ESTADIO_CSS_EXTRA = """
 @keyframes mmeSpotOn{0%{box-shadow:0 0 0 0 rgba(235,255,0,.6)}70%{box-shadow:0 0 0 18px rgba(235,255,0,0)}100%{box-shadow:0 0 0 0 rgba(235,255,0,0)}}
 """
 
+def pruebalo():
+    slides = ('<div class="scr-slides"><div class="scr-slide scr-logo"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
+              '<div class="scr-slide scr-goal"><span>¡GOOOL!</span></div><div class="scr-slide scr-brand"><span>Tu marca aquí</span><i></i></div></div>'
+              '<div class="scr-user"><img alt="Tu diseño en la pantalla"></div>')
+    persona = ('<svg viewBox="0 0 40 120" aria-hidden="true"><circle cx="20" cy="11" r="9"/><path d="M8 26q12-6 24 0l3 40h-6l-2-30-1 82h-8l-1-45-1 45H8l-1-82-2 30H-1z"/></svg>')
+    return '''  <!-- ============================ PRUÉBALO ============================ -->
+  <section class="mme-try" id="pruebalo"><div class="mme-wrap">
+    <div class="mme-head"><span class="mme-kicker mme-rv">PRUÉBALO</span>
+      <h2 class="mme-h2 mme-rv">MIRA TU MARCA EN LA <span class="mme-y">PANTALLA GIGANTE</span></h2>
+      <p class="mme-p mme-rv">Sube tu logo o tu anuncio y velo al instante en la pantalla del estadio. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
+    <div class="try mme-rv">
+      <div class="try__view">
+        <div class="tryit" data-scr><img src="assets/img/estadio-pantalla.webp" alt="Pantalla gigante del estadio con la afición" loading="lazy" width="1600" height="899"><div class="tryit__scr">%s</div><span class="try__tag"><i class="live"></i>Vista en el estadio</span></div>
+        <div class="try__scale">
+          <div class="try__row"><div class="try__screen" data-scr><span class="try__w">20 m</span><span class="try__h">5 m</span><div class="try__flat">%s</div></div>
+            <div class="try__man" title="Persona de 1.75 m a la misma escala">%s</div></div>
+          <small>Vista frontal a escala · la figura mide 1.75 m</small>
+        </div>
+      </div>
+      <aside class="try__panel">
+        <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu imagen aquí</b><span>o haz clic para elegirla · PNG, JPG o WEBP</span><input id="mm-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>
+        <div class="try__info" data-try-info hidden></div>
+        <div class="try__spec">
+          <h3>Tamaño de tu diseño</h3>
+          <ul>
+            <li><span>Proporción</span><b>4 : 1</b><small>igual que la pantalla de 20 × 5 m</small></li>
+            <li><span>Ideal</span><b>3840 × 960 px</b><small>máxima nitidez</small></li>
+            <li><span>Mínimo</span><b>1920 × 480 px</b><small>por debajo se verá pixeleado</small></li>
+          </ul>
+          <p>Usa textos grandes, pocos elementos y colores contrastantes: la afición ve la pantalla a decenas de metros.</p>
+        </div>
+        <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span>Ajuste</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
+        <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi imagen</button>
+          <a class="btn btn--pk btn--sm" data-wa="Hola, ya probé mi diseño en la pantalla gigante del Estadio Corregidora y quiero cotizar.">Cotizar con mi diseño %s</a></div>
+      </aside>
+    </div>
+  </div></section>''' % (slides, slides, persona, ico('subir'), ico('flecha'))
+
 def estadio_partes():
     s = leer('estadio-original.html')
     s = re.sub(r'^<!--.*?-->\s*', '', s, flags=re.S)
@@ -712,7 +881,9 @@ def estadio_partes():
     rep('La salida y las redes: fotos, videos y recuerdos del partido donde tu marca sigue presente.',
         'El cierre: la emoción del resultado, con las fotos y videos que la afición comparte con tu marca en pantalla.')
     rep('<span class="mme-step__tag">Salidas · Contenido digital</span>', '<span class="mme-step__tag">Final y redes sociales</span>')
-    rep('Ver espacios <svg', 'Ver la pantalla <svg')
+    # ---- la galería se reemplaza por el componente para probar tu diseño en la pantalla
+    s, n = re.subn(r'  <!-- =+ GALERÍA =+ -->.*?(?=  <!-- =+ CLIENTES =+ -->)', lambda m: pruebalo() + '\n\n', s, count=1, flags=re.S)
+    assert n == 1
     # ---- preguntas
     items = ''.join('<details class="mme-rv"%s><summary>%s</summary><div class="acc__b"><p>%s</p></div></details>'
                     % (' open' if k == 0 else '', E(q), E(a)) for k, (q, a) in enumerate(ESTADIO_FAQ))
@@ -780,6 +951,8 @@ def main():
     paginas = {'index': home(), 'estadio-corregidora-queretaro': estadio(), 'aviso-de-privacidad': aviso(), '404': no_encontrada()}
     for d in paginas_medios():
         paginas[d['slug']] = pagina_medio(d)
+    for d in paginas_aeropuertos():
+        paginas[d['slug']] = pagina_aeropuerto(d)
     # versión según el contenido: cada cambio de CSS/JS genera una URL nueva y el navegador no usa la copia vieja
     import hashlib
     v = hashlib.md5((css + js).encode('utf-8')).hexdigest()[:10]
