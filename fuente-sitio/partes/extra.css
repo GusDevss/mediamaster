@@ -301,3 +301,4 @@
   .phero:not(.phero--min) h1{max-width:7.2em}
   .phero:not(.phero--min) .lead{max-width:520px}
 }
+.phero h1 small{display:block; font-size:.42em; line-height:1; letter-spacing:.04em; color:#fff; margin-bottom:.12em}
