@@ -108,9 +108,9 @@ def header(actual):
                    % (nombre, ''.join('<a class="%s" href="%s">%s</a>' % ('is-on' if s == actual else '', href(s), c) for s, c in dest)))
     return ('<div class="progress" aria-hidden="true"></div>'
             '<header class="hdr"><div class="hdr__in">%s<nav class="nav" aria-label="Principal">%s</nav>'
-            '<a class="btn btn--pk btn--sm hdr__cta" href="#contacto">Cotizar campaña</a>'
+            '<a class="btn btn--pk btn--sm hdr__cta" href="#contacto">Cotiza tu espacio</a>'
             '<button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mnav"><i></i><i></i><i></i></button></div></header>'
-            '<nav class="mnav" id="mnav" aria-label="Menú móvil">%s<a class="btn btn--pk" href="#contacto">Cotizar campaña</a></nav>'
+            '<nav class="mnav" id="mnav" aria-label="Menú móvil">%s<a class="btn btn--pk" href="#contacto">Cotiza tu espacio</a></nav>'
             % (logo(), ''.join(items), ''.join(mob)))
 
 def contacto(medio_pre=''):
@@ -302,7 +302,7 @@ def simulador(tipo, wa_msg):
       <div class="try__spec"><h3>Tamaño de tu diseño</h3><ul>
         <li><span>Proporción</span><b>%s</b></li><li><span>Ideal</span><b>%s</b><small>máxima nitidez</small></li><li><span>Mínimo</span><b>%s</b><small>por debajo se verá pixeleado</small></li></ul>
         <p>%s</p></div>
-      <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span>Ajuste</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
+      <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span class="try__fitlbl">Ajuste:</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
       <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi diseño</button>
         <a class="btn btn--pk btn--sm" data-wa="%s">Cotizar con mi diseño %s</a></div>
     </aside>
@@ -358,7 +358,7 @@ def pagina_medio(d):
     <nav class="crumbs rv" aria-label="Ruta"><a href="./">Inicio</a><i></i><span>%s</span><i></i><span class="y">%s</span></nav>
     <h1 class="split">%s</h1>
     <p class="lead rv">%s</p>
-    <div class="btns rv"><a class="btn btn--pk" data-wa="%s">Cotiza tu campaña %s</a>%s</div>
+    <div class="btns rv"><a class="btn btn--pk" data-wa="%s">Cotiza tu espacio %s</a>%s</div>
     <div class="chips rv">%s</div>
   </div>
   <span class="scrolldown" aria-hidden="true">SCROLL</span>
@@ -447,7 +447,7 @@ def datos_totems(ciudad, slug, posiciones, mapa):
         vitrina=('totem-impacto.webp', '1/1', [(68, 30, 'Pantalla vertical', 'Formato 1080 × 1920 px que destaca a la altura de la vista.', 'pin--l'),
                                                 (22, 55, 'Cercanía', 'Tu mensaje a pocos metros de tu cliente.', 'pin--r'),
                                                 (68, 72, 'Iluminación y movimiento', 'Contenido dinámico que capta la mirada de día y de noche.', 'pin--l')],
-                 'Diseñados para <span class="y">detener</span> miradas', 'Tótems digitales · %s' % ciudad),
+                 'Diseñados para <span class="y">retener</span> miradas', 'Tótems digitales · %s' % ciudad),
         phone_yt='edVwQNjv_2A', phone_kicker='Formato vertical', phone_title='Pensado para <span class="pk">pantalla vertical</span>',
         phone_text='Si ya tienes contenido para redes sociales en formato vertical, puede funcionar perfecto en nuestros tótems.',
         phone_perks=['Video .MP4 de 10 segundos.', 'Resolución 1080 × 1920 px.', 'Te asesoramos con el diseño de tu anuncio.'],
@@ -750,7 +750,7 @@ def home():
     <span class="hhero__kick rv"><span class="live"></span>MILLONES DE MIRADAS.</span>
     <h1 class="split">Haz que tu <span class="y">marca</span> sea imposible de ignorar</h1>
     <p class="lead rv">Lleva tu marca a <strong>pantallas digitales, tótems y espectaculares de alto impacto</strong>, estratégicamente ubicados en ciudades clave de México.</p>
-    <div class="btns rv"><a class="btn btn--pk" href="#contacto">Cotiza tu campaña %s</a><a class="btn btn--gh" href="#servicios">Ver medios</a></div>
+    <div class="btns rv"><a class="btn btn--pk" href="#contacto">Cotiza tu espacio %s</a><a class="btn btn--gh" href="#servicios">Ver medios</a></div>
     <div class="cities rv"><span>%s Querétaro</span><span>%s CDMX</span><span>%s Puebla</span></div>
   </div>
   <div class="hhero__bb rv rv-d2">%s</div>
@@ -884,7 +884,7 @@ def pruebalo():
           </ul>
           <p>Usa textos grandes, pocos elementos y colores contrastantes: la afición ve la pantalla a decenas de metros.</p>
         </div>
-        <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span>Ajuste</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
+        <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span class="try__fitlbl">Ajuste:</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
         <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi diseño</button>
           <a class="btn btn--pk btn--sm" data-wa="Hola, ya probé mi diseño en la pantalla gigante del Estadio Corregidora y quiero cotizar.">Cotizar con mi diseño %s</a></div>
       </aside>
