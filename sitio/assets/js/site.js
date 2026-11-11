@@ -443,10 +443,12 @@
       if (lastUrl) URL.revokeObjectURL(lastUrl);
       var url = lastUrl = URL.createObjectURL(f), probe = new Image();
       probe.onload = function () {
+        var R = +upl.getAttribute('data-ratio') || 4, MINW = +upl.getAttribute('data-minw') || 1920;
+        var RT = upl.getAttribute('data-ratio-txt') || '4 : 1', IDEAL = upl.getAttribute('data-ideal') || '3840 × 960 px';
         var w = probe.naturalWidth, h = probe.naturalHeight, r = w / h, msg, tipo = 'ok';
-        if (Math.abs(r - 4) / 4 <= .12) msg = '✓ ' + w + ' × ' + h + ' px · proporción ideal para la pantalla.';
-        else { tipo = 'warn'; msg = w + ' × ' + h + ' px · proporción ' + r.toFixed(2).replace(/\.?0+$/, '') + ' : 1. La pantalla es 4 : 1 (por ejemplo 3840 × 960 px): con “Imagen completa” verás franjas y con “Llenar pantalla” se recortará.'; }
-        if (w < 1920 && f.type !== 'image/svg+xml') { tipo = 'warn'; msg += ' Tu imagen mide menos de 1920 px de ancho y podría verse pixeleada.'; }
+        if (Math.abs(r - R) / R <= .12) msg = '✓ ' + w + ' × ' + h + ' px · proporción ideal para la pantalla.';
+        else { tipo = 'warn'; msg = w + ' × ' + h + ' px · tu imagen no tiene la proporción de la pantalla (' + RT + ', por ejemplo ' + IDEAL + '): con “Imagen completa” verás franjas y con “Llenar pantalla” se recortará.'; }
+        if (w < MINW && f.type !== 'image/svg+xml') { tipo = 'warn'; msg += ' Tu imagen mide menos de ' + MINW + ' px de ancho y podría verse pixeleada.'; }
         mostrar(tipo, msg);
         $$('.scr-user img').forEach(function (im) { im.src = url; });
         $$('[data-scr]').forEach(function (s) { s.classList.add('has-user'); });
@@ -477,6 +479,19 @@
     var sc = $('.try__screen', r), man = $('.try__man', r);
     var fit = function () { man.style.setProperty('--man', (sc.offsetHeight * 1.75 / 5).toFixed(1) + 'px'); };
     fit(); window.addEventListener('resize', fit);
+  });
+
+  /* ---------- sonido del video en el teléfono ---------- */
+  $$('.phone__snd').forEach(function (b) {
+    var v = b.parentNode.querySelector('video');
+    b.addEventListener('click', function () {
+      if (!v) return;
+      if (!v.getAttribute('src')) v.src = v.getAttribute('data-src');
+      v.muted = !v.muted;
+      if (!v.muted) { v.volume = 1; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      b.setAttribute('aria-pressed', v.muted ? 'false' : 'true');
+      $('span', b).textContent = v.muted ? 'Activar sonido' : 'Silenciar';
+    });
   });
 
   /* ---------- aeropuertos: explorador de planos ---------- */
@@ -917,7 +932,7 @@
   var CONFIG = {
     // Carpeta de Medios donde subiste los archivos de "subir-a-wordpress"
     MEDIOS: 'assets/',
-    YOUTUBE_ID: 'TGdE6jRWyb8',          // video oficial (fondo del encabezado y botón "Ver video")
+    YOUTUBE_ID: 'EF8OAkjTtSk',          // video oficial (fondo del encabezado y botón "Ver video")
     WHATSAPP: '524421589486',
     SEGUNDOS_POR_ESPACIO: 5               // cambio automático en el mapa del estadio
   };

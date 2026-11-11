@@ -1234,6 +1234,72 @@ p{margin:0 0 1em}
 .try__spec li{grid-template-columns:110px 1fr}
 .mme .btn{font:600 15px/1 var(--body)}
 
+/* ---------- portadas: la imagen se aprecia más ---------- */
+.phero__bg::after{background:linear-gradient(90deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.5) 38%,rgba(0,0,0,.08) 68%,rgba(0,0,0,0) 100%),linear-gradient(0deg,#000 0%,rgba(0,0,0,0) 34%),linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0) 20%)}
+
+/* ---------- home · Expertos: imagen protagonista, texto abajo ---------- */
+.expert{min-height:min(92svh,860px); align-items:flex-end; padding:0 0 70px}
+.expert__bg{inset:-8% 0}
+.expert__bg img{object-position:50% 35%}
+.expert::after{background:linear-gradient(0deg,#000 0%,rgba(0,0,0,.82) 22%,rgba(0,0,0,0) 52%),linear-gradient(180deg,#000 0%,rgba(0,0,0,0) 16%),linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,0) 40%)}
+.expert__grid{grid-template-columns:1fr auto; align-items:end}
+.expert h2{font-size:clamp(40px,5vw,76px); margin-bottom:16px}
+.expert .lead{max-width:700px; margin:0}
+.expert .playbtn{width:96px; height:96px; margin:0 0 6px}
+@media (max-width:1024px){ .expert{min-height:640px} .expert__grid{grid-template-columns:1fr} }
+
+/* ---------- mapa en versión clara, sin la barra superior ---------- */
+.map{background:#e9eef3}
+.map iframe{inset:-74px 0 0 0; height:calc(100% + 74px); filter:none}
+
+/* ---------- sonido del video del teléfono ---------- */
+.phone__snd{position:absolute; z-index:3; left:50%; bottom:18px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:30px; border:1px solid rgba(255,255,255,.3); background:rgba(0,0,0,.6); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); font-size:13px; font-weight:600; white-space:nowrap; transition:.25s}
+.phone__snd svg{width:18px; height:18px}
+.phone__snd .on{display:none} .phone__snd[aria-pressed="true"] .on{display:inline} .phone__snd[aria-pressed="true"] .off{display:none}
+.phone__snd:hover,.phone__snd[aria-pressed="true"]{background:var(--pink); border-color:var(--pink)}
+
+/* ---------- simulador de anuncio (pantalla, tótem, espectacular) ---------- */
+.sim__stage{position:relative; display:grid; place-items:center; min-height:560px; padding:60px 40px 40px; border-radius:18px; overflow:hidden; isolation:isolate; border:1px solid var(--line)}
+.sim__stage::before{content:""; position:absolute; inset:-20px; z-index:-2; background:var(--bg) center/cover; filter:blur(14px) brightness(.35) saturate(1.3)}
+.sim__stage::after{content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(ellipse at 50% 45%,rgba(138,63,252,.25),transparent 60%),linear-gradient(0deg,rgba(0,0,0,.6),transparent 40%)}
+.sim__dev{position:relative; width:100%}
+.sim__scr{position:relative; overflow:hidden; background:#04060a; container-type:size; box-shadow:0 0 70px -10px rgba(255,1,91,.55),0 30px 60px rgba(0,0,0,.6)}
+.sim__scr::after{content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle,rgba(255,255,255,.13) .7px,transparent 1.2px) 0 0/5px 5px,linear-gradient(115deg,rgba(255,255,255,.12),transparent 35%)}
+.sim__dev--pantalla{max-width:620px; padding-bottom:150px}
+.sim__dev--pantalla .sim__scr{aspect-ratio:16/9; border:8px solid #1d2128; border-radius:6px}
+.sim__dev--pantalla::after{content:""; position:absolute; left:50%; bottom:0; width:34px; height:150px; margin-left:-17px; background:linear-gradient(90deg,#15171b,#5b616b 40%,#1b1e23); border-radius:2px}
+.sim__dev--totem{width:min(270px,70%); padding-bottom:38px}
+.sim__dev--totem .sim__scr{aspect-ratio:9/16; border:12px solid #15181d; border-radius:14px; box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 70px -10px rgba(103,251,148,.5),0 30px 60px rgba(0,0,0,.6)}
+.sim__dev--totem::after{content:""; position:absolute; left:12%; right:12%; bottom:0; height:38px; background:linear-gradient(#22262d,#0b0c0f); border-radius:3px 3px 0 0}
+.sim__dev--espectacular{max-width:640px; padding:46px 0 130px}
+.sim__dev--espectacular .sim__scr{aspect-ratio:2/1; border:10px solid #2a2e35; border-radius:2px; box-shadow:0 0 0 1px rgba(255,255,255,.1),0 0 70px -10px rgba(255,178,30,.55),0 30px 60px rgba(0,0,0,.6)}
+.sim__dev--espectacular::before{content:""; position:absolute; left:6%; right:6%; top:0; height:46px; background:radial-gradient(ellipse 30px 10px at 10% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 10px at 37% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 10px at 63% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 10px at 90% 18%,#fff6d8,transparent 70%),linear-gradient(180deg,rgba(255,246,216,.22),transparent)}
+.sim__dev--espectacular::after{content:""; position:absolute; left:50%; bottom:0; width:42px; height:130px; margin-left:-21px; background:linear-gradient(90deg,#15171b,#6a707a 40%,#1b1e23)}
+.sim__scr .scr-slide{text-align:center; padding:6cqmin}
+.sl-a img{width:22cqmin; height:auto; margin-bottom:3cqmin}
+.sl-a b{font:400 13cqmin/1 var(--body); letter-spacing:-.02em} .sl-a b strong{font-weight:800}
+.sl-a small{font-size:4cqmin; letter-spacing:.18em; color:rgba(255,255,255,.75); margin-top:2cqmin}
+.sl-b{background:linear-gradient(135deg,#ff0a6c,#8a3ffc)}
+.sl-b span{font:900 19cqmin/.95 var(--head); text-transform:uppercase}
+.sl-b i{display:block; width:50cqmin; height:2.6cqmin; margin-top:4cqmin; background:var(--brand-steps)}
+.sl-c{background:var(--yellow); color:#000}
+.sl-c b{font:900 15cqmin/1 var(--head); text-transform:uppercase}
+.sl-c small{font:600 6cqmin/1.2 var(--body); margin-top:3cqmin}
+.sim__scr .scr-user img{max-width:100%; max-height:100%}
+@media (max-width:767px){
+  .sim__stage{min-height:420px; padding:50px 18px 24px}
+  .sim__dev--pantalla{padding-bottom:90px} .sim__dev--pantalla::after{height:90px}
+  .sim__dev--espectacular{padding-bottom:80px} .sim__dev--espectacular::after{height:80px}
+}
+.phero h1{max-width:8.6em}
+.sim__dev--espectacular::before{background:radial-gradient(ellipse 30px 9px at 10% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 9px at 37% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 9px at 63% 18%,#fff6d8,transparent 70%),radial-gradient(ellipse 30px 9px at 90% 18%,#fff6d8,transparent 70%),linear-gradient(180deg,rgba(255,246,216,.07),transparent)}
+@media (min-width:1025px){
+  .phero:not(.phero--min) .phero__bg{left:34%; -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26%); mask-image:linear-gradient(90deg,transparent 0,#000 26%)}
+  .phero:not(.phero--min) .phero__bg::after{background:linear-gradient(0deg,#000 0%,rgba(0,0,0,0) 30%),linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0) 18%)}
+  .phero:not(.phero--min) h1{max-width:7.2em}
+  .phero:not(.phero--min) .lead{max-width:520px}
+}
+
 /* ---------- página de estadio ---------- */
 
 /* ===================== base (mismo estilo del sitio) ===================== */

@@ -270,6 +270,44 @@ def vitrina(imagen, ar, pines, titulo, sub):
     return ('<div class="show rv" style="--ar:%s"><img class="show__img" src="assets/img/%s" alt="%s" loading="lazy"><div class="show__shade"></div>%s'
             '<div class="show__cap"><div><small>Toca los puntos</small><h3>%s</h3></div><small>%s</small></div></div>' % (ar, imagen, E(titulo), ps, titulo, E(sub)))
 
+# --------------------------------------------------------------------- simulador de anuncio
+SIM = {
+    'pantalla': dict(nombre='pantalla digital', ratio=16/9, rtxt='16 : 9', ideal='1920 × 1080 px', minw=1280, minimo='1280 × 720 px',
+                     formato='Video .MP4 de 10 s (para la vista previa usa una imagen).', fondo='pantalla-ciudad-noche.webp'),
+    'totem': dict(nombre='tótem', ratio=9/16, rtxt='9 : 16 (vertical)', ideal='1080 × 1920 px', minw=720, minimo='720 × 1280 px',
+                  formato='Video .MP4 vertical de 10 s (para la vista previa usa una imagen).', fondo='totem-restaurante.webp'),
+    'espectacular': dict(nombre='espectacular', ratio=2, rtxt='2 : 1 aprox.', ideal='4800 × 2400 px', minw=2400, minimo='2400 × 1200 px',
+                         formato='.JPG, .PNG o .PDF a 300 dpi al 10% del tamaño real. La medida exacta depende de la ubicación.', fondo='espectacular-atardecer.webp'),
+}
+
+def simulador(tipo, wa_msg):
+    c = SIM[tipo]
+    slides = ('<div class="scr-slides"><div class="scr-slide sl-a"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
+              '<div class="scr-slide sl-b"><span>Tu marca</span><span>aquí</span><i></i></div>'
+              '<div class="scr-slide sl-c"><b>+ Visibilidad</b><small>Anúnciate hoy</small></div></div>'
+              '<div class="scr-user"><img alt="Tu anuncio en la pantalla"></div>')
+    return '''
+<section class="sec" id="simulador"><div class="wrap">
+  <div class="head head--c"><span class="kicker rv">Simulador</span><h2 class="h2 split">Mira tu anuncio en un <span class="y">%s</span></h2>
+    <p class="lead rv">Sube tu diseño y velo al instante en nuestro %s. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
+  <div class="try rv">
+    <div class="sim__stage" style="--bg:url(../img/%s)"><div class="sim__dev sim__dev--%s" data-scr><div class="sim__scr">%s</div></div>
+      <span class="try__tag"><i class="live"></i>Vista previa</span></div>
+    <aside class="try__panel">
+      <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu diseño aquí</b><span>o haz clic para elegirlo · PNG, JPG o WEBP</span>
+        <input id="mm-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-ratio="%.4f" data-ratio-txt="%s" data-ideal="%s" data-minw="%d"></label>
+      <div class="try__info" data-try-info hidden></div>
+      <div class="try__spec"><h3>Tamaño de tu diseño</h3><ul>
+        <li><span>Proporción</span><b>%s</b></li><li><span>Ideal</span><b>%s</b><small>máxima nitidez</small></li><li><span>Mínimo</span><b>%s</b><small>por debajo se verá pixeleado</small></li></ul>
+        <p>%s</p></div>
+      <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span>Ajuste</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
+      <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi diseño</button>
+        <a class="btn btn--pk btn--sm" data-wa="%s">Cotizar con mi diseño %s</a></div>
+    </aside>
+  </div>
+</div></section>''' % (c['nombre'], c['nombre'], c['fondo'], tipo, slides, ico('subir'), c['ratio'], c['rtxt'], c['ideal'], c['minw'],
+                       c['rtxt'], c['ideal'], c['minimo'], E(c['formato']), E(wa_msg + ' Ya probé mi diseño en el simulador.'), ico('flecha'))
+
 # --------------------------------------------------------------------- páginas de medios
 def pagina_medio(d):
     slug = d['slug']
@@ -287,6 +325,7 @@ def pagina_medio(d):
         pantalla = '<button class="yt-face" type="button" data-yt="%s" aria-label="Reproducir video"><img src="https://i.ytimg.com/vi/%s/hqdefault.jpg" alt="" loading="lazy"><i></i></button>' % (d['phone_yt'], d['phone_yt'])
     else:
         pantalla = '<video muted loop playsinline preload="none" data-src="assets/video/%s" poster="assets/img/%s"></video>' % d['phone_video']
+        pantalla += ('<button class="phone__snd" type="button" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">%s</svg><span>Activar sonido</span></button>' % ICO['sonido_off'])
     telefono = '''
 <section class="sec"><div class="wrap vsplit">
   <div class="phone rv"><div class="phone__scr">%s</div></div>
@@ -294,6 +333,8 @@ def pagina_medio(d):
   <div class="btns rv" style="margin-top:30px"><a class="btn btn--pk" data-wa="%s">Quiero mi campaña %s</a></div></div>
 </div></section>''' % (pantalla, d['phone_kicker'], d['phone_title'], E(d['phone_text']),
                        ('<ul class="perks">%s</ul>' % ''.join('<li class="rv">%s</li>' % p for p in d['phone_perks'])), E(wa_msg), ico('flecha'))
+    if d.get('simulador'):
+        telefono = simulador(d['simulador'], wa_msg)
 
     # ubicaciones
     if d.get('mapa'):
@@ -309,7 +350,7 @@ def pagina_medio(d):
 
     cuerpo = '''
 <section class="phero">
-  <div class="phero__bg"><img src="assets/img/%s" alt="" fetchpriority="high"></div>
+  <div class="phero__bg"><img src="assets/img/%s" alt="" fetchpriority="high" style="object-position:%s"></div>
   <div class="wrap phero__in">
     <nav class="crumbs rv" aria-label="Ruta"><a href="./">Inicio</a><i></i><span>%s</span><i></i><span class="y">%s</span></nav>
     <h1 class="split">%s</h1>
@@ -327,7 +368,7 @@ def pagina_medio(d):
 <section class="sec sec--tight"><div class="wrap">%s</div></section>
 %s%s%s%s%s
 %s
-''' % (d['hero_img'], E(nombre), E(ciudad), d['h1'], E(d['lead']), E(wa_msg), ico('flecha'), hero_btn2, chips,
+''' % (d['hero_img'], d.get('hero_pos', '50% 50%'), E(nombre), E(ciudad), d['h1'], E(d['lead']), E(wa_msg), ico('flecha'), hero_btn2, chips,
        ticker(d['ticker']),
        d['intro_kicker'], d['intro_title'], parrafos, specs_html(d['specs']), perks, d['intro_img'], E(nombre), d['badge'][0], E(d['badge'][1]),
        vitrina(*d['vitrina']),
@@ -389,7 +430,7 @@ def datos_totems(ciudad, slug, posiciones, mapa):
         slug=slug, medio='Tótems',
         title='Tótems digitales en %s · Publicidad premium | Mediamaster' % ciudad,
         desc='Tótems digitales publicitarios en %s: pantallas verticales en zonas premium, videos de 10 segundos y monitoreo 24/7.' % ciudad,
-        hero_img='totem-impacto.webp', h1='Tótems <em>digitales</em> en %s' % ciudad,
+        hero_img='totem-impacto.webp', hero_pos='50% 35%', h1='Tótems <em>digitales</em> en %s' % ciudad,
         lead='Pantallas verticales en ubicaciones premium: más cerca de tu cliente, más impacto para tu marca.',
         chips=[(posiciones, 'posiciones'), ('1080×1920', 'vertical'), ('24/7', 'monitoreo')],
         ticker=['Más cerca', 'Más impacto', 'Zonas premium', 'Iluminación', 'Movimiento', 'Interactividad'],
@@ -425,7 +466,7 @@ def datos_espect(ciudad, slug, mapa, yt, vit_img, vit_ar, pines):
         slug=slug, medio='Espectaculares',
         title='Espectaculares en %s · Renta de anuncios | Mediamaster' % ciudad,
         desc='Renta de espectaculares en %s: más de 100 ubicaciones, lonas de gran formato y exposición 24/7 en avenidas de alta afluencia.' % ciudad,
-        hero_img='espectacular-autopista.webp', h1='Espectaculares en <em>%s</em>' % ciudad,
+        hero_img='espectacular-autopista.webp', hero_pos='50% 22%', h1='Espectaculares en <em>%s</em>' % ciudad,
         lead='Anuncios de gran formato en posiciones estratégicas para captar la atención de miles de personas a diario.',
         chips=[('+100', 'ubicaciones'), ('24/7', 'exposición'), ('365', 'días al año')],
         ticker=['Gran formato', 'Visibles 24/7', '+100 ubicaciones', 'Avenidas principales', 'Zonas comerciales', 'Alto impacto'],
@@ -488,7 +529,17 @@ UBIC_AIQ = ('<div class="cards">%s</div>' % ''.join(
         ('aicm-pantalla.webp', 'Salas', 'Salas de espera', 'Tiempo de exposición prolongado mientras esperan su vuelo.')])))
 
 def paginas_medios():
-    return [
+    return [x for x in _paginas_medios()]
+
+def _ajustes(d):
+    extra = {'pantallas-digitales-puebla': dict(hero_pos='50% 18%', simulador='pantalla'),
+             'totems-queretaro': dict(simulador='totem'),
+             'espectaculares-puebla': dict(simulador='espectacular')}
+    d.update(extra.get(d['slug'], {}))
+    return d
+
+def _paginas_medios():
+    return [_ajustes(d) for d in [
         datos_pantallas('Querétaro', 'pantallas-digitales-queretaro', 'https://www.google.com/maps/d/embed?mid=1Krs1K62gw8oBcrio317pOVz5HN6nbx0&ehbc=2E312F',
                         ['Carretera Federal 57', 'Av. 5 de Febrero', 'Paseo de la República', 'Constituyentes', 'Bernardo Quintana'],
                         'queretaro-noche.webp', 'pantallas-mapa-queretaro.webp', 'queretaro-noche.webp'),
@@ -496,7 +547,7 @@ def paginas_medios():
                         'pantalla-ciudad-noche.webp', 'pantalla-edificio.webp', 'pantalla-ciudad-noche.webp',
                         [(70, 30, 'Pantalla LED', 'Alta resolución, visible de día y de noche.', 'pin--l'),
                          (60, 78, 'Vialidades clave', 'Tu mensaje frente al flujo vehicular de la ciudad.', 'pin--l'),
-                         (22, 70, 'Iluminación nocturna', 'Tu marca sigue brillando cuando cae la noche.', 'pin--r')], '1/1'),
+                         (22, 70, 'Contenido dinámico', 'Cambia tus artes sin costo y rota hasta 3 versiones de tu spot.', 'pin--r')], '1/1'),
         datos_totems('Querétaro', 'totems-queretaro', '+40', 'https://www.google.com/maps/d/embed?mid=1Z9GKW4FB0al52BJLZVpNMNVxpBbcfrk'),
         datos_totems('Puebla', 'totems-puebla', '+10', 'https://www.google.com/maps/d/embed?mid=1uZ2v2RxfGYYgNnMPmJxxmmp8DRCsVIA'),
         datos_espect('Querétaro', 'espectaculares-queretaro', 'https://www.google.com/maps/d/embed?mid=194RMs4KqGqeGGvdbm3sGd8NSoryIQgs', None,
@@ -523,7 +574,7 @@ def paginas_medios():
                                                               (66, 68, 'Alto tráfico', 'Uno de los puntos de mayor afluencia del país.', 'pin--l'),
                                                               (20, 72, 'Entorno premium', 'Viajeros nacionales e internacionales.', 'pin--r')],
                           'Megapantallas en el <span class="y">AICM</span>', 'Aeropuerto Internacional de la CDMX')),
-    ]
+    ]]
 
 # --------------------------------------------------------------------- AEROPUERTOS (explorador interactivo)
 # Los espacios de cada aeropuerto están en partes/aeropuertos.json (código, tipo, medida, foto y posición en el plano).
@@ -584,7 +635,7 @@ def pagina_aeropuerto(d):
     grupos = ''.join('<div class="axs rv"><h3>%s</h3>%s</div>' % (g, specs_html(sp)) for g, sp in d['specs'])
     cuerpo = '''
 <section class="phero">
-  <div class="phero__bg"><img src="assets/img/%s" alt="" fetchpriority="high"></div>
+  <div class="phero__bg"><img src="assets/img/%s" alt="" fetchpriority="high" style="object-position:%s"></div>
   <div class="wrap phero__in">
     <nav class="crumbs rv" aria-label="Ruta"><a href="./">Inicio</a><i></i><span>Aeropuertos</span><i></i><span class="y">%s</span></nav>
     <h1 class="split">%s</h1>
@@ -600,7 +651,7 @@ def pagina_aeropuerto(d):
   <div><span class="kicker rv">%s</span><h2 class="h2 split">%s</h2>%s%s</div>
   <figure class="intro__media rv" style="margin:0"><img src="assets/img/%s" alt="%s" loading="lazy"><figcaption class="intro__badge"><b>%s</b><span>%s</span></figcaption></figure>
 </div></section>
-%s%s%s%s%s''' % (d['hero_img'], d['cod'], d['h1'], E(d['lead']), ico('flecha'), E(wa_msg), chips,
+%s%s%s%s%s''' % (d['hero_img'], d.get('hero_pos', '50% 50%'), d['cod'], d['h1'], E(d['lead']), ico('flecha'), E(wa_msg), chips,
                   ticker(d['ticker']), kpis(d['kpis']),
                   d['nombre_largo'], d['intro_title'], ''.join('<p class="txt rv">%s</p>' % p for p in d['intro']), grupos,
                   d['intro_img'], E(d['nombre_largo']), d['badge'][0], E(d['badge'][1]),
@@ -618,7 +669,7 @@ def paginas_aeropuertos():
         slug='aeropuerto-aiq', cod='AIQ', nombre_largo='Aeropuerto Internacional de Querétaro',
         title='Publicidad en el Aeropuerto de Querétaro (AIQ) | Mediamaster',
         desc='Publicidad en el Aeropuerto Internacional de Querétaro: %d espacios entre pantallas digitales, cajas de luz, bastidores y mega viniles. Explora el plano interactivo.' % total_aiq,
-        hero_img='aeropuerto-pasajeros.webp', h1='Aeropuerto <em>AIQ</em>',
+        hero_img='aeropuerto-pasajeros.webp', hero_pos='60% 40%', h1='Aeropuerto <em>AIQ</em>',
         lead='Potencia tu marca en el Aeropuerto Internacional de Querétaro, un punto estratégico para impactar a miles de viajeros diarios, 24 horas al día.',
         chips=[('%d' % total_aiq, 'espacios'), ('+10', 'pantallas'), ('24/7', 'exposición')],
         ticker=['Viajeros', 'Pantallas digitales', 'Cajas de luz', 'Bastidores', 'Mega viniles', 'Alto perfil'],
@@ -639,7 +690,7 @@ def paginas_aeropuertos():
         slug='aeropuerto-aicm', cod='AICM', nombre_largo='Aeropuerto Internacional de la Ciudad de México',
         title='Publicidad en el Aeropuerto de la CDMX (AICM) | Mediamaster',
         desc='4 megapantallas digitales en el Aeropuerto Internacional de la Ciudad de México (AICM), uno de los lugares de mayor tráfico del país.',
-        hero_img='terminal-autobuses.webp', h1='Aeropuerto <em>AICM</em>',
+        hero_img='terminal-autobuses.webp', hero_pos='85% 30%', h1='Aeropuerto <em>AICM</em>',
         lead='4 megapantallas digitales en uno de los lugares de mayor tráfico del país, frente a miles de viajeros todos los días.',
         chips=[('4', 'megapantallas'), ('1920×512', 'px'), ('30', 'días mínimo')],
         ticker=['Megapantallas', 'Entorno premium', 'Alto tráfico', 'Viajeros de negocios', 'Turismo', 'Contenido dinámico'],
