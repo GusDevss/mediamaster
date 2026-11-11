@@ -285,8 +285,8 @@ SIM = {
                          formato='.JPG, .PNG o .PDF a 300 dpi al 10% del tamaño real. La medida exacta depende de la ubicación.', fondo='espectacular-atardecer.webp'),
 }
 
-def simulador(tipo, wa_msg):
-    c = SIM[tipo]
+def simulador(tipo, wa_msg, extra=None):
+    c = dict(SIM[tipo], **(extra or {}))
     slides = ('<div class="scr-slides"><div class="scr-slide sl-a"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
               '<div class="scr-slide sl-b"><span>Tu marca</span><span>aquí</span><i></i></div>'
               '<div class="scr-slide sl-c"><b>+ Visibilidad</b><small>Anúnciate hoy</small></div></div>'
@@ -343,7 +343,7 @@ def pagina_medio(d):
 </div></section>''' % (pantalla, d['phone_kicker'], d['phone_title'], E(d['phone_text']),
                        ('<ul class="perks">%s</ul>' % ''.join('<li class="rv">%s</li>' % p for p in d['phone_perks'])), E(wa_msg), ico('flecha'))
     if d.get('simulador'):
-        telefono = (telefono if d.get('con_video') else '') + simulador(d['simulador'], wa_msg)
+        telefono = (telefono if d.get('con_video') else '') + simulador(d['simulador'], wa_msg, d.get('sim_extra'))
 
     # ubicaciones
     if d.get('mapa'):
@@ -542,11 +542,13 @@ def paginas_medios():
 
 def _ajustes(d):
     extra = {'pantallas-digitales-queretaro': dict(simulador='pantalla', con_video=True),
-             'pantallas-digitales-puebla': dict(hero_pos='50% 18%', simulador='pantalla'),
-             'totems-queretaro': dict(simulador='totem'),
-             'totems-puebla': dict(simulador='totem'),
+             'pantallas-digitales-puebla': dict(hero_img='espectacular-puebla-entorno.webp', hero_pos='75% 40%', simulador='pantalla', sim_extra=dict(mock='espectacular-puebla-entorno.webp', mock_ar='1448/1086', area=(59.6, 30.1, 32.0, 23.0), lugar='En Puebla')),
+             'totems-queretaro': dict(hero_img='totem-queretaro-entorno.webp', hero_pos='65% 50%', simulador='totem',
+                                      sim_extra=dict(mock='totem-queretaro-entorno.webp', mock_ar='1445/1088', area=(56.2, 29.8, 16.3, 43.0), lugar='En un acceso de alto flujo')),
+             'totems-puebla': dict(hero_img='totem-puebla-entorno.webp', hero_pos='60% 45%', simulador='totem',
+                                   sim_extra=dict(mock='totem-puebla-entorno.webp', mock_ar='1445/1089', area=(50.7, 21.6, 19.5, 52.3), lugar='En la entrada de un restaurante')),
              'espectaculares-queretaro': dict(simulador='espectacular'),
-             'espectaculares-puebla': dict(simulador='espectacular')}
+             'espectaculares-puebla': dict(hero_img='espectacular-puebla-entorno.webp', hero_pos='100% 75%', simulador='espectacular', sim_extra=dict(mock='espectacular-puebla-entorno.webp', mock_ar='1448/1086', area=(59.6, 30.1, 32.0, 23.0), lugar='En Puebla'))}
     d.update(extra.get(d['slug'], {}))
     return d
 
