@@ -14,7 +14,7 @@
     { titulo: 'Tótems',               imagen: U + 'totem-restaurante.webp',       url: 'totems-queretaro',              color: '#22d65a' },
     { titulo: 'Aeropuerto AIQ',       imagen: U + 'aeropuerto-gran-campana.webp', url: 'aeropuerto-aiq',                color: '#ff0a6c' },
     { titulo: 'Aeropuerto AICM',      imagen: U + 'aicm-pantalla.webp',           url: 'aeropuerto-aicm',               color: '#3aa0ff' },
-    { titulo: 'Estadio Corregidora',  imagen: U + 'estadio-pantalla.webp',        url: 'estadio-corregidora-queretaro', color: '#f5e400' }
+    { titulo: 'Estadio La Corregidora',  imagen: U + 'estadio-pantalla.webp',        url: 'estadio-corregidora-queretaro', color: '#f5e400' }
   ];
 
   var VELOCIDAD = 0.12;           // grados por frame (más alto = gira más rápido)

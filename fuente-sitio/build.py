@@ -72,7 +72,7 @@ MEDIOS = {
     'espectaculares-puebla': ('Espectaculares', 'Puebla', 'espectacular-noche.webp', 'Más de 100 ubicaciones para llegar a las personas correctas.'),
     'aeropuerto-aiq': ('Aeropuerto AIQ', 'Querétaro', 'aeropuerto-gran-campana.webp', 'Miles de viajeros diarios en el Aeropuerto Internacional de Querétaro.'),
     'aeropuerto-aicm': ('Aeropuerto AICM', 'CDMX', 'aicm-pantalla.webp', '4 megapantallas en uno de los aeropuertos con mayor tráfico del país.'),
-    'estadio-corregidora-queretaro': ('Estadio Corregidora', 'Querétaro', 'estadio-pantalla.webp', 'La pantalla gigante de 5 × 20 m frente a miles de aficionados.'),
+    'estadio-corregidora-queretaro': ('Estadio La Corregidora', 'Querétaro', 'estadio-pantalla.webp', 'La pantalla gigante de 5 × 20 m frente a miles de aficionados.'),
 }
 
 NAV = [
@@ -186,7 +186,7 @@ def footer():
 <button class="totop" type="button" aria-label="Volver arriba"><svg class="ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20"/></svg>%s</button>
 <div class="modal" hidden><div class="modal__box" role="dialog" aria-modal="true" aria-label="Video"><button class="modal__x" type="button" aria-label="Cerrar">×</button><div class="modal__frame"></div></div></div>
 ''' % (redes,
-       col('Servicios', [('pantallas-digitales-queretaro', 'Pantallas digitales', 'resolucion'), ('totems-queretaro', 'Tótems', 'movil'), ('espectaculares-queretaro', 'Espectaculares', 'medida'), ('estadio-corregidora-queretaro', 'Estadio Corregidora', 'estadio')]),
+       col('Servicios', [('pantallas-digitales-queretaro', 'Pantallas digitales', 'resolucion'), ('totems-queretaro', 'Tótems', 'movil'), ('espectaculares-queretaro', 'Espectaculares', 'medida'), ('estadio-corregidora-queretaro', 'Estadio La Corregidora', 'estadio')]),
        col('Ciudades', [('pantallas-digitales-queretaro', 'Querétaro', 'pin'), ('pantallas-digitales-puebla', 'Puebla', 'pin'), ('aeropuerto-aicm', 'CDMX', 'pin')]),
        col('Aeropuertos', [('aeropuerto-aiq', 'AIQ · Querétaro', 'avion'), ('aeropuerto-aicm', 'AICM · CDMX', 'avion')]),
        E(mapa), MAPA_OFICINA, ico('pin'), DIRECCION, TEL.replace(' ', ''), ico('tel'), TEL, CORREO, ico('mail'), CORREO, WA_SVG, ico('arriba', 'arr ico'))
@@ -274,11 +274,14 @@ def vitrina(imagen, ar, pines, titulo, sub):
 ACC_IMG = 'image/png,image/jpeg,image/webp,image/svg+xml'
 ACC_VID = 'image/png,image/jpeg,image/webp,image/svg+xml,video/mp4,video/webm,video/quicktime'
 SIM = {
-    'pantalla': dict(nombre='pantalla digital', ratio=16/9, rtxt='16 : 9', ideal='1920 × 1080 px', minw=1280, minimo='1280 × 720 px',
+    'pantalla': dict(nombre='pantalla digital', art='una', pos='nuestra', mock='queretaro-noche.webp', mock_ar='1671/941',
+                     area=(61.2, 12.6, 14.2, 16.4), lugar='En la calle', ratio=16/9, rtxt='16 : 9', ideal='1920 × 1080 px', minw=1280, minimo='1280 × 720 px',
                      formato='Video .MP4 de 10 s o imagen fija. Puedes subir tu video tal cual para verlo en la pantalla.', fondo='pantalla-ciudad-noche.webp', video=True),
-    'totem': dict(nombre='tótem', ratio=9/16, rtxt='9 : 16 (vertical)', ideal='1080 × 1920 px', minw=720, minimo='720 × 1280 px',
+    'totem': dict(nombre='tótem', art='un', pos='nuestro', mock='totem-restaurante.webp', mock_ar='1/1',
+                  area=(58.8, 20.6, 31.0, 64.4), lugar='En un restaurante', ratio=9/16, rtxt='9 : 16 (vertical)', ideal='1080 × 1920 px', minw=720, minimo='720 × 1280 px',
                   formato='Video .MP4 vertical de 10 s o imagen fija. Puedes subir tu video tal cual para verlo en el tótem.', fondo='totem-restaurante.webp', video=True),
-    'espectacular': dict(nombre='espectacular', ratio=2, rtxt='2 : 1 aprox.', ideal='4800 × 2400 px', minw=2400, minimo='2400 × 1200 px',
+    'espectacular': dict(nombre='espectacular', art='un', pos='nuestro', mock='espectacular-atardecer.webp', mock_ar='1/1',
+                         area=(57.6, 17.8, 38.0, 25.8), lugar='En la avenida', ratio=2, rtxt='2 : 1 aprox.', ideal='4800 × 2400 px', minw=2400, minimo='2400 × 1200 px',
                          formato='.JPG, .PNG o .PDF a 300 dpi al 10% del tamaño real. La medida exacta depende de la ubicación.', fondo='espectacular-atardecer.webp'),
 }
 
@@ -290,11 +293,14 @@ def simulador(tipo, wa_msg):
               '<div class="scr-user"><img alt="Tu anuncio en la pantalla"><video muted loop playsinline></video></div>')
     return '''
 <section class="sec" id="simulador"><div class="wrap">
-  <div class="head head--c"><span class="kicker rv">Simulador</span><h2 class="h2 split">Mira tu anuncio en un <span class="y">%s</span></h2>
-    <p class="lead rv">Sube tu diseño y velo al instante en nuestro %s. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
+  <div class="head head--c"><span class="kicker rv">Simulador</span><h2 class="h2 split">Mira tu anuncio en %s <span class="y">%s</span></h2>
+    <p class="lead rv">Sube tu diseño y velo al instante en %s %s, en la calle y de frente. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
   <div class="try rv">
-    <div class="sim__stage" style="--bg:url(../img/%s)"><div class="sim__dev sim__dev--%s" data-scr><div class="sim__scr">%s</div></div>
-      <span class="try__tag"><i class="live"></i>Vista previa</span></div>
+    <div class="try__view">
+      <div class="tryit sim__mock" data-scr style="aspect-ratio:%s"><img src="assets/img/%s" alt="" loading="lazy"><div class="sim__scr sim__scr--mock" style="left:%s%%;top:%s%%;width:%s%%;height:%s%%">%s</div><span class="try__tag"><i class="live"></i>%s</span></div>
+      <div class="sim__stage" style="--bg:url(../img/%s)"><div class="sim__dev sim__dev--%s" data-scr><div class="sim__scr">%s</div></div>
+        <span class="try__tag"><i class="live"></i>Vista de frente</span></div>
+    </div>
     <aside class="try__panel">
       <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu diseño aquí</b><span>o haz clic para elegirlo · %s</span>
         <input id="mm-logo" type="file" accept="%s" data-ratio="%.4f" data-ratio-txt="%s" data-ideal="%s" data-minw="%d"></label>
@@ -307,9 +313,9 @@ def simulador(tipo, wa_msg):
         <a class="btn btn--pk btn--sm" data-wa="%s">Cotizar con mi diseño %s</a></div>
     </aside>
   </div>
-</div></section>''' % (c['nombre'], c['nombre'], c['fondo'], tipo, slides, ico('subir'),
+</div></section>''' % ((c['art'], c['nombre'], c['pos'], c['nombre'], c['mock_ar'], c['mock']) + tuple(c['area']) + (slides, c['lugar'], c['fondo'], tipo, slides, ico('subir'),
                        'imagen o video (MP4, MOV, WEBM)' if c.get('video') else 'PNG, JPG o WEBP', ACC_VID if c.get('video') else ACC_IMG, c['ratio'], c['rtxt'], c['ideal'], c['minw'],
-                       c['rtxt'], c['ideal'], c['minimo'], E(c['formato']), E(wa_msg + ' Ya probé mi diseño en el simulador.'), ico('flecha'))
+                       c['rtxt'], c['ideal'], c['minimo'], E(c['formato']), E(wa_msg + ' Ya probé mi diseño en el simulador.'), ico('flecha')))
 
 # --------------------------------------------------------------------- páginas de medios
 def pagina_medio(d):
@@ -728,7 +734,7 @@ def home():
            ('centro-monitoreo.webp', 'Monitoreo y control 24/7', 'Un centro de monitoreo en tiempo real asegura la calidad y visibilidad de tus campañas en nuestras pantallas digitales.')]
     why_list = ''.join('<button class="why__it" type="button"><b>0%d</b><h3>%s</h3><p>%s</p></button>' % (i + 1, E(t), E(d)) for i, (_, t, d) in enumerate(why))
     why_imgs = ''.join('<img src="assets/img/%s" alt="%s" loading="lazy">' % (im, E(t)) for im, t, _ in why)
-    ciudades = [('Querétaro', 'Sede · desde 2013', [('pantallas-digitales-queretaro', 'Pantallas digitales'), ('totems-queretaro', 'Tótems'), ('espectaculares-queretaro', 'Espectaculares'), ('aeropuerto-aiq', 'Aeropuerto AIQ'), ('estadio-corregidora-queretaro', 'Estadio Corregidora')]),
+    ciudades = [('Querétaro', 'Sede · desde 2013', [('pantallas-digitales-queretaro', 'Pantallas digitales'), ('totems-queretaro', 'Tótems'), ('espectaculares-queretaro', 'Espectaculares'), ('aeropuerto-aiq', 'Aeropuerto AIQ'), ('estadio-corregidora-queretaro', 'Estadio La Corregidora')]),
                 ('Puebla', 'Cobertura completa', [('pantallas-digitales-puebla', 'Pantallas digitales'), ('totems-puebla', 'Tótems'), ('espectaculares-puebla', 'Espectaculares')]),
                 ('CDMX', 'Entorno premium', [('aeropuerto-aicm', 'Aeropuerto AICM')])]
     city_html = ''.join('<div class="city rv rv-d%d"><span class="city__n">0%d</span><h3>%s</h3><small>%s</small><ul>%s</ul></div>'
@@ -799,7 +805,7 @@ def home():
 </section>
 %s
 ''' % (ico('flecha'), ico('pin'), ico('pin'), ico('pin'), bb,
-       ticker(['Pantallas digitales', 'Tótems', 'Espectaculares', 'Aeropuertos', 'Estadio Corregidora', 'Monitoreo 24/7']),
+       ticker(['Pantallas digitales', 'Tótems', 'Espectaculares', 'Aeropuertos', 'Estadio La Corregidora', 'Monitoreo 24/7']),
        totem, why_list, why_imgs, city_html, logos, logos2, ico('flecha'), rev_html, faq_html(faq))
     cuerpo += cta('Que tu marca sea <span class="y">imposible</span> de ignorar', 'Cuéntanos tu objetivo y te armamos una propuesta con los medios ideales para tu marca.',
                   'queretaro-noche.webp', 'Hola Mediamaster, quiero una propuesta para mi marca.') + contacto()
@@ -835,13 +841,13 @@ ESTADIO_JS_PANTALLA = """  // ---------- la pantalla gigante ----------
   panel.querySelector('.mme-panel__text').textContent = e0.texto;
   var pList = panel.querySelector('.mme-panel__list');
   e0.lista.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; pList.appendChild(li); });
-  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio Corregidora.');
+  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio La Corregidora.');
   root.querySelectorAll('.mme-spot').forEach(function (s) { s.classList.add('is-active'); });
 
 """
 ESTADIO_JS_ESPACIOS = """  var ESPACIOS = [
     { titulo: 'Pantalla gigante', img: 'img/estadio-pantalla.webp',
-      texto: 'La pantalla principal del Estadio Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
+      texto: 'La pantalla principal del Estadio La Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
       lista: ['5 × 20 m · 100 m² de pantalla LED', 'Visible desde todas las gradas', 'Spots en video o imagen fija', 'Antes del partido, medio tiempo y final'] }
   ];"""
 ESTADIO_CSS_EXTRA = """
@@ -886,7 +892,7 @@ def pruebalo():
         </div>
         <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span class="try__fitlbl">Ajuste:</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
         <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi diseño</button>
-          <a class="btn btn--pk btn--sm" data-wa="Hola, ya probé mi diseño en la pantalla gigante del Estadio Corregidora y quiero cotizar.">Cotizar con mi diseño %s</a></div>
+          <a class="btn btn--pk btn--sm" data-wa="Hola, ya probé mi diseño en la pantalla gigante del Estadio La Corregidora y quiero cotizar.">Cotizar con mi diseño %s</a></div>
       </aside>
     </div>
   </div></section>''' % (slides, slides, persona, ico('subir'), ico('flecha'))
@@ -907,7 +913,7 @@ def estadio_partes():
     rep('TU MARCA ENTRA<br>A LA <span>CANCHA</span>', 'TU MARCA EN LA<br><span>PANTALLA GIGANTE</span>')
     rep('Pantalla gigante, tableros LED y espacios en todo el estadio para que <strong>más de 30 mil aficionados</strong> vean tu marca justo en el momento de mayor emoción.',
         'Una pantalla de <strong>5 × 20 metros</strong> frente a <strong>más de 30 mil aficionados</strong>: tu marca justo en el momento de mayor emoción.')
-    rep('data-mm-wa="Hola, me interesa anunciarme en el Estadio Corregidora."', 'data-mm-wa="Hola, me interesa anunciarme en la pantalla gigante del Estadio Corregidora."')
+    rep('data-mm-wa="Hola, me interesa anunciarme en el Estadio La Corregidora."', 'data-mm-wa="Hola, me interesa anunciarme en la pantalla gigante del Estadio La Corregidora."')
     s = re.sub(r'(<div class="mme-ticker__track">).*?(</div></div>)', lambda m: m.group(1) + ''.join(
         '<span>%s</span>' % t for t in ['PANTALLA GIGANTE', '5 × 20 METROS', '100 M² DE LED', 'DÍA DE PARTIDO', '+30 MIL AFICIONADOS', 'TU MARCA AQUÍ'] * 2) + m.group(2), s, count=1, flags=re.S)
     # ---- cifras
@@ -947,8 +953,8 @@ def estadio_partes():
     s, n = re.subn(r'(<div class="mme-acc">).*?(\n      </div>\n    </div>\n  </section>)', lambda m: m.group(1) + items + m.group(2), s, count=1, flags=re.S)
     assert n == 1
     # ---- CTA
-    rep('data-mm-wa="Hola, quiero una propuesta para anunciarme en el Estadio Corregidora."', 'data-mm-wa="Hola, quiero una propuesta para la pantalla gigante del Estadio Corregidora."')
-    rep('te armamos una propuesta para el Estadio Corregidora.', 'te armamos una propuesta para la pantalla gigante del Estadio Corregidora.')
+    rep('data-mm-wa="Hola, quiero una propuesta para anunciarme en el Estadio La Corregidora."', 'data-mm-wa="Hola, quiero una propuesta para la pantalla gigante del Estadio La Corregidora."')
+    rep('te armamos una propuesta para el Estadio La Corregidora.', 'te armamos una propuesta para la pantalla gigante del Estadio La Corregidora.')
 
     css = re.search(r'<style>(.*?)</style>', s, re.S).group(1) + ESTADIO_CSS_EXTRA
     js = re.search(r'<script>(.*?)</script>', s, re.S).group(1)
@@ -967,8 +973,8 @@ def estadio_partes():
 
 def estadio():
     cuerpo, _, _ = estadio_partes()
-    return pagina('estadio-corregidora-queretaro', 'Pantalla gigante en el Estadio Corregidora · 5 × 20 m | Mediamaster',
-                  'Anúnciate en la pantalla gigante de 5 × 20 m del Estadio Corregidora en Querétaro, frente a más de 30 mil aficionados por partido.',
+    return pagina('estadio-corregidora-queretaro', 'Pantalla gigante en el Estadio La Corregidora · 5 × 20 m | Mediamaster',
+                  'Anúnciate en la pantalla gigante de 5 × 20 m del Estadio La Corregidora en Querétaro, frente a más de 30 mil aficionados por partido.',
                   'estadio-pantalla.webp', cuerpo + contacto('Estadio'))
 
 # --------------------------------------------------------------------- AVISO DE PRIVACIDAD

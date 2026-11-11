@@ -768,7 +768,7 @@
     { titulo: 'Tótems',               imagen: U + 'totem-restaurante.webp',       url: 'totems-queretaro',              color: '#22d65a' },
     { titulo: 'Aeropuerto AIQ',       imagen: U + 'aeropuerto-gran-campana.webp', url: 'aeropuerto-aiq',                color: '#ff0a6c' },
     { titulo: 'Aeropuerto AICM',      imagen: U + 'aicm-pantalla.webp',           url: 'aeropuerto-aicm',               color: '#3aa0ff' },
-    { titulo: 'Estadio Corregidora',  imagen: U + 'estadio-pantalla.webp',        url: 'estadio-corregidora-queretaro', color: '#f5e400' }
+    { titulo: 'Estadio La Corregidora',  imagen: U + 'estadio-pantalla.webp',        url: 'estadio-corregidora-queretaro', color: '#f5e400' }
   ];
 
   var VELOCIDAD = 0.12;           // grados por frame (más alto = gira más rápido)
@@ -954,7 +954,7 @@
 
   var ESPACIOS = [
     { titulo: 'Pantalla gigante', img: 'img/estadio-pantalla.webp',
-      texto: 'La pantalla principal del Estadio Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
+      texto: 'La pantalla principal del Estadio La Corregidora: 5 × 20 metros de LED frente a toda la afición, en los momentos de mayor emoción del partido.',
       lista: ['5 × 20 m · 100 m² de pantalla LED', 'Visible desde todas las gradas', 'Spots en video o imagen fija', 'Antes del partido, medio tiempo y final'] }
   ];
 
@@ -1014,7 +1014,7 @@
   if (CONFIG.YOUTUBE_ID && !reduce) {
     var id = CONFIG.YOUTUBE_ID;
     ytFrame = document.createElement('iframe');
-    ytFrame.title = 'Video oficial Estadio Corregidora';
+    ytFrame.title = 'Video oficial Estadio La Corregidora';
     ytFrame.allow = 'autoplay; encrypted-media; picture-in-picture';
     ytFrame.setAttribute('tabindex', '-1');
     ytFrame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + id +
@@ -1120,7 +1120,7 @@
   panel.querySelector('.mme-panel__text').textContent = e0.texto;
   var pList = panel.querySelector('.mme-panel__list');
   e0.lista.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; pList.appendChild(li); });
-  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio Corregidora.');
+  panel.querySelector('.mme-panel__cta').href = wa('Hola, me interesa la pantalla gigante del Estadio La Corregidora.');
   root.querySelectorAll('.mme-spot').forEach(function (s) { s.classList.add('is-active'); });
 
   // ---------- clientes ----------

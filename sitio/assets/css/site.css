@@ -1308,6 +1308,17 @@ p{margin:0 0 1em}
 .fit-cover .scr-user video{width:100%; height:100%; max-width:none; max-height:none; object-fit:cover}
 .try__fitlbl{font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gray); margin-right:6px}
 
+/* ---------- simuladores: mockup en entorno real + vista de frente ---------- */
+.try__view{display:grid; gap:18px}
+.sim__mock{position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#000}
+.sim__mock>img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+.sim__scr--mock{position:absolute; border:0; border-radius:2px; box-shadow:0 0 30px rgba(255,255,255,.18),0 0 60px -10px rgba(255,1,91,.5)}
+.sim__mock .try__tag{z-index:2}
+.try__view .sim__stage{min-height:340px; padding:50px 30px 30px}
+.try__view .sim__dev--pantalla{max-width:440px; padding-bottom:90px} .try__view .sim__dev--pantalla::after{height:90px}
+.try__view .sim__dev--totem{width:min(190px,60%)}
+.try__view .sim__dev--espectacular{max-width:460px; padding-bottom:80px} .try__view .sim__dev--espectacular::after{height:80px}
+
 /* ---------- página de estadio ---------- */
 
 /* ===================== base (mismo estilo del sitio) ===================== */
