@@ -338,6 +338,8 @@
     var SUAVE = { base: .08, hoverSize: 1.8, hoverOpacity: .38, halo: .3 };
     function heroRect() { hr = hero ? hero.getBoundingClientRect() : null; if (hr && (hr.bottom <= 0 || hr.top >= H)) hr = null; }
     function enHero(x, y) { return hr && x >= hr.left && x <= hr.right && y >= hr.top && y <= hr.bottom; }
+    // 1 dentro de la portada, baja suavemente a 0 en sus últimos 220 px (sin cortes bruscos)
+    function nivelHero(y) { return hr ? Math.max(0, Math.min(1, (hr.bottom - y) / 220)) : 0; }
     function resize() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = innerWidth; H = innerHeight;
@@ -355,7 +357,7 @@
       var mHero = mouse.active && enHero(mouse.x, mouse.y);
       ripples = ripples.filter(function (r) { return (now - r.t) / cfg.rippleDuration < 1; });
       for (var i = 0; i < dots.length; i += 2) {
-        var x = dots[i], y = dots[i + 1], full = enHero(x, y), size = cfg.dotSize, op = full ? cfg.baseOpacity : SUAVE.base, col = '255,255,255', wg = 0;
+        var x = dots[i], y = dots[i + 1], full = enHero(x, y), nh = full ? nivelHero(y) : 0, size = cfg.dotSize, op = SUAVE.base + (cfg.baseOpacity - SUAVE.base) * nh, col = '255,255,255', wg = 0;
         if (mouse.active) {
           var dx = x - mouse.x, dy = y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < cfg.hoverRadius) {
@@ -393,6 +395,9 @@
     if (!reduce) {
       window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; kick(); }, { passive: true });
       document.addEventListener('mouseleave', function () { mouse.active = false; kick(); });
+      // al salir el cursor de la ventana (por ejemplo hacia las pestañas) se apaga el brillo
+      window.addEventListener('mouseout', function (e) { if (!e.relatedTarget) { mouse.active = false; kick(); } });
+      document.addEventListener('visibilitychange', function () { if (document.hidden) { mouse.active = false; kick(); } });
       window.addEventListener('blur', function () { mouse.active = false; kick(); });
       window.addEventListener('scroll', kick, { passive: true });
       window.addEventListener('click', function (e) {
