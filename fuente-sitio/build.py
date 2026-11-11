@@ -561,7 +561,7 @@ def _ajustes(d):
     if d['slug'] in vit:
         img, ar, pines = vit[d['slug']]
         d['vitrina'] = (img, ar, pines) + tuple(d['vitrina'][3:])
-        d['intro_img'] = img
+        d['intro_img'] = {'totems-queretaro': 'totem-impacto.webp', 'totems-puebla': 'totem-restaurante.webp'}[d['slug']]
     return d
 
 def _paginas_medios():
