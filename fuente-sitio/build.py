@@ -550,6 +550,18 @@ def _ajustes(d):
              'espectaculares-queretaro': dict(simulador='espectacular'),
              'espectaculares-puebla': dict(hero_img='espectacular-puebla-entorno.webp', hero_pos='100% 75%', simulador='espectacular', sim_extra=dict(mock='espectacular-puebla-entorno.webp', mock_ar='1448/1086', area=(59.6, 30.1, 32.0, 23.0), lugar='En Puebla'))}
     d.update(extra.get(d['slug'], {}))
+    vit = {'totems-queretaro': ('totem-queretaro-entorno.webp', '1445/1088', [
+               (64, 40, 'Pantalla vertical', 'Formato 1080 × 1920 px que destaca a la altura de la vista.', 'pin--l'),
+               (45, 50, 'Cercanía', 'Tu mensaje a pocos metros de tu cliente, en accesos de alto flujo.', 'pin--r'),
+               (86, 52, 'Atención directa', 'Las personas se detienen frente al tótem: impacto cara a cara.', 'pin--l')]),
+           'totems-puebla': ('totem-puebla-entorno.webp', '1445/1089', [
+               (60, 38, 'Pantalla vertical', 'Formato 1080 × 1920 px que destaca a la altura de la vista.', 'pin--l'),
+               (22, 48, 'Cercanía', 'Tu mensaje a pocos metros de tu cliente, en la entrada del negocio.', 'pin--r'),
+               (82, 52, 'Atención directa', 'Las personas se detienen frente al tótem: impacto cara a cara.', 'pin--l')])}
+    if d['slug'] in vit:
+        img, ar, pines = vit[d['slug']]
+        d['vitrina'] = (img, ar, pines) + tuple(d['vitrina'][3:])
+        d['intro_img'] = img
     return d
 
 def _paginas_medios():
