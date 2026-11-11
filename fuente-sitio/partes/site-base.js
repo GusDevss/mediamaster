@@ -342,11 +342,15 @@
     function nivelHero(y) { return hr ? Math.max(0, Math.min(1, (hr.bottom - y) / 220)) : 0; }
     function resize() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = innerWidth; H = innerHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // ancho real sin la barra de desplazamiento: así el lienzo no se reescala y no aparecen columnas más brillantes
+      W = document.documentElement.clientWidth; H = document.documentElement.clientHeight;
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+      // cada punto se alinea al centro de un píxel físico para que todos se vean iguales
+      var snap = function (v) { return (Math.floor(v * dpr) + .5) / dpr; };
       dots = [];
-      for (var y = cfg.spacing / 2; y < H; y += cfg.spacing) for (var x = cfg.spacing / 2; x < W; x += cfg.spacing) dots.push(x, y);
+      for (var y = cfg.spacing / 2; y < H; y += cfg.spacing) for (var x = cfg.spacing / 2; x < W; x += cfg.spacing) dots.push(snap(x), snap(y));
       kick();
     }
     function fade(p) { return Math.pow(Math.max(0, 1 - (p - .65) / .35), 1.4); }
