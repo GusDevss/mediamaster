@@ -271,11 +271,13 @@ def vitrina(imagen, ar, pines, titulo, sub):
             '<div class="show__cap"><div><small>Toca los puntos</small><h3>%s</h3></div><small>%s</small></div></div>' % (ar, imagen, E(titulo), ps, titulo, E(sub)))
 
 # --------------------------------------------------------------------- simulador de anuncio
+ACC_IMG = 'image/png,image/jpeg,image/webp,image/svg+xml'
+ACC_VID = 'image/png,image/jpeg,image/webp,image/svg+xml,video/mp4,video/webm,video/quicktime'
 SIM = {
     'pantalla': dict(nombre='pantalla digital', ratio=16/9, rtxt='16 : 9', ideal='1920 × 1080 px', minw=1280, minimo='1280 × 720 px',
-                     formato='Video .MP4 de 10 s (para la vista previa usa una imagen).', fondo='pantalla-ciudad-noche.webp'),
+                     formato='Video .MP4 de 10 s o imagen fija. Puedes subir tu video tal cual para verlo en la pantalla.', fondo='pantalla-ciudad-noche.webp', video=True),
     'totem': dict(nombre='tótem', ratio=9/16, rtxt='9 : 16 (vertical)', ideal='1080 × 1920 px', minw=720, minimo='720 × 1280 px',
-                  formato='Video .MP4 vertical de 10 s (para la vista previa usa una imagen).', fondo='totem-restaurante.webp'),
+                  formato='Video .MP4 vertical de 10 s o imagen fija. Puedes subir tu video tal cual para verlo en el tótem.', fondo='totem-restaurante.webp', video=True),
     'espectacular': dict(nombre='espectacular', ratio=2, rtxt='2 : 1 aprox.', ideal='4800 × 2400 px', minw=2400, minimo='2400 × 1200 px',
                          formato='.JPG, .PNG o .PDF a 300 dpi al 10% del tamaño real. La medida exacta depende de la ubicación.', fondo='espectacular-atardecer.webp'),
 }
@@ -285,7 +287,7 @@ def simulador(tipo, wa_msg):
     slides = ('<div class="scr-slides"><div class="scr-slide sl-a"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
               '<div class="scr-slide sl-b"><span>Tu marca</span><span>aquí</span><i></i></div>'
               '<div class="scr-slide sl-c"><b>+ Visibilidad</b><small>Anúnciate hoy</small></div></div>'
-              '<div class="scr-user"><img alt="Tu anuncio en la pantalla"></div>')
+              '<div class="scr-user"><img alt="Tu anuncio en la pantalla"><video muted loop playsinline></video></div>')
     return '''
 <section class="sec" id="simulador"><div class="wrap">
   <div class="head head--c"><span class="kicker rv">Simulador</span><h2 class="h2 split">Mira tu anuncio en un <span class="y">%s</span></h2>
@@ -294,8 +296,8 @@ def simulador(tipo, wa_msg):
     <div class="sim__stage" style="--bg:url(../img/%s)"><div class="sim__dev sim__dev--%s" data-scr><div class="sim__scr">%s</div></div>
       <span class="try__tag"><i class="live"></i>Vista previa</span></div>
     <aside class="try__panel">
-      <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu diseño aquí</b><span>o haz clic para elegirlo · PNG, JPG o WEBP</span>
-        <input id="mm-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-ratio="%.4f" data-ratio-txt="%s" data-ideal="%s" data-minw="%d"></label>
+      <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu diseño aquí</b><span>o haz clic para elegirlo · %s</span>
+        <input id="mm-logo" type="file" accept="%s" data-ratio="%.4f" data-ratio-txt="%s" data-ideal="%s" data-minw="%d"></label>
       <div class="try__info" data-try-info hidden></div>
       <div class="try__spec"><h3>Tamaño de tu diseño</h3><ul>
         <li><span>Proporción</span><b>%s</b></li><li><span>Ideal</span><b>%s</b><small>máxima nitidez</small></li><li><span>Mínimo</span><b>%s</b><small>por debajo se verá pixeleado</small></li></ul>
@@ -305,7 +307,8 @@ def simulador(tipo, wa_msg):
         <a class="btn btn--pk btn--sm" data-wa="%s">Cotizar con mi diseño %s</a></div>
     </aside>
   </div>
-</div></section>''' % (c['nombre'], c['nombre'], c['fondo'], tipo, slides, ico('subir'), c['ratio'], c['rtxt'], c['ideal'], c['minw'],
+</div></section>''' % (c['nombre'], c['nombre'], c['fondo'], tipo, slides, ico('subir'),
+                       'imagen o video (MP4, MOV, WEBM)' if c.get('video') else 'PNG, JPG o WEBP', ACC_VID if c.get('video') else ACC_IMG, c['ratio'], c['rtxt'], c['ideal'], c['minw'],
                        c['rtxt'], c['ideal'], c['minimo'], E(c['formato']), E(wa_msg + ' Ya probé mi diseño en el simulador.'), ico('flecha'))
 
 # --------------------------------------------------------------------- páginas de medios
@@ -334,7 +337,7 @@ def pagina_medio(d):
 </div></section>''' % (pantalla, d['phone_kicker'], d['phone_title'], E(d['phone_text']),
                        ('<ul class="perks">%s</ul>' % ''.join('<li class="rv">%s</li>' % p for p in d['phone_perks'])), E(wa_msg), ico('flecha'))
     if d.get('simulador'):
-        telefono = simulador(d['simulador'], wa_msg)
+        telefono = (telefono if d.get('con_video') else '') + simulador(d['simulador'], wa_msg)
 
     # ubicaciones
     if d.get('mapa'):
@@ -408,7 +411,7 @@ def datos_pantallas(ciudad, slug, mapa, leyenda, hero, intro_img, vitrina_img, p
         specs=SPECS_PANTALLAS, perks=['<strong>Cambios de artes sin costo</strong> durante tu campaña.', '<strong>3 versiones de spots</strong> para probar mensajes.'],
         intro_img=intro_img, badge=('+30', 'ubicaciones de alto tránsito vehicular y peatonal'),
         vitrina=(vitrina_img, ar, pines, 'Así se ve tu <span class="y">campaña</span>', 'Pantallas digitales · %s' % ciudad),
-        phone_video=('pantallas-campana.mp4', 'pantallas-campana-poster.webp'), phone_kicker='Campaña real',
+        phone_video=('pantallas-campana-audio.mp4', 'pantallas-campana-poster.webp'), phone_kicker='Campaña real',
         phone_title='Puntos <span class="pk">estratégicos</span>, máxima visibilidad',
         phone_text='Mira cómo luce una campaña en nuestra red de pantallas: ubicaciones de alto flujo, visibles desde lejos y con contenido en movimiento.',
         phone_perks=['Spots de 10 segundos en rotación.', 'Programación y cambios desde nuestro centro de monitoreo.', 'Reportes de exhibición de tu campaña.'],
@@ -478,7 +481,7 @@ def datos_espect(ciudad, slug, mapa, yt, vit_img, vit_ar, pines):
                ('alcance', 'Alcance', '+100 ubicaciones', 'Tu mensaje frente a las personas correctas.')],
         intro_img='espectacular-noche.webp', badge=('+100', 'ubicaciones en avenidas de alta afluencia'),
         vitrina=(vit_img, vit_ar, pines, 'Tu marca en <span class="y">gran formato</span>', 'Espectaculares · %s' % ciudad),
-        phone_yt=yt, phone_video=('pantallas-campana.mp4', 'pantallas-campana-poster.webp'), phone_kicker='En la calle',
+        phone_yt=yt, phone_video=('pantallas-campana-audio.mp4', 'pantallas-campana-poster.webp'), phone_kicker='En la calle',
         phone_title='Ubicaciones que <span class="pk">sí se ven</span>',
         phone_text='Seleccionamos cada espectacular por su flujo vehicular, su ángulo de visión y su cercanía a zonas comerciales.',
         phone_perks=['Te asesoramos para elegir las mejores ubicaciones.', 'Impresión e instalación de tu lona.', 'Evidencia fotográfica de tu campaña.'],
@@ -532,8 +535,11 @@ def paginas_medios():
     return [x for x in _paginas_medios()]
 
 def _ajustes(d):
-    extra = {'pantallas-digitales-puebla': dict(hero_pos='50% 18%', simulador='pantalla'),
+    extra = {'pantallas-digitales-queretaro': dict(simulador='pantalla', con_video=True),
+             'pantallas-digitales-puebla': dict(hero_pos='50% 18%', simulador='pantalla'),
              'totems-queretaro': dict(simulador='totem'),
+             'totems-puebla': dict(simulador='totem'),
+             'espectaculares-queretaro': dict(simulador='espectacular'),
              'espectaculares-puebla': dict(simulador='espectacular')}
     d.update(extra.get(d['slug'], {}))
     return d
@@ -850,13 +856,13 @@ ESTADIO_CSS_EXTRA = """
 def pruebalo():
     slides = ('<div class="scr-slides"><div class="scr-slide scr-logo"><img src="assets/img/icono.png" alt=""><b>media<strong>master</strong></b><small>MEDIOS PUBLICITARIOS</small></div>'
               '<div class="scr-slide scr-goal"><span>¡GOOOL!</span></div><div class="scr-slide scr-brand"><span>Tu marca aquí</span><i></i></div></div>'
-              '<div class="scr-user"><img alt="Tu diseño en la pantalla"></div>')
+              '<div class="scr-user"><img alt="Tu diseño en la pantalla"><video muted loop playsinline></video></div>')
     persona = ('<svg viewBox="0 0 40 120" aria-hidden="true"><circle cx="20" cy="11" r="9"/><path d="M8 26q12-6 24 0l3 40h-6l-2-30-1 82h-8l-1-45-1 45H8l-1-82-2 30H-1z"/></svg>')
     return '''  <!-- ============================ PRUÉBALO ============================ -->
   <section class="mme-try" id="pruebalo"><div class="mme-wrap">
     <div class="mme-head"><span class="mme-kicker mme-rv">PRUÉBALO</span>
       <h2 class="mme-h2 mme-rv">MIRA TU MARCA EN LA <span class="mme-y">PANTALLA GIGANTE</span></h2>
-      <p class="mme-p mme-rv">Sube tu logo o tu anuncio y velo al instante en la pantalla del estadio. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
+      <p class="mme-p mme-rv">Sube tu logo, tu anuncio o tu video y velo al instante en la pantalla del estadio. Tu archivo no se envía a ningún lado: solo se muestra en tu navegador.</p></div>
     <div class="try mme-rv">
       <div class="try__view">
         <div class="tryit" data-scr><img src="assets/img/estadio-pantalla.webp" alt="Pantalla gigante del estadio con la afición" loading="lazy" width="1600" height="899"><div class="tryit__scr">%s</div><span class="try__tag"><i class="live"></i>Vista en el estadio</span></div>
@@ -867,7 +873,7 @@ def pruebalo():
         </div>
       </div>
       <aside class="try__panel">
-        <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu imagen aquí</b><span>o haz clic para elegirla · PNG, JPG o WEBP</span><input id="mm-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>
+        <label class="try__drop" for="mm-logo" data-drop>%s<b>Arrastra tu imagen o video aquí</b><span>o haz clic para elegirlo · PNG, JPG, WEBP, MP4, MOV o WEBM</span><input id="mm-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,video/mp4,video/webm,video/quicktime"></label>
         <div class="try__info" data-try-info hidden></div>
         <div class="try__spec">
           <h3>Tamaño de tu diseño</h3>
@@ -879,7 +885,7 @@ def pruebalo():
           <p>Usa textos grandes, pocos elementos y colores contrastantes: la afición ve la pantalla a decenas de metros.</p>
         </div>
         <div class="try__fit" role="group" aria-label="Ajuste de la imagen"><span>Ajuste</span><button type="button" class="is-on" data-fit="contain">Imagen completa</button><button type="button" data-fit="cover">Llenar pantalla</button></div>
-        <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi imagen</button>
+        <div class="try__btns"><button class="btn btn--gh btn--sm" type="button" data-scr-reset hidden>Quitar mi diseño</button>
           <a class="btn btn--pk btn--sm" data-wa="Hola, ya probé mi diseño en la pantalla gigante del Estadio Corregidora y quiero cotizar.">Cotizar con mi diseño %s</a></div>
       </aside>
     </div>

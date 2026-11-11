@@ -438,19 +438,34 @@
   var upl = $('#mm-logo');
   if (upl) {
     var info = $('[data-try-info]'), rs = $('[data-scr-reset]'), drop = $('[data-drop]'), lastUrl = null;
+    var aceptaVideo = /video\//.test(upl.getAttribute('accept') || '');
     function cargar(f) {
-      if (!f || !/^image\//.test(f.type)) { mostrar('err', 'Ese archivo no es una imagen. Usa PNG, JPG o WEBP.'); return; }
+      var esVideo = !!f && /^video\//.test(f.type);
+      if (!f || !(/^image\//.test(f.type) || (esVideo && aceptaVideo))) {
+        mostrar('err', aceptaVideo ? 'Ese archivo no es una imagen ni un video. Usa PNG, JPG, WEBP, MP4, MOV o WEBM.' : 'Ese archivo no es una imagen. Usa PNG, JPG o WEBP.'); return;
+      }
       if (lastUrl) URL.revokeObjectURL(lastUrl);
-      var url = lastUrl = URL.createObjectURL(f), probe = new Image();
-      probe.onload = function () {
+      var url = lastUrl = URL.createObjectURL(f), probe;
+      if (esVideo) {
+        probe = document.createElement('video'); probe.muted = true; probe.preload = 'metadata';
+        probe.onerror = function () { mostrar('err', 'Tu navegador no puede reproducir ese video. Prueba con MP4 (H.264).'); };
+      } else probe = new Image();
+      probe[esVideo ? 'onloadedmetadata' : 'onload'] = function () {
+        probe.naturalWidth = probe.naturalWidth || probe.videoWidth; probe.naturalHeight = probe.naturalHeight || probe.videoHeight;
         var R = +upl.getAttribute('data-ratio') || 4, MINW = +upl.getAttribute('data-minw') || 1920;
         var RT = upl.getAttribute('data-ratio-txt') || '4 : 1', IDEAL = upl.getAttribute('data-ideal') || '3840 × 960 px';
         var w = probe.naturalWidth, h = probe.naturalHeight, r = w / h, msg, tipo = 'ok';
         if (Math.abs(r - R) / R <= .12) msg = '✓ ' + w + ' × ' + h + ' px · proporción ideal para la pantalla.';
         else { tipo = 'warn'; msg = w + ' × ' + h + ' px · tu imagen no tiene la proporción de la pantalla (' + RT + ', por ejemplo ' + IDEAL + '): con “Imagen completa” verás franjas y con “Llenar pantalla” se recortará.'; }
         if (w < MINW && f.type !== 'image/svg+xml') { tipo = 'warn'; msg += ' Tu imagen mide menos de ' + MINW + ' px de ancho y podría verse pixeleada.'; }
+        if (esVideo) msg = msg.replace('tu imagen', 'tu video').replace('Tu imagen', 'Tu video') + (probe.duration ? ' · ' + Math.round(probe.duration) + ' s' : '');
         mostrar(tipo, msg);
-        $$('.scr-user img').forEach(function (im) { im.src = url; });
+        $$('.scr-user').forEach(function (u) {
+          var im = u.querySelector('img'), v = u.querySelector('video');
+          u.classList.toggle('is-video', esVideo);
+          if (esVideo && v) { v.src = url; v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+          else { if (v) { v.pause(); v.removeAttribute('src'); } im.src = url; }
+        });
         $$('[data-scr]').forEach(function (s) { s.classList.add('has-user'); });
         if (rs) rs.hidden = false;
       };
