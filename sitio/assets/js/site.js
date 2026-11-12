@@ -778,8 +778,8 @@
   var U = 'assets/img/';
   var MEDIOS = [
     { titulo: 'Pantallas Digitales',  imagen: U + 'pantalla-edificio.webp',       url: 'pantallas-digitales-queretaro', color: '#8a3ffc' },
-    { titulo: 'Espectaculares',       imagen: U + 'espectacular-atardecer.webp',  url: 'espectaculares-queretaro',      color: '#ff7a00' },
-    { titulo: 'Tótems',               imagen: U + 'totem-restaurante.webp',       url: 'totems-queretaro',              color: '#22d65a' },
+    { titulo: 'Espectaculares',       imagen: U + 'espectacular-puebla-entorno.webp', url: 'espectaculares-queretaro',      color: '#ff7a00' },
+    { titulo: 'Tótems',               imagen: U + 'totem-queretaro-entorno.webp', url: 'totems-queretaro',              color: '#22d65a' },
     { titulo: 'Aeropuerto AIQ',       imagen: U + 'aeropuerto-gran-campana.webp', url: 'aeropuerto-aiq',                color: '#ff0a6c' },
     { titulo: 'Aeropuerto AICM',      imagen: U + 'aicm-pantalla.webp',           url: 'aeropuerto-aicm',               color: '#3aa0ff' },
     { titulo: 'Estadio La Corregidora',  imagen: U + 'estadio-pantalla.webp',        url: 'estadio-corregidora-queretaro', color: '#f5e400' }
