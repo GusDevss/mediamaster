@@ -39,20 +39,20 @@ if ($tipo === 'suscripcion') {
 } else {
     $nombre  = linea(campo('nombre', 120));
     $mensaje = campo('mensaje', 5000);
-    if ($nombre === '' || $mensaje === '') salir(false, 422, 'faltan');
     $tel     = linea(campo('telefono', 40));
     $empresa = linea(campo('empresa', 120));
     $medios  = [];
     if (isset($_POST['medio']) && is_array($_POST['medio'])) {
         foreach (array_slice($_POST['medio'], 0, 10) as $m) if (is_string($m)) $medios[] = linea(mb_substr(strip_tags($m), 0, 40, 'UTF-8'));
     }
+    if ($nombre === '' || $tel === '' || $empresa === '' || !$medios) salir(false, 422, 'faltan');
     $asunto = 'Cotización · ' . ($empresa !== '' ? $empresa : $nombre);
     $cuerpo = "Nuevo mensaje desde mediamaster.mx\n\n"
             . "Nombre: $nombre\nCorreo: $correo\n"
             . ($tel !== '' ? "Teléfono: $tel\n" : '')
             . ($empresa !== '' ? "Empresa: $empresa\n" : '')
             . ($medios ? 'Le interesa: ' . implode(', ', $medios) . "\n" : '')
-            . "\nMensaje:\n$mensaje\n";
+            . ($mensaje !== '' ? "\nMensaje:\n$mensaje\n" : "\n(Sin mensaje)\n");
 }
 
 $encabezados = implode("\r\n", [

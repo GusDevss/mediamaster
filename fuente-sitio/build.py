@@ -134,10 +134,10 @@ def contacto(medio_pre=''):
     <div class="hp" aria-hidden="true"><label>No llenar <input name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
     <div class="fld"><label for="f-nombre">Nombre *</label><input id="f-nombre" name="nombre" autocomplete="name" required><em>Escribe tu nombre</em></div>
     <div class="fld"><label for="f-correo">Correo *</label><input id="f-correo" name="correo" type="email" autocomplete="email" required><em>Escribe un correo válido</em></div>
-    <div class="fld"><label for="f-tel">Teléfono</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel"></div>
-    <div class="fld"><label for="f-emp">Empresa</label><input id="f-emp" name="empresa" autocomplete="organization"></div>
-    <div class="fld fld--w"><label>¿Qué medio te interesa?</label><div class="pills">%s</div></div>
-    <div class="fld fld--w"><label for="f-msg">Mensaje *</label><textarea id="f-msg" name="mensaje" required placeholder="Cuéntanos sobre tu campaña: fechas, ciudad, presupuesto…"></textarea><em>Cuéntanos un poco sobre tu campaña</em></div>
+    <div class="fld"><label for="f-tel">Teléfono *</label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" required><em>Escribe tu teléfono</em></div>
+    <div class="fld"><label for="f-emp">Empresa *</label><input id="f-emp" name="empresa" autocomplete="organization" required><em>Escribe el nombre de tu empresa</em></div>
+    <div class="fld fld--w" data-grupo><label>¿Qué medio te interesa? *</label><div class="pills">%s</div><em>Elige al menos un medio</em></div>
+    <div class="fld fld--w"><label for="f-msg">Mensaje <small style="font-weight:400;opacity:.7">(opcional)</small></label><textarea id="f-msg" name="mensaje" placeholder="Cuéntanos sobre tu campaña: fechas, ciudad, presupuesto…"></textarea></div>
     <p class="form__msg" role="status" aria-live="polite"></p>
     <div class="form__foot">
       <a href="#" class="form__wa" data-form-wa>%s Prefiero enviarlo por WhatsApp</a>
